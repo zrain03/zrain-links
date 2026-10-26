@@ -99,7 +99,17 @@
   <div class="dialog-top"><span class="brand-icon" aria-hidden="true">Z</span><button type="button" id="close-auth" class="dialog-close" aria-label="Close sign in">×</button></div>
   <h2 id="auth-title">Welcome to Zrain Links</h2><p id="auth-caption">Sign in to create and manage links.</p>
   <p id="auth-context" class="auth-context" hidden>Your link details are saved in this form. Sign in or create an account to continue.</p>
-  <div class="auth-tabs"><button id="signin-tab" type="button" data-auth-mode="signin" class="active" aria-pressed="true">Sign in</button><button id="signup-tab" type="button" data-auth-mode="signup" aria-pressed="false">Create account</button></div>
+  <section id="verification-panel" class="verify-panel" hidden aria-labelledby="verify-title">
+    <h3 id="verify-title">Verify your email</h3>
+    <p>We have sent a verification link to <strong id="verify-email"></strong>. Open it, then return here.</p>
+    <p id="verification-message" class="form-message" role="status" aria-live="polite"></p>
+    <button id="verified-button" type="button" class="button button-primary auth-submit">I've verified my email →</button>
+    <div class="verify-actions">
+      <button id="resend-verification" type="button">Resend verification email</button>
+      <button id="switch-account" type="button">Use another account</button>
+    </div>
+  </section>
+  <div id="auth-tabs" class="auth-tabs"><button id="signin-tab" type="button" data-auth-mode="signin" class="active" aria-pressed="true">Sign in</button><button id="signup-tab" type="button" data-auth-mode="signup" aria-pressed="false">Create account</button></div>
   <form id="auth-form">
     <label for="email">Email address</label><input id="email" type="email" autocomplete="email" maxlength="254" placeholder="you@example.com" required>
     <label for="password">Password <small id="password-hint"></small></label>
