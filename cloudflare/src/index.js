@@ -152,7 +152,7 @@ async function handleRequest(request, env) {
           const user = await authUser(request,db);
           const link = await db.prepare("SELECT id,code FROM short_links WHERE id=? AND owner_id=?").bind(qr[1],user.id).first();
           if (!link) return error("NOT_FOUND","Link not found.",404);
-          return new Response(renderSVG(getOrigin(request,env.PUBLIC_BASE_URL)+"/"+link.code), {headers:{"content-type":"image/svg+xml; charset=utf-8","content-disposition":"attachment; filename=\"zrain-links-"+link.code+".svg\"","cache-control":"no-store"}});
+          return new Response(renderSVG("https://zrain-links.web.app/"+link.code), {headers:{"content-type":"image/svg+xml; charset=utf-8","content-disposition":"attachment; filename=\"zrain-links-"+link.code+".svg\"","cache-control":"no-store"}});
         }
         return error("NOT_FOUND","API endpoint not found.",404);
       }
