@@ -21,6 +21,7 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
     show("verification-panel", false);
     show("auth-tabs", true);
     show("auth-form", true);
+    show("google-auth-section", true);
   }
   async function signedIn(user) {
     currentUser = user;
@@ -103,7 +104,7 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
     authFormView();
     show("auth-context", forShortening);
     if (!modal.open) modal.showModal();
-    window.setTimeout(() => $("email").focus(), 0);
+    window.setTimeout(() => $("email").focus({preventScroll:true}), 0);
   }
   function closeAuth() { if (modal.open) modal.close(); }
   function autoMode() {
