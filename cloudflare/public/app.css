@@ -123,3 +123,25 @@ body{background:linear-gradient(180deg,#fffdfb,#fff7f2 70%,#fffaf6);color:var(--
 .auth-dialog .google-button:disabled{opacity:.65;cursor:wait}
 .auth-dialog #auth-tabs button{cursor:pointer}
 .auth-dialog #auth-tabs button:not(.active):hover{color:#ba4d34}
+
+
+/* 2026-10-26: Conventional, accessible account creation and Google sign-in. */
+.auth-dialog .auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:15px}
+.auth-dialog .auth-tabs button{text-align:center;font-size:13px;min-height:40px}
+.auth-dialog form label{color:#253346}
+.auth-dialog form input{font-size:13px}
+.auth-dialog .password-row input{padding-right:65px}
+.auth-dialog .password-row button{color:#ac4b34;min-width:48px}
+.auth-dialog .auth-help{font-size:11px;line-height:1.55;color:#697686;margin:-7px 0 12px}
+.auth-dialog .auth-submit{min-height:46px}
+.auth-dialog .google-button{
+  min-height:46px;border-radius:9px;border:1px solid #747775;
+  background:#fff;color:#1f1f1f;font-size:14px;font-weight:600;
+  letter-spacing:0;gap:11px;padding:10px 14px;
+}
+.auth-dialog .google-button:hover{background:#f8f9fa;border-color:#747775}
+.auth-dialog .google-button:focus-visible{outline:3px solid #7396cc;outline-offset:2px}
+.auth-dialog .google-icon{width:20px;height:20px;flex:none}
+.auth-dialog .google-auth-section .form-message:not(:empty){margin:9px 0 4px;text-align:left}
+.auth-dialog .form-message:not(:empty){overflow-wrap:anywhere}
+@media(max-width:540px){.auth-dialog .auth-tabs{gap:3px}.auth-dialog .auth-tabs button{padding-inline:7px}}
