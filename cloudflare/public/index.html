@@ -7,14 +7,18 @@
   <meta name="description" content="Create a memorable link with your own name. QR codes and optional automatic shortening with Zrain Links.">
   <title>Zrain Links — Create your own link</title>
   <link rel="icon" href="/zrain-logo.webp" type="image/webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/app.css?v=admin-20261026-1">
+  <link rel="stylesheet" href="/brand.css?v=zrain-shared-20261026-1">
   <script type="module" src="/app.js?v=admin-20261026-2"></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<header class="topbar">
-  <div class="container topbar-inner">
-    <a class="brand" href="/" aria-label="Zrain Links home"><img src="/zrain-logo.webp" class="brand-logo-image" alt="" width="40" height="40"><span><strong>Zrain</strong> Links</span></a>
+<header class="topbar zrain-header">
+  <div class="container topbar-inner zrain-header__inner">
+    <a class="brand zrain-brand" href="/" aria-label="Zrain Links home"><img src="/zrain-logo.webp" class="brand-logo-image zrain-brand__logo" alt="" width="42" height="42"><span class="zrain-brand__label"><strong>Zrain</strong><span class="zrain-brand__product">Links</span></span></a>
     <nav class="topnav" aria-label="Site navigation">
       <a class="current" href="#create">Create link</a>
       <a id="nav-my-links" href="#my-links" hidden>My links</a>
@@ -177,6 +181,17 @@
   <p class="dialog-note">Your account is used to keep your links together.</p>
 </dialog>
 <div id="toast" class="toast" hidden role="status" aria-live="polite"></div>
-<footer class="footer"><div class="container footer-inner"><div class="footer-brand"><span class="brand-icon">Z</span><span><strong>Developed by Zrain</strong><small>One ecosystem. Many useful tools.</small></span></div><div class="footer-links"><a href="mailto:zrain.dev@gmail.com">Contact</a><a href="https://github.com/zrain03/zrain-links" target="_blank" rel="noopener noreferrer">GitHub</a></div></div></footer>
+<footer class="footer zrain-footer">
+  <div class="container footer-inner zrain-footer__inner">
+    <div class="footer-brand zrain-footer__identity">
+      <img src="/zrain-logo.webp" class="brand-logo-image zrain-footer__logo" alt="" width="38" height="38">
+      <span class="zrain-footer__copy"><strong>Developed by Zrain</strong><small>One ecosystem. Many useful tools.</small></span>
+    </div>
+    <div class="footer-links zrain-footer__links">
+      <a href="mailto:zrain.dev@gmail.com">Contact</a>
+      <a href="https://github.com/zrain03/zrain-links" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </div>
+  </div>
+</footer>
 </body>
 </html>
