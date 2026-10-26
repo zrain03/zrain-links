@@ -108,7 +108,7 @@ public class ShortLinkService {
             URI uri = new URI(input.trim());
             String host = uri.getHost();
             if (!"https".equalsIgnoreCase(uri.getScheme()) || host == null || host.isBlank()
-                    || uri.getUserInfo() != null || uri.getFragment() != null
+                    || uri.getUserInfo() != null
                     || host.equalsIgnoreCase("localhost") || host.endsWith(".localhost")
                     || host.equals("0.0.0.0") || host.matches("[0-9.]+")
                     || host.indexOf(':') >= 0 || host.toLowerCase(Locale.ROOT).endsWith(".local")) {
