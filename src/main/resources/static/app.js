@@ -37,7 +37,15 @@
   function closeAuth() { if (modal.open) modal.close(); }
   function setMode(mode) {
     authMode = mode;
-    document.querySelectorAll("[data-auth-mode]").forEach(b => {
+    function updateAliasPreview() {
+    const alias = $("custom-alias").value.trim();
+    $("alias-preview").textContent = alias
+      ? "Preview: " + window.location.origin + "/" + alias
+      : "Leave blank to generate a random name.";
+  }
+  $("alias-prefix").textContent = window.location.host + " /";
+  $("custom-alias").addEventListener("input", updateAliasPreview);
+  document.querySelectorAll("[data-auth-mode]").forEach(b => {
       const active = b.dataset.authMode === mode;
       b.classList.toggle("active", active);
       b.setAttribute("aria-pressed", String(active));
@@ -75,22 +83,24 @@
       await refresh();
       if (pendingUrl !== null) {
         const target = pendingUrl; pendingUrl = null;
-        await createLink(target);
+        await createLink(target.url, target.alias);
       } else toast("Signed in successfully.");
     } catch (error) { note("form-message", error.message); }
     finally { button.disabled = false; }
   }
-  async function createLink(url) {
+  async function createLink(url, alias) {
     const button = $("shorten-button"); button.disabled = true; note("shorten-message", "");
     try {
       if (!/^https:\/\//i.test(url)) throw new Error("Please enter a link starting with https://");
-      const link = await api("/api/v1/links", { method: "POST", body: { destinationUrl: url } });
+      const link = await api("/api/v1/links", { method: "POST", body: { destinationUrl: url, customAlias: alias || null } });
       latestLink = link;
       $("result-url").textContent = link.shortUrl;
       $("result-url").href = link.shortUrl;
       $("result-destination").textContent = link.destinationUrl;
       show("latest-result", true);
       $("long-url").value = "";
+      $("custom-alias").value = "";
+      updateAliasPreview();
       await refresh();
       $("latest-result").scrollIntoView({ behavior: "smooth", block: "nearest" });
     } catch (error) { note("shorten-message", error.message); }
@@ -100,8 +110,10 @@
     event.preventDefault();
     const url = $("long-url").value.trim();
     if (!/^https:\/\//i.test(url)) { note("shorten-message", "Please paste a public HTTPS website link."); return; }
-    if (!token) { pendingUrl = url; openAuth(true); return; }
-    createLink(url);
+    const alias = $("custom-alias").value.trim();
+    if (alias && !/^[a-z0-9][a-z0-9-]{2,29}$/.test(alias)) { note("shorten-message", "Use 3–30 lowercase letters, numbers or hyphens for your custom name."); return; }
+    if (!token) { pendingUrl = { url, alias }; openAuth(true); return; }
+    createLink(url, alias);
   }
   function render() {
     $("total-links").textContent = String(links.length);
