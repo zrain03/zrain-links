@@ -164,7 +164,7 @@
     try {
       const response = await api("/api/v1/links/" + encodeURIComponent(link.id) + "/qr");
       const blob = await response.blob(), url = URL.createObjectURL(blob);
-      const anchor = document.createElement("a"); anchor.href = url; anchor.download = "zrain-links-" + link.code + ".png";
+      const anchor = document.createElement("a"); anchor.href = url; anchor.download = "zrain-links-" + link.code + ".svg";
       document.body.append(anchor); anchor.click(); anchor.remove(); window.setTimeout(() => URL.revokeObjectURL(url), 1500);
     } catch (error) { toast(error.message); }
   }
