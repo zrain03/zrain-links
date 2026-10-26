@@ -51,3 +51,49 @@ body{background:linear-gradient(180deg,#fffdfb,#fff7f2 70%,#fffaf6);color:var(--
 .forgot-link{display:block;border:0;background:transparent;color:#b74d32;font-size:12px;font-weight:700;margin:0 0 12px;padding:5px 0;text-decoration:underline;text-underline-offset:3px}.forgot-link:hover{color:#8d351f}.auth-divider{display:flex;align-items:center;gap:12px;margin:15px 0;color:#87909a;font-size:12px}.auth-divider::before,.auth-divider::after{content:"";flex:1;border-top:1px solid #eaded7}.google-button{display:flex;width:100%;justify-content:center;background:#fff;color:#293443;border:1px solid #d9dce1;font-size:13px}.google-button:hover{background:#f5f5f5}
 
 .connect-google-panel{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;border:1px solid #e8d7ca;background:#fff7f0;border-radius:12px;padding:14px 16px;margin:0 0 17px}.connect-google-panel strong{font-size:13px}.connect-google-panel p{margin:4px 0 0;font-size:11px;color:#73808b}.connect-google-panel .form-message{flex-basis:100%;margin:0}
+
+
+/* Authentication dialog: one unified, compact layout across browsers. */
+.auth-dialog{
+  width:min(460px,calc(100vw - 28px));
+  max-width:calc(100vw - 28px);
+  max-height:min(690px,calc(100dvh - 32px));
+  margin:auto;
+  padding:22px 26px 20px;
+  overflow-y:auto;
+  background:#fffdfb;
+  border:1px solid #eaded7;
+  border-radius:20px;
+  box-shadow:0 24px 65px rgba(27,39,53,.28);
+}
+.auth-dialog .dialog-top{align-items:center;min-height:30px}
+.auth-dialog .dialog-close{display:grid;place-items:center;width:32px;height:32px;padding:0;border-radius:8px;background:transparent;color:#677484;line-height:1}
+.auth-dialog h2{margin:10px 0 3px;font-size:23px;letter-spacing:-.6px;line-height:1.25}
+.auth-dialog>p{margin:0 0 12px;line-height:1.5}
+.auth-dialog .auth-tabs{margin:13px 0 14px}
+.auth-dialog .auth-tabs button{padding:9px 12px;font-size:13px}
+.auth-dialog form label{margin-bottom:5px;font-size:12px}
+.auth-dialog form input{height:42px;padding:9px 12px;margin-bottom:11px;border-radius:9px;background:white}
+.auth-dialog .password-row input{padding-right:65px}
+.auth-dialog .password-row button{top:5px;right:8px;border-radius:7px;background:transparent;height:31px}
+.auth-dialog .form-message{margin:4px 0 8px;line-height:1.4}
+.auth-dialog .form-message:empty{display:none}
+.auth-dialog .forgot-link{
+  display:block;appearance:none;width:max-content;max-width:100%;
+  margin:0 0 8px;padding:0;border:0;border-radius:0;background:transparent;
+  color:#ba4d34;font:700 12px/1.6 Inter,"Segoe UI",Arial,sans-serif;
+  text-decoration:underline;text-underline-offset:3px;
+}
+.auth-dialog .forgot-link:hover{color:#923720}
+.auth-dialog .auth-submit,.auth-dialog .google-button{width:100%;min-height:43px;font-size:13px}
+.auth-dialog .google-auth-section{width:100%}
+.auth-dialog .auth-divider{margin:11px 0;color:#81909b}
+.auth-dialog .google-button{display:flex;gap:11px;align-items:center;justify-content:center;background:#fff;border:1px solid #d8dce1;color:#253346;border-radius:9px}
+.auth-dialog .google-button:hover{background:#f6f7f8}
+.auth-dialog .google-g{font-family:Arial,sans-serif;font-size:18px;font-weight:800;color:#4285f4}
+.auth-dialog .dialog-note{margin:11px 0 0!important;font-size:10px!important}
+.auth-dialog .verify-panel{margin-top:12px}
+@media(max-width:540px){
+  .auth-dialog{width:calc(100vw - 20px);max-width:calc(100vw - 20px);max-height:calc(100dvh - 20px);padding:17px 19px;border-radius:16px}
+  .auth-dialog h2{font-size:21px}
+}
