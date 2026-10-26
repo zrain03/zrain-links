@@ -7,8 +7,8 @@
   <meta name="description" content="Create a memorable link with your own name. QR codes and optional automatic shortening with Zrain Links.">
   <title>Zrain Links — Create your own link</title>
   <link rel="icon" href="/zrain-logo.webp" type="image/webp">
-  <link rel="stylesheet" href="/app.css?v=auth-ui-20261026-2">
-  <script type="module" src="/app.js"></script>
+  <link rel="stylesheet" href="/app.css?v=auth-flow-20261026-3">
+  <script type="module" src="/app.js?v=auth-flow-20261026-3"></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -123,18 +123,35 @@
       <button id="switch-account" type="button">Use another account</button>
     </div>
   </section>
+  <section id="reset-password-panel" class="reset-password-panel" hidden aria-labelledby="reset-title">
+    <h3 id="reset-title">Reset your password</h3>
+    <p>Enter your account email. We'll send a link to create a new password.</p>
+    <form id="reset-password-form">
+      <label for="reset-email">Email address</label>
+      <input id="reset-email" type="email" autocomplete="email" maxlength="254" placeholder="you@example.com" required>
+      <p id="reset-message" class="form-message" role="status" aria-live="polite"></p>
+      <button id="reset-submit" class="button button-primary auth-submit" type="submit">Send reset link</button>
+    </form>
+    <button id="back-to-signin" type="button" class="back-to-signin">← Back to sign in</button>
+  </section>
   <div id="auth-tabs" class="auth-tabs"><button id="signin-tab" type="button" data-auth-mode="signin" class="active" aria-pressed="true">Sign in</button><button id="signup-tab" type="button" data-auth-mode="signup" aria-pressed="false">Create account</button></div>
   <form id="auth-form">
     <label for="email">Email address</label><input id="email" type="email" autocomplete="email" maxlength="254" placeholder="you@example.com" required>
     <label for="password">Password <small id="password-hint"></small></label>
     <div class="password-row"><input id="password" type="password" autocomplete="current-password" placeholder="Enter your password" required><button type="button" id="toggle-password" aria-label="Show password" aria-pressed="false">Show</button></div>
+    <div id="confirm-password-section" hidden>
+      <label for="confirm-password">Confirm password</label>
+      <input id="confirm-password" type="password" autocomplete="new-password" placeholder="Re-enter your password" disabled>
+    </div>
+    <div id="forgot-password-row" class="forgot-password-row"><button type="button" id="forgot-password" class="forgot-link">Forgot password?</button></div>
     <p id="form-message" class="form-message" role="status" aria-live="polite"></p>
-    <button type="button" id="forgot-password" class="forgot-link">Forgot password?</button>
     <button class="button button-primary auth-submit" type="submit" id="auth-submit">Sign in →</button>
   </form>
   <div id="google-auth-section" class="google-auth-section">
     <div class="auth-divider" aria-hidden="true"><span>or</span></div>
-    <button id="google-signin" type="button" class="button google-button"><span class="google-g" aria-hidden="true">G</span><span>Continue with Google</span></button>
+    <button id="google-signin" type="button" class="button google-button"><span class="google-g" aria-hidden="true">G</span><span id="google-label">Continue with Google</span></button>
+    <p id="google-message" class="form-message" role="status" aria-live="polite"></p>
+    <button id="google-redirect" type="button" class="google-redirect" hidden>Google popup not working? Continue in this tab</button>
   </div>
   <p class="dialog-note">Your account is used to keep your links together.</p>
 </dialog>
