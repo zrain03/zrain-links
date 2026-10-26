@@ -11,7 +11,7 @@ export function validateDestination(input) {
   let url;
   try { url = new URL(input.trim()); } catch { throw new Error("Enter a valid HTTPS URL."); }
   const host = url.hostname.toLowerCase();
-  if (url.protocol !== "https:" || !host || url.username || url.password || url.hash ||
+  if (url.protocol !== "https:" || !host || url.username || url.password ||
     (url.port && url.port !== "443") || host === "localhost" || host.endsWith(".localhost") ||
     host.endsWith(".local") || host.endsWith(".internal") || host.endsWith(".invalid") ||
     host.endsWith(".test") || host.endsWith(".example") || host.startsWith("[") ||
