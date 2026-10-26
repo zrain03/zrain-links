@@ -5,7 +5,7 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
   const $ = id => document.getElementById(id);
   const modal = $("auth-dialog");
   let token = null, email = null, authMode = "signin", links = [], pendingUrl = null, latestLink = null;
-  let firebaseAuth, firebaseMethods, currentUser;
+  let firebaseAuth, firebaseMethods, currentUser, firebaseInitError = null;
   const API = "https://zrain-links.zrain-dev.workers.dev";
   const PUBLIC_LINK_ORIGIN = "https://zrain-links.web.app";
   const PENDING_LINK_KEY = "zrain-links:pending-link";
@@ -101,7 +101,12 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
       }
     });
   }
-  setupFirebase().catch(error => { console.error("Firebase setup failed:", error.message); note("shorten-message", error.message); });
+  setupFirebase().catch(error => {
+    firebaseInitError = error.message || "Authentication could not start.";
+    console.error("Firebase setup failed:", firebaseInitError);
+    note("shorten-message", firebaseInitError);
+    note("google-message", "Sign-in is unavailable: " + firebaseInitError);
+  });
   const show = (id, yes) => { $(id).hidden = !yes; };
   const note = (id, text, success = false) => { const el = $(id); el.textContent = text; el.classList.toggle("ok", success); };
   function toast(text) {
@@ -195,13 +200,19 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
     $("password").minLength = signingIn ? 1 : 12;
     $("password-hint").textContent = signingIn ? "" : "(at least 12 characters)";
     show("forgot-password-row", signingIn);
+    show("signup-name-section", !signingIn);
+    show("password-guidance", !signingIn);
+    $("full-name").disabled = signingIn;
+    $("full-name").required = !signingIn;
     show("confirm-password-section", !signingIn);
     $("confirm-password").disabled = signingIn;
     $("confirm-password").required = !signingIn;
     $("confirm-password").value = "";
-    $("password").type = "password";
-    $("toggle-password").textContent = "Show";
-    $("toggle-password").setAttribute("aria-pressed","false");
+    for (const [fieldId, buttonId] of [["password", "toggle-password"], ["confirm-password", "toggle-confirm-password"]]) {
+      $(fieldId).type = "password";
+      $(buttonId).textContent = "Show";
+      $(buttonId).setAttribute("aria-pressed", "false");
+    }
     show("google-redirect", false);
     note("form-message", "");
     note("google-message", "");
@@ -219,12 +230,21 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
     try {
       if (!firebaseAuth || !firebaseMethods) throw new Error("Firebase is not ready. Refresh the page.");
       if (authMode === "signup") {
+        const fullName = $("full-name").value.trim().replace(/\s+/g, " ");
+        if (!fullName || fullName.length > 80) {
+          throw new Error("Enter your full name (up to 80 characters).");
+        }
+        if (password.length < 12) {
+          throw new Error("Use at least 12 characters for your password.");
+        }
         if (password !== $("confirm-password").value) {
           throw new Error("Passwords do not match. Please check both fields.");
         }
         const result = await firebaseMethods.createUserWithEmailAndPassword(firebaseAuth, accountEmail, password);
+        await firebaseMethods.updateProfile(result.user, { displayName: fullName });
         await firebaseMethods.sendEmailVerification(result.user);
         $("password").value = "";
+        $("confirm-password").value = "";
         verificationView(result.user);
         return;
       }
@@ -414,7 +434,7 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
       "auth/network-request-failed": "Network connection failed. Check your connection and try again.",
       "auth/operation-not-supported-in-this-environment": "Google popup sign-in is not supported in this browser. Use Continue in this tab below."
     };
-    return messages[error?.code] || "Unable to sign in with Google. Please try again, or sign in with email.";
+    return messages[error?.code] || (error?.message?.startsWith("Sign-in is unavailable:") || error?.message?.startsWith("Authentication is still loading.") ? error.message : "Unable to sign in with Google. Please try again, or sign in with email.");
   }
   $("google-signin").addEventListener("click", async () => {
     const button = $("google-signin");
@@ -423,7 +443,7 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
     note("google-message", "Opening Google's secure sign-in window…");
     show("google-redirect", false);
     try {
-      if (!firebaseAuth || !firebaseMethods) throw new Error("Firebase is not ready.");
+      if (!firebaseAuth || !firebaseMethods) throw new Error(firebaseInitError ? "Sign-in is unavailable: " + firebaseInitError : "Authentication is still loading. Please try again.");
       const provider = new firebaseMethods.GoogleAuthProvider();
       provider.setCustomParameters({prompt:"select_account"});
       const result = await firebaseMethods.signInWithPopup(firebaseAuth, provider);
@@ -487,12 +507,15 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
   $("header-signout").addEventListener("click", async () => { if (firebaseAuth) await firebaseMethods.signOut(firebaseAuth); signout(); toast("Signed out."); });
   $("close-auth").addEventListener("click", closeAuth);
   modal.addEventListener("click", e => { if (e.target === modal) closeAuth(); });
-  $("toggle-password").addEventListener("click", () => {
-    const field = $("password"), visible = field.type === "password";
+  function toggleVisibility(fieldId, buttonId) {
+    const field = $(fieldId), button = $(buttonId), visible = field.type === "password";
     field.type = visible ? "text" : "password";
-    $("toggle-password").textContent = visible ? "Hide" : "Show";
-    $("toggle-password").setAttribute("aria-pressed", String(visible));
-  });
+    button.textContent = visible ? "Hide" : "Show";
+    button.setAttribute("aria-pressed", String(visible));
+    button.setAttribute("aria-label", (visible ? "Hide" : "Show") + (fieldId === "confirm-password" ? " confirmation password" : " password"));
+  }
+  $("toggle-password").addEventListener("click", () => toggleVisibility("password", "toggle-password"));
+  $("toggle-confirm-password").addEventListener("click", () => toggleVisibility("confirm-password", "toggle-confirm-password"));
   $("auth-form").addEventListener("submit", submitAuth);
   $("shorten-form").addEventListener("submit", onShorten);
   $("refresh-links").addEventListener("click", refresh);
