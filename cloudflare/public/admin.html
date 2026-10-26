@@ -8,8 +8,8 @@
   <title>Admin Dashboard — Zrain Links</title>
   <link rel="icon" href="/zrain-logo.webp" type="image/webp">
   <link rel="stylesheet" href="/app.css?v=admin-20261026-1">
-  <link rel="stylesheet" href="/admin.css?v=admin-20261026-1">
-  <script type="module" src="/admin.js?v=admin-20261026-1"></script>
+  <link rel="stylesheet" href="/admin.css?v=admin-20261026-2">
+  <script type="module" src="/admin.js?v=admin-20261026-2"></script>
 </head>
 <body>
 <header class="topbar">
@@ -30,6 +30,14 @@
   </div>
   <p id="admin-status" class="admin-status" role="status" aria-live="polite">Checking administrator access…</p>
   <div id="admin-content" hidden>
+    <div id="admin-verification" class="admin-verification">
+      <div>
+        <strong><span aria-hidden="true">🔐</span> Confirm Google sign-in before deleting</strong>
+        <p>For security, deletions require a recent Google sign-in (within 15 minutes). This does not affect viewing data.</p>
+        <p id="reauth-message" class="admin-panel-message" role="status" aria-live="polite"></p>
+      </div>
+      <button id="reauth-google" type="button" class="button button-outline">Verify with Google</button>
+    </div>
     <section class="admin-stats" aria-label="Platform statistics">
       <article><span>Short links</span><strong id="metric-links">—</strong></article>
       <article><span>Total visits</span><strong id="metric-visits">—</strong></article>
