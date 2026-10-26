@@ -18,12 +18,12 @@ public class ShortLinkController {
 
     public ShortLinkController(ShortLinkService service) { this.service = service; }
 
-    public record CreateLinkRequest(@NotBlank @Size(max = 2048) String destinationUrl) {}
+    public record CreateLinkRequest(@NotBlank @Size(max = 2048) String destinationUrl, String customAlias) {}
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public LinkResponse create(@AuthenticationPrincipal Jwt jwt, @Valid @RequestBody CreateLinkRequest request) {
-        return service.create(UUID.fromString(jwt.getSubject()), request.destinationUrl());
+        return service.create(UUID.fromString(jwt.getSubject()), request.destinationUrl(), request.customAlias());
     }
 
     @GetMapping
