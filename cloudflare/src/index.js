@@ -79,7 +79,7 @@ function wrap(e) {
   if (e?.message && /valid|public|name|reserved|HTTPS|URL|short/i.test(e.message) && e instanceof Error && !/database|query|D1|internal/i.test(e.message))
     return error("VALIDATION_ERROR", e.message, 400);
   console.error("Unhandled request failure", e?.stack || String(e));
-  return error("SERVER_ERROR", "Request could not be completed.", 500);
+  return error("SERVER_ERROR", "A server error occurred. Check My links before trying again. If the problem continues, contact support.", 500);
 }
 function isAlias(path) { return /^\/[a-zA-Z0-9][a-zA-Z0-9-]{2,29}$/.test(path); }
 const reserved = new Set(["api","actuator","r","favicon","favicon.svg","app.css","app.js","index.html","robots.txt","sitemap.xml"]);
@@ -101,6 +101,13 @@ async function handleRequest(request, env) {
       if (method === "GET" && path === "/api/health") {
         await db.prepare("SELECT 1 AS ok").first();
         return json({ status: "ok" });
+      }
+      if (method === "GET" && path === "/api/v1/links/availability") {
+        await throttle(db, request, "alias-check", 120);
+        const code = validateAlias(url.searchParams.get("name"));
+        const taken = !!(await db.prepare("SELECT id FROM short_links WHERE code_lower = ?")
+          .bind(code.toLowerCase()).first());
+        return json({ name: code, available: !taken, shortUrl: PUBLIC_LINK_ORIGIN + "/" + code });
       }
       if (path.startsWith("/api/v1/")) {
         if (method === "POST" && path === "/api/v1/auth/register") {
@@ -134,13 +141,29 @@ async function handleRequest(request, env) {
           const user = await authUser(request,db);
           await throttle(db, request, "create", 50);
           const body = await readBody(request);
+          if (!body || typeof body !== "object" || Array.isArray(body))
+            return error("VALIDATION_ERROR", "Enter a destination URL and a valid link name.", 400);
           const destination = validateDestination(body.destinationUrl);
-          const custom = typeof body.customAlias === "string" && !!body.customAlias.trim();
+          const custom = body.customAlias != null && body.customAlias !== "";
+          if (custom && typeof body.customAlias !== "string")
+            return error("VALIDATION_ERROR", "Your link name must be text.", 400);
           const code = custom ? validateAlias(body.customAlias) : randomAlias();
-          if (await db.prepare("SELECT id FROM short_links WHERE code_lower = ?").bind(code.toLowerCase()).first()) return error("CONFLICT","This short name is already taken.",409);
-          const linkId=id(), stamp=now();
-          await db.prepare("INSERT INTO short_links (id,owner_id,code,code_lower,destination_url,created_at,click_count) VALUES (?,?,?,?,?,?,0)").bind(linkId,user.id,code,code.toLowerCase(),destination,stamp).run();
-          return json({id:linkId,code,destinationUrl:destination,shortUrl:getOrigin(request,env.PUBLIC_BASE_URL)+"/"+code,clickCount:0,createdAt:new Date(stamp*1000).toISOString()},201);
+          if (await db.prepare("SELECT id FROM short_links WHERE code_lower = ?").bind(code.toLowerCase()).first())
+            return error("ALIAS_TAKEN", "This link name is already taken. Choose another name.", 409);
+          const linkId = id(), stamp = now();
+          try {
+            await db.prepare("INSERT INTO short_links (id,owner_id,code,code_lower,destination_url,created_at,click_count) VALUES (?,?,?,?,?,?,0)")
+              .bind(linkId, user.id, code, code.toLowerCase(), destination, stamp).run();
+          } catch (e) {
+            if (/UNIQUE constraint/i.test(String(e?.message)))
+              return error("ALIAS_TAKEN", "This link name is already taken. Choose another name.", 409);
+            throw e;
+          }
+          return json({
+            id: linkId, code, destinationUrl: destination,
+            shortUrl: PUBLIC_LINK_ORIGIN + "/" + code,
+            clickCount: 0, createdAt: new Date(stamp * 1000).toISOString()
+          }, 201);
         }
         const del = path.match(/^\/api\/v1\/links\/([0-9a-f-]{36})$/);
         if (method === "DELETE" && del) {
