@@ -1,6 +1,6 @@
 package dev.zrain.authstarter.links;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,36 +11,43 @@ import java.security.SecureRandom;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
-import org.springframework.dao.DataIntegrityViolationException;
 
 @Service
 public class ShortLinkService {
     private static final String ALPHABET = "23456789abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ";
     private static final SecureRandom RANDOM = new SecureRandom();
     private final ShortLinkRepository links;
-    private final String baseUrl;
+    private final LinkDomains domains;
 
-    public ShortLinkService(ShortLinkRepository links, @Value("${zrain-links.base-url}") String baseUrl) {
+    public ShortLinkService(ShortLinkRepository links, LinkDomains domains) {
         this.links = links;
-        this.baseUrl = baseUrl.replaceAll("/+$", "");
+        this.domains = domains;
     }
 
-    @Transactional
     public LinkResponse create(UUID ownerId, String destinationUrl) {
-        return create(ownerId, destinationUrl, null);
+        return create(ownerId, destinationUrl, null, false);
     }
 
     public LinkResponse create(UUID ownerId, String destinationUrl, String alias) {
+        return create(ownerId, destinationUrl, alias, false);
+    }
+
+    @Transactional
+    public LinkResponse create(UUID ownerId, String destinationUrl, String alias, boolean useShortDomain) {
         String destination = validateDestination(destinationUrl);
+        if (useShortDomain && !domains.shorterAvailable()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The shorter domain is not available.");
+        }
+        String variant = useShortDomain ? "SHORT" : "PRIMARY";
         boolean custom = alias != null && !alias.isBlank();
         String code = custom ? validateAlias(alias) : randomCode();
         if (custom && links.existsByCodeIgnoreCase(code)) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "This custom name is already taken.");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "This link name is already taken.");
         }
         try {
-            return toResponse(links.saveAndFlush(new ShortLink(ownerId, code, destination)));
+            return toResponse(links.saveAndFlush(new ShortLink(ownerId, code, destination, variant)));
         } catch (DataIntegrityViolationException exception) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "This short name is already taken. Try another.");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "This link name is already taken. Try another.");
         }
     }
 
@@ -48,14 +55,13 @@ public class ShortLinkService {
         String alias = value.trim();
         if (!alias.matches("[a-z0-9][a-z0-9-]{2,29}") || alias.endsWith("-")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Use 3–30 lowercase letters, numbers or hyphens; no hyphen at the end.");
+                    "Use 3-30 lowercase letters, numbers or hyphens. No trailing hyphen.");
         }
-        if (List.of("api", "r", "admin", "login", "logout", "signup", "signin",
-                "register", "assets", "static", "docs", "swagger-ui", "actuator",
-                "favicon", "favicon.svg", "index", "index.html", "app", "app.js", "app.css",
-                "robots", "health", "help", "terms", "privacy", "dashboard",
-                "links", "my-links", "account", "settings", "support").contains(alias)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "That name is reserved.");
+        if (List.of("api","r","admin","auth","login","logout","signup","signin",
+                "register","assets","static","docs","swagger-ui","actuator",
+                "favicon","index","app","robots","health","help","terms","privacy",
+                "dashboard","links","my-links","account","settings","support").contains(alias)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This link name is reserved.");
         }
         return alias;
     }
@@ -74,15 +80,24 @@ public class ShortLinkService {
 
     @Transactional
     public String destinationAndCountClick(String code) {
+        return destinationAndCountClick(code, domains.primary());
+    }
+
+    @Transactional
+    public String destinationAndCountClick(String code, String requestHost) {
         ShortLink link = links.findByCode(code)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Link not found."));
+        if (!domains.matchesHost(link.getDomainVariant(), requestHost)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Link not found on this domain.");
+        }
         links.incrementClicks(link.getId());
         return link.getDestinationUrl();
     }
 
     private LinkResponse toResponse(ShortLink link) {
         return new LinkResponse(link.getId(), link.getCode(), link.getDestinationUrl(),
-                baseUrl + "/" + link.getCode(), link.getClickCount(), link.getCreatedAt());
+                domains.urlFor(link.getDomainVariant()) + "/" + link.getCode(),
+                link.getClickCount(), link.getCreatedAt());
     }
 
     static String validateDestination(String input) {
