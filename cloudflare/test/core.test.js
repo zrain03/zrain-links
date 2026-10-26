@@ -34,7 +34,7 @@ test("Malaysia creation time uses Asia/Kuala_Lumpur consistently", async () => {
   const {formatMalaysiaTime} = await import("../public/time-format.js");
   const output = formatMalaysiaTime("2026-10-26T05:00:00.000Z");
   assert.match(output, /26 Oct 2026/);
-  assert.match(output, /1:00 pm MYT/i);
+  assert.match(output, /1:00:00 pm MYT/i);
   assert.equal(formatMalaysiaTime("not-a-date"), "Creation time unavailable");
 });
 test("password recovery and Google authentication use Firebase SDK", async () => {
