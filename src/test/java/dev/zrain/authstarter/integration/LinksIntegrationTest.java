@@ -162,4 +162,21 @@ class LinksIntegrationTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    void preserveQueryStringAndFragmentInDestination() throws Exception {
+        String jwt = login("fullurl@example.com");
+        String destination = "https://zrain03.github.io/zrain-auth-starter/?utm_source=chatgpt.com#playground";
+        mvc.perform(post("/api/v1/links")
+                .header("Authorization", "Bearer " + jwt)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(
+                        java.util.Map.of("destinationUrl", destination, "customAlias", "fullurltest"))))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.destinationUrl").value(destination));
+
+        mvc.perform(get("/fullurltest"))
+                .andExpect(status().isFound())
+                .andExpect(header().string("Location", destination));
+    }
+
 }
