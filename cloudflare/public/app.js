@@ -57,7 +57,11 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
     show("header-signin", false);
     show("header-user", true);
     show("nav-my-links", true);
+    show("nav-admin", false);
     show("my-links", true);
+    api("/api/v1/admin/me").then(() => {
+      if (currentUser?.uid === user.uid) show("nav-admin", true);
+    }).catch(() => show("nav-admin", false));
     closeAuth();
     await refresh();
     if (pendingUrl) {
@@ -87,6 +91,7 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
         currentUser = null;
         show("my-links", false);
         show("nav-my-links", false);
+        show("nav-admin", false);
         show("header-signin", true);
         show("header-user", false);
         return;
@@ -221,7 +226,7 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
     token = null; email = null; currentUser = null; links = []; latestLink = null;
     show("connect-google-panel", false);
     $("password").value = "";
-    show("my-links", false); show("nav-my-links", false); show("header-signin", true); show("header-user", false); show("latest-result", false);
+    show("my-links", false); show("nav-my-links", false); show("nav-admin", false); show("header-signin", true); show("header-user", false); show("latest-result", false);
   }
   async function submitAuth(event) {
     event.preventDefault();
