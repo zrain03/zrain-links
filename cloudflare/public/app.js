@@ -71,6 +71,11 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
     firebaseMethods = await import("https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js");
     firebaseAuth = firebaseMethods.getAuth(app.initializeApp(config));
     await firebaseMethods.setPersistence(firebaseAuth, firebaseMethods.browserLocalPersistence);
+    firebaseMethods.getRedirectResult(firebaseAuth).catch(error => {
+      setMode("signin");
+      if (!modal.open) modal.showModal();
+      note("google-message", googleErrorMessage(error));
+    });
     firebaseMethods.onAuthStateChanged(firebaseAuth, async user => {
       if (!user) {
         currentUser = null;
@@ -392,51 +397,82 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
       note("connect-google-message", messages[error.code] || error.message || "Unable to connect Google. No links were changed.");
     } finally { button.disabled = false; }
   });
+  function googleErrorMessage(error) {
+    const messages = {
+      "auth/account-exists-with-different-credential": "An account with this email already uses another sign-in method. Sign in with that method first, then use Connect Google in My links to keep your existing links.",
+      "auth/popup-blocked": "Your browser blocked the Google window. Allow pop-ups or choose Continue in this tab below.",
+      "auth/popup-closed-by-user": "Google sign-in was cancelled. You can try again.",
+      "auth/operation-not-allowed": "Google sign-in has not been enabled in Firebase Authentication. Please contact Zrain support.",
+      "auth/unauthorized-domain": "Google sign-in is not authorized for this website domain. Please contact Zrain support.",
+      "auth/cancelled-popup-request": "Another Google window was opened. Please try again.",
+      "auth/network-request-failed": "Network connection failed. Check your connection and try again.",
+      "auth/operation-not-supported-in-this-environment": "Google popup sign-in is not supported in this browser. Use Continue in this tab below."
+    };
+    return messages[error?.code] || "Unable to sign in with Google. Please try again, or sign in with email.";
+  }
   $("google-signin").addEventListener("click", async () => {
     const button = $("google-signin");
     button.disabled = true;
-    note("form-message", "");
+    $("google-label").textContent = "Opening Google…";
+    note("google-message", "Opening Google's secure sign-in window…");
+    show("google-redirect", false);
     try {
-      if (!firebaseAuth || !firebaseMethods) throw new Error("Authentication is still loading. Try again.");
+      if (!firebaseAuth || !firebaseMethods) throw new Error("Firebase is not ready.");
       const provider = new firebaseMethods.GoogleAuthProvider();
-      provider.setCustomParameters({ prompt: "select_account" });
+      provider.setCustomParameters({prompt:"select_account"});
       const result = await firebaseMethods.signInWithPopup(firebaseAuth, provider);
-      if (!result.user.emailVerified) throw new Error("Please verify your Google email before continuing.");
+      if (!result.user.emailVerified) throw new Error("Email verification is required.");
       await signedIn(result.user);
     } catch (error) {
-      const known = {
-        "auth/account-exists-with-different-credential": "This email already has an account using a different sign-in method. Sign in with the original method first to keep access to existing links.",
-        "auth/popup-blocked": "Your browser blocked Google sign-in. Allow pop-ups and try again.",
-        "auth/popup-closed-by-user": "Google sign-in was cancelled.",
-        "auth/operation-not-allowed": "Google sign-in is not yet enabled for this application.",
-        "auth/unauthorized-domain": "This website domain is not authorized for Google sign-in.",
-        "auth/cancelled-popup-request": "Another sign-in window was opened. Try again."
-      };
-      note("form-message", known[error.code] || error.message || "Google sign-in failed. Please try again.");
-    } finally { button.disabled = false; }
-  });
-  $("forgot-password").addEventListener("click", async () => {
-    const address = $("email").value.trim();
-    if (!address || !$("email").checkValidity()) {
-      note("form-message", "Enter your email address above, then select Forgot password.");
-      $("email").focus();
-      return;
+      note("google-message", googleErrorMessage(error));
+      if (["auth/popup-blocked","auth/operation-not-supported-in-this-environment"].includes(error?.code)) {
+        show("google-redirect", true);
+      }
+    } finally {
+      button.disabled = false;
+      $("google-label").textContent = "Continue with Google";
     }
-    const button = $("forgot-password");
+  });
+  $("google-redirect").addEventListener("click", async () => {
+    const button = $("google-redirect");
     button.disabled = true;
+    note("google-message", "Redirecting to Google's sign-in page…");
     try {
-      if (!firebaseAuth || !firebaseMethods) throw new Error("Authentication is still loading.");
+      if (!firebaseAuth || !firebaseMethods) throw new Error("Firebase is not ready.");
+      const provider = new firebaseMethods.GoogleAuthProvider();
+      provider.setCustomParameters({prompt:"select_account"});
+      await firebaseMethods.signInWithRedirect(firebaseAuth, provider);
+    } catch (error) {
+      note("google-message", googleErrorMessage(error));
+      button.disabled = false;
+    }
+  });
+  $("forgot-password").addEventListener("click", () => resetPasswordView());
+  $("back-to-signin").addEventListener("click", () => setMode("signin"));
+  $("reset-password-form").addEventListener("submit", async event => {
+    event.preventDefault();
+    const address = $("reset-email").value.trim();
+    const button = $("reset-submit");
+    button.disabled = true;
+    button.textContent = "Sending…";
+    note("reset-message", "");
+    try {
+      if (!firebaseAuth || !firebaseMethods) throw new Error("Firebase is not ready.");
       await firebaseMethods.sendPasswordResetEmail(firebaseAuth, address);
-      note("form-message", "If an account can be recovered with this email, you'll receive reset instructions. Check your inbox and spam folder.", true);
+      note("reset-message",
+        "If this address belongs to an email/password account, you'll receive a reset link. Check your inbox and spam folder.", true);
     } catch (error) {
       if (error.code === "auth/too-many-requests") {
-        note("form-message", "Too many reset requests. Please try again later.");
+        note("reset-message", "Too many attempts. Please wait before requesting another email.");
       } else if (error.code === "auth/invalid-email") {
-        note("form-message", "Enter a valid email address.");
+        note("reset-message", "Please enter a valid email address.");
       } else {
-        note("form-message", "Password reset could not be requested right now. Try again later.");
+        note("reset-message", "Reset instructions could not be sent right now. Please try again later.");
       }
-    } finally { button.disabled = false; }
+    } finally {
+      button.disabled = false;
+      button.textContent = "Send reset link";
+    }
   });
   $("header-signin").addEventListener("click", () => openAuth(false));
   $("header-signout").addEventListener("click", async () => { if (firebaseAuth) await firebaseMethods.signOut(firebaseAuth); signout(); toast("Signed out."); });
