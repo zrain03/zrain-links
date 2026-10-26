@@ -26,3 +26,15 @@ server:
 
 zrain-links:
   base-url: ${ZRAIN_LINKS_BASE_URL}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+  health:
+    db:
+      enabled: true
