@@ -17,14 +17,19 @@ async function readConfirmation(request) {
   try { const parsed = JSON.parse(body); return typeof parsed?.confirm === "string" ? parsed.confirm : ""; }
   catch { return ""; }
 }
+function validFirebaseServiceAccount(env) {
+  try {
+    const creds = JSON.parse(env.FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON || "");
+    return creds?.type === "service_account" && creds.project_id === PROJECT &&
+      typeof creds.client_email === "string" && creds.client_email.length > 0 &&
+      typeof creds.private_key === "string" && creds.private_key.includes("BEGIN PRIVATE KEY");
+  } catch { return false; }
+}
 async function tokenForFirebase(env) {
-  if (!env.FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON) throw new Error("Firebase account management is not configured.");
-  let creds;
-  try { creds = JSON.parse(env.FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON); }
-  catch { throw new Error("Firebase service account configuration is invalid."); }
-  if (creds.project_id !== PROJECT || !creds.client_email || !creds.private_key) {
-    throw new Error("Firebase service account project does not match Zrain Links.");
+  if (!validFirebaseServiceAccount(env)) {
+    throw { status: 503, message: "Firebase management is not configured correctly. Upload a valid service-account JSON as the Cloudflare secret." };
   }
+  const creds = JSON.parse(env.FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON);
   const key = await importPKCS8(creds.private_key, "RS256");
   const assertion = await new SignJWT({ scope: "https://www.googleapis.com/auth/identitytoolkit" })
     .setProtectedHeader({ alg: "RS256", typ: "JWT" })
@@ -77,7 +82,7 @@ export async function handleAdmin(request, env, db) {
   const admin = authorized.payload;
 
   if (method === "GET" && path === "/api/v1/admin/me") {
-    return json({ admin: true, firebaseManagementConfigured: !!env.FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON });
+    return json({ admin: true, firebaseManagementConfigured: validFirebaseServiceAccount(env) });
   }
   if (method === "GET" && path === "/api/v1/admin/overview") {
     const [links, users] = await Promise.all([
@@ -103,7 +108,7 @@ export async function handleAdmin(request, env, db) {
   }
   const linkDelete = path.match(/^\/api\/v1\/admin\/links\/([0-9a-f-]{36})$/);
   if (method === "DELETE" && linkDelete) {
-    if (!recentAuth(admin)) return fail(403, "Sign out and sign in with Google again before deleting.");
+    if (!recentAuth(admin)) return fail(403, "Recent Google verification required. Click Verify with Google, then try again.");
     const record = await db.prepare("SELECT id, code FROM short_links WHERE id = ?").bind(linkDelete[1]).first();
     if (!record) return fail(404, "Link already deleted.");
     if (await readConfirmation(request) !== record.code) return fail(400, "Type the exact link name to confirm deletion.");
@@ -115,7 +120,7 @@ export async function handleAdmin(request, env, db) {
     return results[0]?.meta?.changes ? json({ deleted: true, code: record.code }) : fail(409, "Link changed. Refresh and try again.");
   }
   if (method === "GET" && path === "/api/v1/admin/users") {
-    if (!env.FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON) return fail(503, "Firebase account management is not configured.");
+    if (!validFirebaseServiceAccount(env)) return fail(503, "Firebase account management is not configured correctly. Upload a valid service-account JSON secret.");
     const params = new URL(request.url).searchParams;
     const pageToken = params.get("pageToken") || "";
     if (pageToken.length > 2048) return fail(400, "Invalid page token.");
@@ -147,11 +152,11 @@ export async function handleAdmin(request, env, db) {
   }
   const orphanDelete = path.match(/^\/api\/v1\/admin\/d1-accounts\/([^/]+)$/);
   if (method === "DELETE" && orphanDelete) {
-    if (!recentAuth(admin)) return fail(403, "Sign out and sign in with Google again before deleting.");
+    if (!recentAuth(admin)) return fail(403, "Recent Google verification required. Click Verify with Google, then try again.");
     const uid = decodeURIComponent(orphanDelete[1]);
     if (!validId(uid)) return fail(400, "Invalid user ID.");
     if (uid === env.ZRAIN_ADMIN_FIREBASE_UID) return fail(403, "Admin account is protected.");
-    if (!env.FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON) return fail(503, "Firebase account verification is not configured.");
+    if (!validFirebaseServiceAccount(env)) return fail(503, "Firebase account verification is not configured correctly. Upload a valid service-account JSON secret.");
     if (await readConfirmation(request) !== uid) return fail(400, "Type the exact UID to confirm.");
     const access = await tokenForFirebase(env);
     const info = await firebaseCall(access, "lookup", { method: "POST", body: { localId: [uid] } });
@@ -173,11 +178,11 @@ export async function handleAdmin(request, env, db) {
   }
   const userDelete = path.match(/^\/api\/v1\/admin\/users\/([^/]+)$/);
   if (method === "DELETE" && userDelete) {
-    if (!recentAuth(admin)) return fail(403, "Sign out and sign in with Google again before deleting.");
+    if (!recentAuth(admin)) return fail(403, "Recent Google verification required. Click Verify with Google, then try again.");
     const uid = decodeURIComponent(userDelete[1]);
     if (!validId(uid)) return fail(400, "Invalid Firebase UID.");
     if (uid === env.ZRAIN_ADMIN_FIREBASE_UID) return fail(403, "The only admin account cannot be deleted.");
-    if (!env.FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON) return fail(503, "Firebase account management is not configured.");
+    if (!validFirebaseServiceAccount(env)) return fail(503, "Firebase account management is not configured correctly. Upload a valid service-account JSON secret.");
     const access = await tokenForFirebase(env);
     const info = await firebaseCall(access, "lookup", { method: "POST", body: { localId: [uid] } });
     const target = (info.users || []).find(u => u.localId === uid);
