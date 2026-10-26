@@ -107,8 +107,12 @@ export async function handleAdmin(request, env, db) {
     const record = await db.prepare("SELECT id, code FROM short_links WHERE id = ?").bind(linkDelete[1]).first();
     if (!record) return fail(404, "Link already deleted.");
     if (await readConfirmation(request) !== record.code) return fail(400, "Type the exact link name to confirm deletion.");
-    const result = await db.prepare("DELETE FROM short_links WHERE id = ? RETURNING code").bind(record.id).first();
-    return result ? json({ deleted: true, code: result.code }) : fail(409, "Link changed. Refresh and try again.");
+    const results = await db.batch([
+      db.prepare("DELETE FROM short_links WHERE id = ?").bind(record.id),
+      db.prepare("INSERT INTO admin_events (id,admin_uid,action,target,created_at) VALUES (?,?,?,?,?)")
+        .bind(crypto.randomUUID(), admin.sub, "DELETE_LINK", record.code, Math.floor(Date.now() / 1000))
+    ]);
+    return results[0]?.meta?.changes ? json({ deleted: true, code: record.code }) : fail(409, "Link changed. Refresh and try again.");
   }
   if (method === "GET" && path === "/api/v1/admin/users") {
     if (!env.FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON) return fail(503, "Firebase account management is not configured.");
@@ -158,9 +162,12 @@ export async function handleAdmin(request, env, db) {
     const existing = await db.prepare("SELECT id FROM users WHERE id = ?").bind(ownerId).first();
     if (!existing) return fail(404, "D1 account record no longer exists.");
     await db.batch([
+      db.prepare("INSERT OR IGNORE INTO deleted_firebase_uids (uid, deleted_at) VALUES (?,?)").bind(uid, Math.floor(Date.now() / 1000)),
       db.prepare("DELETE FROM short_links WHERE owner_id = ?").bind(ownerId),
       db.prepare("DELETE FROM sessions WHERE user_id = ?").bind(ownerId),
-      db.prepare("DELETE FROM users WHERE id = ?").bind(ownerId)
+      db.prepare("DELETE FROM users WHERE id = ?").bind(ownerId),
+      db.prepare("INSERT INTO admin_events (id,admin_uid,action,target,created_at) VALUES (?,?,?,?,?)")
+        .bind(crypto.randomUUID(), admin.sub, "PURGE_ORPHAN", uid, Math.floor(Date.now() / 1000))
     ]);
     return json({ deleted: true });
   }
@@ -177,12 +184,21 @@ export async function handleAdmin(request, env, db) {
     if (!target) return fail(404, "Firebase user not found. Any orphaned links can still be deleted individually.");
     if ((target.email || "").toLowerCase() === ADMIN_EMAIL) return fail(403, "The admin email cannot be deleted.");
     if (await readConfirmation(request) !== target.email) return fail(400, "Type the exact account email to confirm deletion.");
-    await firebaseCall(access, "delete", { method: "POST", body: { localId: uid } });
+    const stamp = Math.floor(Date.now() / 1000);
+    await db.prepare("INSERT OR IGNORE INTO deleted_firebase_uids (uid,deleted_at) VALUES (?,?)").bind(uid, stamp).run();
+    try {
+      await firebaseCall(access, "delete", { method: "POST", body: { localId: uid } });
+    } catch (error) {
+      await db.prepare("DELETE FROM deleted_firebase_uids WHERE uid = ?").bind(uid).run();
+      throw error;
+    }
     const ownerId = "firebase:" + uid;
     await db.batch([
       db.prepare("DELETE FROM short_links WHERE owner_id = ?").bind(ownerId),
       db.prepare("DELETE FROM sessions WHERE user_id = ?").bind(ownerId),
-      db.prepare("DELETE FROM users WHERE id = ?").bind(ownerId)
+      db.prepare("DELETE FROM users WHERE id = ?").bind(ownerId),
+      db.prepare("INSERT INTO admin_events (id,admin_uid,action,target,created_at) VALUES (?,?,?,?,?)")
+        .bind(crypto.randomUUID(), admin.sub, "DELETE_USER", uid, stamp)
     ]);
     return json({ deleted: true });
   }
