@@ -9,19 +9,38 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
   const API = "https://zrain-links.zrain-dev.workers.dev";
   const PUBLIC_LINK_ORIGIN = "https://zrain-links.web.app";
   function publicShortUrl(link) { return PUBLIC_LINK_ORIGIN + "/" + encodeURIComponent(link.code); }
+  function authHeading(title, description) {
+    $("auth-title").textContent = title;
+    $("auth-caption").textContent = description;
+  }
   function verificationView(user) {
+    authHeading("Verify your email", "One quick step before you can save your links.");
     $("verify-email").textContent = user.email || "your email";
     show("verification-panel", true);
+    show("reset-password-panel", false);
     show("auth-tabs", false);
     show("auth-form", false);
+    show("google-auth-section", false);
     note("verification-message", "");
     if (!modal.open) modal.showModal();
   }
   function authFormView() {
     show("verification-panel", false);
+    show("reset-password-panel", false);
     show("auth-tabs", true);
     show("auth-form", true);
     show("google-auth-section", true);
+  }
+  function resetPasswordView() {
+    authHeading("Reset your password", "We'll email you a secure password reset link.");
+    show("verification-panel", false);
+    show("auth-tabs", false);
+    show("auth-form", false);
+    show("google-auth-section", false);
+    show("reset-password-panel", true);
+    $("reset-email").value = $("email").value.trim();
+    note("reset-message", "");
+    window.setTimeout(() => $("reset-email").focus({preventScroll:true}), 0);
   }
   async function signedIn(user) {
     currentUser = user;
@@ -101,7 +120,7 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
     return response.headers.get("content-type")?.includes("application/json") ? response.json() : response;
   }
   function openAuth(forShortening = false) {
-    authFormView();
+    setMode("signin");
     show("auth-context", forShortening);
     if (!modal.open) modal.showModal();
     window.setTimeout(() => $("email").focus({preventScroll:true}), 0);
@@ -151,18 +170,30 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
   $("custom-alias").addEventListener("input", () => { updateAliasPreview(); checkAliasAvailability(); });
   function setMode(mode) {
     authMode = mode;
-  document.querySelectorAll("[data-auth-mode]").forEach(b => {
-      const active = b.dataset.authMode === mode;
-      b.classList.toggle("active", active);
-      b.setAttribute("aria-pressed", String(active));
-    });
-    $("auth-submit").textContent = mode === "signin" ? "Sign in →" : "Create account →";
-    $("auth-caption").textContent = mode === "signin" ? "Sign in to create and manage your links." : "Create an account to save your links.";
-    $("password").autocomplete = mode === "signin" ? "current-password" : "new-password";
-    $("password").minLength = mode === "signin" ? 1 : 12;
-    $("password-hint").textContent = mode === "signin" ? "" : "(at least 12 characters)";
-    $("forgot-password").hidden = mode !== "signin";
+    authFormView();
+    for (const button of document.querySelectorAll("[data-auth-mode]")) {
+      const active = button.dataset.authMode === mode;
+      button.classList.toggle("active", active);
+      button.setAttribute("aria-pressed", String(active));
+    }
+    const signingIn = mode === "signin";
+    authHeading(signingIn ? "Welcome back" : "Create your account",
+      signingIn ? "Sign in to manage your links." : "Sign up to save and manage your links.");
+    $("auth-submit").textContent = signingIn ? "Sign in →" : "Create account →";
+    $("password").autocomplete = signingIn ? "current-password" : "new-password";
+    $("password").minLength = signingIn ? 1 : 12;
+    $("password-hint").textContent = signingIn ? "" : "(at least 12 characters)";
+    show("forgot-password-row", signingIn);
+    show("confirm-password-section", !signingIn);
+    $("confirm-password").disabled = signingIn;
+    $("confirm-password").required = !signingIn;
+    $("confirm-password").value = "";
+    $("password").type = "password";
+    $("toggle-password").textContent = "Show";
+    $("toggle-password").setAttribute("aria-pressed","false");
+    show("google-redirect", false);
     note("form-message", "");
+    note("google-message", "");
   }
   function signout() {
     token = null; email = null; currentUser = null; links = []; latestLink = null;
@@ -177,6 +208,9 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
     try {
       if (!firebaseAuth || !firebaseMethods) throw new Error("Firebase is not ready. Refresh the page.");
       if (authMode === "signup") {
+        if (password !== $("confirm-password").value) {
+          throw new Error("Passwords do not match. Please check both fields.");
+        }
         const result = await firebaseMethods.createUserWithEmailAndPassword(firebaseAuth, accountEmail, password);
         await firebaseMethods.sendEmailVerification(result.user);
         $("password").value = "";
