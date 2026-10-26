@@ -5,6 +5,8 @@
   let token = null, email = null, authMode = "signin", links = [], pendingUrl = null, latestLink = null;
   let firebaseAuth, firebaseMethods, currentUser;
   const API = "https://zrain-links.zrain-dev.workers.dev";
+  const PUBLIC_LINK_ORIGIN = "https://zrain-links.web.app";
+  function publicShortUrl(link) { return PUBLIC_LINK_ORIGIN + "/" + encodeURIComponent(link.code); }
   function verificationView(user) {
     $("verify-email").textContent = user.email || "your email";
     show("verification-panel", true);
@@ -179,7 +181,7 @@
       const link = await api("/api/v1/links", { method: "POST", body: { destinationUrl: url, customAlias: alias || null } });
       latestLink = link;
       $("result-url").textContent = publicLink(link);
-      $("result-url").href = link.shortUrl;
+      $("result-url").href = publicShortUrl(link);
       $("result-destination").textContent = link.destinationUrl;
       show("latest-result", true);
       $("long-url").value = "";
@@ -214,7 +216,7 @@
     for (const link of links) {
       const card = document.createElement("article"); card.className = "link-card";
       const body = document.createElement("div"); body.className = "link-core";
-      const anchor = document.createElement("a"); anchor.href = link.shortUrl; anchor.target = "_blank"; anchor.rel = "noopener noreferrer"; anchor.textContent = link.shortUrl;
+      const anchor = document.createElement("a"); anchor.href = publicShortUrl(link); anchor.target = "_blank"; anchor.rel = "noopener noreferrer"; anchor.textContent = publicShortUrl(link);
       const target = document.createElement("p"); target.className = "destination"; target.textContent = link.destinationUrl;
       const meta = document.createElement("div"); meta.className = "link-meta";
       const visits = document.createElement("span"); visits.textContent = (link.clickCount || 0) + " visits";
@@ -224,7 +226,7 @@
       function action(name, handler, extra = "") {
         const b = document.createElement("button"); b.type = "button"; b.textContent = name; b.className = extra; b.addEventListener("click", handler); actions.append(b);
       }
-      action("Copy", () => copyLink(link.shortUrl));
+      action("Copy", () => copyLink(publicShortUrl(link)));
       action("QR code", () => downloadQr(link));
       action("Delete", async () => {
         if (!window.confirm("Delete this short link? It will stop working.")) return;
@@ -288,7 +290,7 @@
   $("auth-form").addEventListener("submit", submitAuth);
   $("shorten-form").addEventListener("submit", onShorten);
   $("refresh-links").addEventListener("click", refresh);
-  $("result-copy").addEventListener("click", () => { if (latestLink) copyLink(latestLink.shortUrl); });
+  $("result-copy").addEventListener("click", () => { if (latestLink) copyLink(publicShortUrl(latestLink)); });
   $("result-qr").addEventListener("click", () => { if (latestLink) downloadQr(latestLink); });
   $("auto-shorten").addEventListener("change", updateAliasPreview);
   $("long-url").addEventListener("input", updateDestinationPreview);
