@@ -50,6 +50,7 @@ test("admin dashboard exposes safe link, Firebase user and orphan record workflo
   assert.match(ui, /confirm: typed/);
   assert.match(page, /id="reauth-google"/);
   assert.match(page, /id="reauth-message"/);
+  assert.match(page, /id="admin-config-warning"/);
   assert.match(ui, /reauthenticateWithPopup\(currentUser, provider\)/);
   assert.match(ui, /getIdToken\(true\)/);
   assert.match(ui, /time-format\.js\?v=myt-seconds-20261026-2/);
