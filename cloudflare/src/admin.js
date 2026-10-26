@@ -142,7 +142,7 @@ export async function handleAdmin(request, env, db) {
       "SELECT u.id, u.created_at, COUNT(l.id) AS link_count FROM users u LEFT JOIN short_links l ON l.owner_id = u.id WHERE u.id LIKE 'firebase:%' GROUP BY u.id ORDER BY u.created_at DESC LIMIT 200"
     ).all();
     return json({ accounts: (rows.results || []).map(row => ({
-      uid: row.id.slice("firebase:".length), createdAt: dateIso(row.created_at), linkCount: row.link_count
+      uid: row.id.slice("firebase:".length), isAdmin: row.id === "firebase:" + env.ZRAIN_ADMIN_FIREBASE_UID, createdAt: dateIso(row.created_at), linkCount: row.link_count
     })) });
   }
   const orphanDelete = path.match(/^\/api\/v1\/admin\/d1-accounts\/([^/]+)$/);
