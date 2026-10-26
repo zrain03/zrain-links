@@ -8,6 +8,12 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
   let firebaseAuth, firebaseMethods, currentUser;
   const API = "https://zrain-links.zrain-dev.workers.dev";
   const PUBLIC_LINK_ORIGIN = "https://zrain-links.web.app";
+  const PENDING_LINK_KEY = "zrain-links:pending-link";
+  try {
+    const queued = sessionStorage.getItem(PENDING_LINK_KEY);
+    if (queued) pendingUrl = JSON.parse(queued);
+    sessionStorage.removeItem(PENDING_LINK_KEY);
+  } catch { /* Private browsing can disable session storage. */ }
   function publicShortUrl(link) { return PUBLIC_LINK_ORIGIN + "/" + encodeURIComponent(link.code); }
   function authHeading(title, description) {
     $("auth-title").textContent = title;
@@ -441,6 +447,9 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
       if (!firebaseAuth || !firebaseMethods) throw new Error("Firebase is not ready.");
       const provider = new firebaseMethods.GoogleAuthProvider();
       provider.setCustomParameters({prompt:"select_account"});
+      try {
+        if (pendingUrl) sessionStorage.setItem(PENDING_LINK_KEY, JSON.stringify(pendingUrl));
+      } catch { /* Continue without preserving a pending link. */ }
       await firebaseMethods.signInWithRedirect(firebaseAuth, provider);
     } catch (error) {
       note("google-message", googleErrorMessage(error));
