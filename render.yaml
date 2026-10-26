@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: zrain-links
+    runtime: docker
+    plan: free
+    branch: feature/links-foundation
+    dockerfilePath: ./Dockerfile
+    autoDeployTrigger: off
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: ZRAIN_JWT_SECRET_BASE64
+        generateValue: true
+      - key: DB_JDBC_URL
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: ZRAIN_LINKS_BASE_URL
+        sync: false
