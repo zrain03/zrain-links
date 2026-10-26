@@ -25,5 +25,5 @@ springdoc:
   swagger-ui:
     enabled: true
 
-  links:
-    base-url: ${ZRAIN_LINKS_BASE_URL:http://localhost:8080}
+zrain-links:
+  base-url: ${ZRAIN_LINKS_BASE_URL:http://localhost:8080}
