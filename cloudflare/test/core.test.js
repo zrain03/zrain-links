@@ -29,3 +29,18 @@ test("link creation uses canonical domain and never calls the removed origin hel
   assert.match(worker, /"ALIAS_TAKEN"/);
   assert.match(worker, /\/api\/v1\/links\/availability/);
 });
+
+test("Malaysia creation time uses Asia/Kuala_Lumpur consistently", async () => {
+  const {formatMalaysiaTime} = await import("../public/time-format.js");
+  const output = formatMalaysiaTime("2026-10-26T05:00:00.000Z");
+  assert.match(output, /26 Oct 2026/);
+  assert.match(output, /1:00 pm MYT/i);
+  assert.equal(formatMalaysiaTime("not-a-date"), "Creation time unavailable");
+});
+test("password recovery and Google authentication use Firebase SDK", async () => {
+  const fs = await import("node:fs/promises");
+  const script = await fs.readFile(new URL("../public/app.js", import.meta.url), "utf8");
+  assert.match(script, /sendPasswordResetEmail\(firebaseAuth, address\)/);
+  assert.match(script, /signInWithPopup\(firebaseAuth, provider\)/);
+  assert.match(script, /formatMalaysiaTime\(link.createdAt\)/);
+});
