@@ -88,8 +88,10 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
     if (!response.ok) {
       let reason = "";
       try { reason = (await response.json()).message || ""; } catch {}
-      if (response.status === 401 && auth) throw new Error(reason || "Please verify your email and sign in again.");
-      throw new Error(reason || "Request failed (" + response.status + ").");
+      const failure = new Error(reason || "Request failed (" + response.status + ").");
+      failure.status = response.status;
+      if (response.status === 401 && auth) failure.message = reason || "Please verify your email and sign in again.";
+      throw failure;
     }
     if (response.status === 204) return null;
     return response.headers.get("content-type")?.includes("application/json") ? response.json() : response;
@@ -123,6 +125,7 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
         input.value = suggestion;
         note("shorten-message", "");
         updateAliasPreview();
+        checkAliasAvailability();
         input.focus();
       });
       buttons.append(button);
@@ -141,7 +144,7 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
     $("preview-destination").textContent = url || "Add a destination URL";
   }
   
-  $("custom-alias").addEventListener("input", updateAliasPreview);
+  $("custom-alias").addEventListener("input", () => { updateAliasPreview(); checkAliasAvailability(); });
   function setMode(mode) {
     authMode = mode;
   document.querySelectorAll("[data-auth-mode]").forEach(b => {
@@ -208,8 +211,39 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
       updateAliasPreview();
       await refresh();
       $("latest-result").scrollIntoView({ behavior: "smooth", block: "nearest" });
-    } catch (error) { note("shorten-message", error.message); }
-    finally { button.disabled = false; }
+    } catch (error) {
+      note("shorten-message", explainApiError(error));
+      if (error?.status === 409) checkAliasAvailability();
+    } finally { button.disabled = false; }
+  }
+  function explainApiError(error) {
+    if (error?.status === 409) return "This link name is already taken. Please choose a different name.";
+    if (error?.status === 429) return "Too many requests. Please try again later.";
+    if (error?.status === 401) return "Please sign in again, then create your link.";
+    if (error?.status === 400) return error.message || "Check the URL and link name.";
+    return error?.message || "Something went wrong. Check My links before trying again.";
+  }
+  let availabilityTimer = null, availabilitySequence = 0;
+  async function checkAliasAvailability() {
+    const sequence = ++availabilitySequence;
+    clearTimeout(availabilityTimer);
+    const alias = $("custom-alias").value.trim();
+    const status = $("alias-availability");
+    status.textContent = "";
+    status.classList.remove("ok");
+    if (autoMode() || !isValidAlias(alias)) return;
+    status.textContent = "Checking name availability…";
+    availabilityTimer = setTimeout(async () => {
+      try {
+        const response = await api("/api/v1/links/availability?name=" + encodeURIComponent(alias), {auth:false});
+        if (sequence !== availabilitySequence || $("custom-alias").value.trim() !== alias) return;
+        status.textContent = response.available ? "✓ This name is available." : "This name is already taken. Please choose another.";
+        status.classList.toggle("ok", !!response.available);
+      } catch (error) {
+        if (sequence !== availabilitySequence) return;
+        status.textContent = "Could not check availability right now. You can still try creating the link.";
+      }
+    }, 450);
   }
   function onShorten(event) {
     event.preventDefault();
@@ -309,7 +343,7 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
   $("refresh-links").addEventListener("click", refresh);
   $("result-copy").addEventListener("click", () => { if (latestLink) copyLink(publicShortUrl(latestLink)); });
   $("result-qr").addEventListener("click", () => { if (latestLink) downloadQr(latestLink); });
-  $("auto-shorten").addEventListener("change", updateAliasPreview);
+  $("auto-shorten").addEventListener("change", () => { updateAliasPreview(); checkAliasAvailability(); });
   $("long-url").addEventListener("input", updateDestinationPreview);
   updateAliasPreview();
   updateDestinationPreview();
