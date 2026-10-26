@@ -112,4 +112,35 @@ class LinksIntegrationTest {
 
         mvc.perform(get("/r/missing00")).andExpect(status().isNotFound());
     }
+    @Test
+    void customNameIsAvailableAtRootAndLegacyRedirectStillWorks() throws Exception {
+        String jwt = login("alias@example.com");
+        String body = mvc.perform(post("/api/v1/links")
+                .header("Authorization", "Bearer " + jwt)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"destinationUrl\":\"https://example.com/hello\",\"customAlias\":\"randomgenerator\"}"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.shortUrl").value("http://localhost:8080/randomgenerator"))
+                .andReturn().getResponse().getContentAsString();
+
+        String code = mapper.readTree(body).get("code").stringValue();
+        mvc.perform(get("/" + code))
+                .andExpect(status().isFound())
+                .andExpect(header().string("Location", "https://example.com/hello"));
+        mvc.perform(get("/r/" + code))
+                .andExpect(status().isFound());
+
+        mvc.perform(post("/api/v1/links")
+                .header("Authorization", "Bearer " + jwt)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"destinationUrl\":\"https://example.com/other\",\"customAlias\":\"randomgenerator\"}"))
+                .andExpect(status().isConflict());
+
+        mvc.perform(post("/api/v1/links")
+                .header("Authorization", "Bearer " + jwt)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"destinationUrl\":\"https://example.com/other\",\"customAlias\":\"api\"}"))
+                .andExpect(status().isBadRequest());
+    }
+
 }
