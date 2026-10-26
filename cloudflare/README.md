@@ -59,3 +59,22 @@ npm audit
 ```
 
 The smoke script uses a newly generated fictional account and checks register, login, auth, unsafe URL rejection, custom aliases, redirect, visit counter, QR and deletion. The script runs **only against local Wrangler/D1** and does not affect the already migrated remote database. Do not deploy publicly unless all checks pass and the vulnerability findings have been reviewed. The cloud-hosted password hashing cost must be validated against Workers Free limits before production.
+
+## Optional shorter Pages address
+
+Cloudflare Workers always includes the account subdomain. A Pages project named `zrain-links`, if available, can instead use `https://zrain-links.pages.dev`. This does **not** shorten existing Workers links; it introduces a new host. Before switching, verify redirects and avoid deleting the old Worker, or old links may break.
+
+From the `cloudflare` folder:
+
+```powershell
+npm install
+npm run build:pages
+npx wrangler pages project create zrain-links
+npx wrangler pages deploy dist-pages --project-name zrain-links
+```
+
+**Important:** The Pages project also requires a separate D1 binding named `DB`, connected to the existing `zrain-links-db` database, in **Workers & Pages → zrain-links → Settings → Bindings → Add D1**. Do not create a new database. The Pages app is not fully functional until that binding is available and the Pages deployment has been refreshed. Never delete existing Workers URLs during this transition.
+
+## Debug live signup
+
+If the live website shows `Request could not be completed` during signup, run `npx wrangler tail zrain-links --format pretty` in one PowerShell terminal and reproduce registration with a **fresh test account** in another browser tab. The server log should expose the actual error, without needing to send passwords or authentication tokens. Do not log user-submitted passwords. The free Workers plan has strict per-request CPU limits, which may affect PBKDF2 hashing. Do not weaken password hashing as a workaround.
