@@ -143,4 +143,23 @@ class LinksIntegrationTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    void domainOptionsDescribeOnlyConfiguredDomains() throws Exception {
+        mvc.perform(get("/api/v1/links/domains"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.primary").value("http://localhost:8080"))
+                .andExpect(jsonPath("$.shortAvailable").value(false))
+                .andExpect(jsonPath("$.shortDomain").value(""));
+    }
+
+    @Test
+    void preventSelectingUnconfiguredShortDomain() throws Exception {
+        String jwt = login("shortdomain@example.com");
+        mvc.perform(post("/api/v1/links")
+                .header("Authorization", "Bearer " + jwt)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"destinationUrl\":\"https://example.com/page\",\"useShortDomain\":true}"))
+                .andExpect(status().isBadRequest());
+    }
+
 }
