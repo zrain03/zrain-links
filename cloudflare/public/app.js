@@ -35,9 +35,7 @@
     window.setTimeout(() => $("email").focus(), 0);
   }
   function closeAuth() { if (modal.open) modal.close(); }
-  function setMode(mode) {
-    authMode = mode;
-    function updateAliasPreview() {
+  function updateAliasPreview() {
     const alias = $("custom-alias").value.trim();
     $("alias-preview").textContent = alias
       ? "Preview: " + window.location.origin + "/" + alias
@@ -45,6 +43,8 @@
   }
   $("alias-prefix").textContent = window.location.host + " /";
   $("custom-alias").addEventListener("input", updateAliasPreview);
+  function setMode(mode) {
+    authMode = mode;
   document.querySelectorAll("[data-auth-mode]").forEach(b => {
       const active = b.dataset.authMode === mode;
       b.classList.toggle("active", active);
