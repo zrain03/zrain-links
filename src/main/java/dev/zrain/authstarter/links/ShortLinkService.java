@@ -80,7 +80,7 @@ public class ShortLinkService {
 
     @Transactional
     public String destinationAndCountClick(String code) {
-        return destinationAndCountClick(code, domains.primary());
+        return destinationAndCountClick(code, URI.create(domains.primary()).getHost());
     }
 
     @Transactional
