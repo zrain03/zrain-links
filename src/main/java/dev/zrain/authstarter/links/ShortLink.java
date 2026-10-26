@@ -11,7 +11,7 @@ public class ShortLink {
     private UUID id;
     @Column(name = "owner_id", nullable = false)
     private UUID ownerId;
-    @Column(nullable = false, unique = true, length = 16)
+    @Column(nullable = false, unique = true, length = 30)
     private String code;
     @Column(name = "destination_url", nullable = false, length = 2048)
     private String destinationUrl;
