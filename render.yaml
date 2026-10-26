@@ -10,7 +10,7 @@ services:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
       - key: ZRAIN_JWT_SECRET_BASE64
-        generateValue: true
+        sync: false
       - key: DB_JDBC_URL
         sync: false
       - key: DB_USERNAME
