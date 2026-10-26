@@ -49,6 +49,25 @@ test("existing link details persist if Google popup requires explicit redirect",
 
 test("auth resources have a coordinated cache-busting revision", async () => {
   const html = await read("../public/index.html");
-  assert.match(html, /app\.css\?v=auth-flow-20261026-3/);
-  assert.match(html, /app\.js\?v=auth-flow-20261026-3/);
+  assert.match(html, /app\.css\?v=auth-standard-20261026-4/);
+  assert.match(html, /app\.js\?v=auth-standard-20261026-4/);
+});
+
+test("registration includes a real name, password confirmation and a separate recovery path", async () => {
+  const [html,script] = await Promise.all([read("../public/index.html"),read("../public/app.js")]);
+  assert.match(html, /id="full-name"[^>]*autocomplete="name"/);
+  assert.match(html, /id="confirm-password"[^>]*autocomplete="new-password"/);
+  assert.match(html, /id="toggle-confirm-password"/);
+  assert.match(script, /show\("signup-name-section", !signingIn\)/);
+  assert.match(script, /\$\("full-name"\)\.required = !signingIn/);
+  assert.match(script, /updateProfile\(result\.user, \{ displayName: fullName \}\)/);
+  assert.match(script, /sendEmailVerification\(result\.user\)/);
+});
+
+test("Google button uses the full-color standard G on a neutral surface", async () => {
+  const [html,css] = await Promise.all([read("../public/index.html"),read("../public/app.css")]);
+  for (const color of ["#EA4335","#4285F4","#FBBC05","#34A853"]) assert.ok(html.includes(color));
+  assert.match(html,/class="google-icon"/);
+  assert.doesNotMatch(html,/class="google-g"/);
+  assert.match(css,/\.auth-dialog \.google-button\{[\s\S]*?background:#fff;color:#1f1f1f/);
 });
