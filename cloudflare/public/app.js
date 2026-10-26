@@ -1,3 +1,4 @@
+import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
 "use strict";
 (() => {
   const $ = id => document.getElementById(id);
@@ -110,6 +111,23 @@
     input.required = !automatic;
     $("alias-fieldset").classList.toggle("is-automatic", automatic);
     const name = input.value.trim();
+    const options = !automatic && name && !isValidAlias(name) ? aliasSuggestions(name) : [];
+    const suggestions = $("alias-suggestions"), buttons = $("alias-suggestion-buttons");
+    buttons.replaceChildren();
+    for (const suggestion of options) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "alias-choice";
+      button.textContent = suggestion;
+      button.addEventListener("click", () => {
+        input.value = suggestion;
+        note("shorten-message", "");
+        updateAliasPreview();
+        input.focus();
+      });
+      buttons.append(button);
+    }
+    suggestions.hidden = options.length === 0;
     const domain = window.location.origin;
     $("alias-prefix").textContent = new URL(domain).host + "/";
     $("preview-url").textContent = new URL(domain).host + "/" + (automatic ? "aB7k9Q2" : (name || "your-name"));
@@ -198,11 +216,10 @@
     const url = $("long-url").value.trim();
     if (!/^https:\/\//i.test(url)) { note("shorten-message", "Please paste a public HTTPS website link."); return; }
     const alias = autoMode() ? "" : $("custom-alias").value.trim();
-    if (!autoMode() && !/^[a-z0-9][a-z0-9-]{2,29}$/.test(alias)) { note("shorten-message", "Choose a link name with 3–30 lowercase letters, numbers or hyphens, or tick automatic shortening."); return; }
+    if (!autoMode() && !isValidAlias(alias)) { note("shorten-message", "Choose a valid name below, or use 3–30 lowercase letters, numbers or hyphens."); updateAliasPreview(); $("custom-alias").focus(); return; }
     if (!currentUser) { pendingUrl = { url, alias }; openAuth(true); return; }
     createLink(url, alias);
   }
-  const publicLink = link => "https://zrain-links.web.app/" + link.code;
   function render() {
     $("total-links").textContent = String(links.length);
     $("total-clicks").textContent = links.reduce((sum, l) => sum + (l.clickCount || 0), 0).toLocaleString();
