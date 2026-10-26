@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#f6f8f7">
+  <meta name="theme-color" content="#fffaf6">
   <meta name="description" content="Create a memorable link with your own name. QR codes and optional automatic shortening with Zrain Links.">
   <title>Zrain Links — Create your own link</title>
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/zrain-logo.webp" type="image/webp">
   <link rel="stylesheet" href="/app.css">
   <script src="/app.js" defer></script>
 </head>
@@ -14,7 +14,7 @@
 <a class="skip" href="#main">Skip to content</a>
 <header class="topbar">
   <div class="container topbar-inner">
-    <a class="brand" href="/" aria-label="Zrain Links home"><span class="brand-icon">Z</span><span>Zrain <b>Links</b></span></a>
+    <a class="brand" href="/" aria-label="Zrain Links home"><img src="/zrain-logo.webp" class="brand-logo-image" alt="" width="40" height="40"><span><strong>Zrain</strong> Links</span></a>
     <nav class="topnav" aria-label="Site navigation">
       <a class="current" href="#create">Create link</a>
       <a id="nav-my-links" href="#my-links" hidden>My links</a>
@@ -26,14 +26,15 @@
   </div>
 </header>
 <main id="main" class="container">
+<div class="zrain-hero-layout">
   <section id="create" class="page-intro">
-    <div class="intro-copy"><p class="eyebrow">YOUR LINK WORKSPACE</p><h1>Create a link</h1><p>Choose the name people will see when you share your link.</p></div>
-    <div class="intro-note"><span class="note-icon" aria-hidden="true">↗</span><span><strong>Make links your own</strong><small>Create, copy, share and track in one place.</small></span></div>
+    <div class="intro-copy"><p class="eyebrow">✦ CUSTOM LINKS, YOUR WAY</p><h1>Create a clean link<br><em>you control.</em></h1><p>Give every link a memorable name of your own. Automatic shortening is optional — you decide how you share.</p><a class="button button-primary hero-start" href="#long-url">Create a link <span aria-hidden="true">→</span></a><div class="hero-points"><span>✓ Your custom name</span><span>✓ QR sharing</span><span>✓ Visit counts</span></div></div>
+    
   </section>
 
   <div class="editor-grid">
     <section class="editor-card" aria-labelledby="editor-heading">
-      <div class="card-heading"><div><span class="card-kicker">NEW LINK</span><h2 id="editor-heading">Link details</h2></div><span class="step-pill">2 fields</span></div>
+      <div class="card-heading"><div><span class="card-kicker">LINK WORKSPACE</span><h2 id="editor-heading">Create link</h2></div><span class="step-pill">2 fields</span></div>
       <form id="shorten-form" novalidate>
         <div class="field-block">
           <label for="long-url">1. Destination URL <span class="required-star">*</span></label>
@@ -80,6 +81,16 @@
     </aside>
   </div>
 
+</div>
+<section class="zrain-feature-grid" aria-label="What Zrain Links can do">
+  <article><span class="feature-icon coral">⌁</span><h3>Custom names</h3><p>Pick a name that feels like yours and is easy to remember.</p></article>
+  <article><span class="feature-icon orange">↗</span><h3>Optional shortening</h3><p>Need something shorter? Turn on automatic link naming.</p></article>
+  <article><span class="feature-icon blue">▦</span><h3>QR codes</h3><p>Download a QR code for the link you have created.</p></article>
+  <article><span class="feature-icon blue">⧉</span><h3>Copy &amp; share</h3><p>Copy a link in a click and share it anywhere.</p></article>
+  <article><span class="feature-icon orange">▥</span><h3>Visit counts</h3><p>See how many times someone has opened each link.</p></article>
+  <article><span class="feature-icon coral">✦</span><h3>Your collection</h3><p>Keep all your links together and manage them yourself.</p></article>
+</section>
+<section class="zrain-steps" aria-label="How it works"><strong>HOW IT WORKS</strong><span><b>1</b> Paste destination</span><span class="separator">→</span><span><b>2</b> Choose your name</span><span class="separator">→</span><span><b>3</b> Create &amp; share</span></section>
   <section id="latest-result" class="result-card" hidden aria-labelledby="result-heading">
     <div class="result-heading"><span class="result-check" aria-hidden="true">✓</span><div><h2 id="result-heading">Your link is ready</h2><p>Copy it or download a QR code to share it.</p></div></div>
     <a id="result-url" class="result-url" href="#" target="_blank" rel="noopener noreferrer"></a>
@@ -96,7 +107,7 @@
 </main>
 
 <dialog id="auth-dialog" class="auth-dialog" aria-labelledby="auth-title">
-  <div class="dialog-top"><span class="brand-icon" aria-hidden="true">Z</span><button type="button" id="close-auth" class="dialog-close" aria-label="Close sign in">×</button></div>
+  <div class="dialog-top"><img src="/zrain-logo.webp" class="brand-logo-image" alt="" width="38" height="38"><button type="button" id="close-auth" class="dialog-close" aria-label="Close sign in">×</button></div>
   <h2 id="auth-title">Welcome to Zrain Links</h2><p id="auth-caption">Sign in to create and manage links.</p>
   <p id="auth-context" class="auth-context" hidden>Your link details are saved in this form. Sign in or create an account to continue.</p>
   <section id="verification-panel" class="verify-panel" hidden aria-labelledby="verify-title">
