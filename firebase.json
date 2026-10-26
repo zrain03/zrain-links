@@ -8,7 +8,7 @@
     ],
     "redirects": [
       {
-        "regex": "^/(?P<code>[a-z0-9][a-z0-9-]{2,29})$",
+        "regex": "^/(?P<code>[A-Za-z0-9][A-Za-z0-9-]{2,29})$",
         "destination": "https://zrain-links.zrain-dev.workers.dev/:code",
         "type": 302
       }
