@@ -1,7 +1,6 @@
 package dev.zrain.authstarter.links;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,15 +27,8 @@ public class ShortLinkService {
     @Transactional
     public LinkResponse create(UUID ownerId, String destinationUrl) {
         String destination = validateDestination(destinationUrl);
-        for (int attempt = 0; attempt < 8; attempt++) {
-            String code = randomCode();
-            try {
-                return toResponse(links.saveAndFlush(new ShortLink(ownerId, code, destination)));
-            } catch (DataIntegrityViolationException ex) {
-                if (links.findByCode(code).isEmpty()) throw ex;
-            }
-        }
-        throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Could not generate a unique link.");
+        String code = randomCode();
+        return toResponse(links.saveAndFlush(new ShortLink(ownerId, code, destination)));
     }
 
     @Transactional(readOnly = true)
