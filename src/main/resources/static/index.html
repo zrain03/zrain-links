@@ -34,7 +34,7 @@
     <section class="hero shell" aria-labelledby="page-title">
       <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span> SIMPLE LINK SHORTENER</p>
       <h1 id="page-title">Shorten a link.<br><em>Share it anywhere.</em></h1>
-      <p class="hero-description">Paste a URL, choose an optional short name, and share your new link or QR code.</p>
+      <p class="hero-description">Paste a URL, choose a link name if you like, then copy or share it.</p>
 
       <div class="shorten-card" id="shorten">
         <form id="shorten-form">
@@ -48,7 +48,14 @@
               Shorten link <span aria-hidden="true">→</span>
             </button>
           </div>
-          <div class="custom-name"><label for="custom-alias">Custom link name <span>(optional)</span></label><div class="alias-line"><span id="alias-prefix">Your short URL /</span><input id="custom-alias" type="text" maxlength="30" autocomplete="off" spellcheck="false" placeholder="e.g. randomgenerator" pattern="[a-z0-9][a-z0-9-]{2,29}"></div><p id="alias-preview" class="form-help">Leave blank to generate a random name.</p></div><p id="shorten-help" class="form-help">Only public links starting with <strong>https://</strong> are supported. Sign in to create and save your links.</p>
+          <div class="custom-name"><label for="custom-alias">Custom link name <span>(optional)</span></label><div class="alias-line"><span id="alias-prefix">Your short URL /</span><input id="custom-alias" type="text" maxlength="30" autocomplete="off" spellcheck="false" placeholder="e.g. randomgenerator" pattern="[a-z0-9][a-z0-9-]{2,29}"></div><p id="alias-preview" class="form-help">Leave blank to generate a random name.</p></div>
+            <div class="domain-option" id="domain-option" hidden>
+              <label class="domain-checkbox" for="use-short-domain">
+                <input id="use-short-domain" type="checkbox">
+                <span>Use a shorter link domain</span>
+              </label>
+            </div>
+            <p id="domain-hint" class="form-help" aria-live="polite">Checking available link domains…</p><p id="shorten-help" class="form-help">Only public links starting with <strong>https://</strong> are supported. Sign in to create and save your links.</p>
           <p id="shorten-message" class="form-message" role="status" aria-live="polite"></p>
         </form>
       </div>
