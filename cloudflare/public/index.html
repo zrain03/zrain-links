@@ -128,8 +128,11 @@
     <label for="password">Password <small id="password-hint"></small></label>
     <div class="password-row"><input id="password" type="password" autocomplete="current-password" placeholder="Enter your password" required><button type="button" id="toggle-password" aria-label="Show password" aria-pressed="false">Show</button></div>
     <p id="form-message" class="form-message" role="status" aria-live="polite"></p>
+    <button type="button" id="forgot-password" class="forgot-link">Forgot password?</button>
     <button class="button button-primary auth-submit" type="submit" id="auth-submit">Sign in →</button>
   </form>
+  <div class="auth-divider"><span>or</span></div>
+  <button id="google-signin" type="button" class="button google-button">Continue with Google</button>
   <p class="dialog-note">Your account is used to keep your links together.</p>
 </dialog>
 <div id="toast" class="toast" hidden role="status" aria-live="polite"></div>
