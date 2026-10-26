@@ -26,6 +26,7 @@ server:
 
 zrain-links:
   base-url: ${ZRAIN_LINKS_BASE_URL}
+  short-base-url: ${ZRAIN_LINKS_SHORT_BASE_URL:}
 
 management:
   endpoints:
