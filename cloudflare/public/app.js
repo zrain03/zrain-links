@@ -26,6 +26,8 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
     currentUser = user;
     email = user.email;
     $("header-email").textContent = email;
+    show("connect-google-panel", !user.providerData.some(provider => provider.providerId === "google.com"));
+    note("connect-google-message", "");
     show("header-signin", false);
     show("header-user", true);
     show("nav-my-links", true);
@@ -163,6 +165,7 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
   }
   function signout() {
     token = null; email = null; currentUser = null; links = []; latestLink = null;
+    show("connect-google-panel", false);
     $("password").value = "";
     show("my-links", false); show("nav-my-links", false); show("header-signin", true); show("header-user", false); show("latest-result", false);
   }
@@ -329,6 +332,30 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
     await firebaseMethods.signOut(firebaseAuth);
     authFormView();
     setMode("signin");
+  });
+  $("connect-google").addEventListener("click", async () => {
+    const button = $("connect-google");
+    button.disabled = true;
+    note("connect-google-message", "");
+    try {
+      if (!firebaseAuth?.currentUser || !firebaseMethods) throw new Error("Please sign in first.");
+      const provider = new firebaseMethods.GoogleAuthProvider();
+      provider.setCustomParameters({prompt:"select_account"});
+      const linked = await firebaseMethods.linkWithPopup(firebaseAuth.currentUser, provider);
+      await linked.user.getIdToken(true);
+      show("connect-google-panel", false);
+      toast("Google connected to your existing account.");
+    } catch (error) {
+      const messages = {
+        "auth/credential-already-in-use": "That Google account belongs to another user. Nothing was changed.",
+        "auth/email-already-in-use": "That Google email is already used by another account. Nothing was changed.",
+        "auth/provider-already-linked": "Google is already connected.",
+        "auth/popup-blocked": "Allow pop-ups and try again.",
+        "auth/popup-closed-by-user": "Google linking was cancelled.",
+        "auth/operation-not-allowed": "Enable the Google provider in Firebase Authentication first."
+      };
+      note("connect-google-message", messages[error.code] || error.message || "Unable to connect Google. No links were changed.");
+    } finally { button.disabled = false; }
   });
   $("google-signin").addEventListener("click", async () => {
     const button = $("google-signin");
