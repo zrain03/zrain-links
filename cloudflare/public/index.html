@@ -7,8 +7,8 @@
   <meta name="description" content="Create a memorable link with your own name. QR codes and optional automatic shortening with Zrain Links.">
   <title>Zrain Links — Create your own link</title>
   <link rel="icon" href="/zrain-logo.webp" type="image/webp">
-  <link rel="stylesheet" href="/app.css?v=auth-flow-20261026-3">
-  <script type="module" src="/app.js?v=auth-flow-20261026-3"></script>
+  <link rel="stylesheet" href="/app.css?v=auth-standard-20261026-4">
+  <script type="module" src="/app.js?v=auth-standard-20261026-4"></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -136,20 +136,40 @@
   </section>
   <div id="auth-tabs" class="auth-tabs"><button id="signin-tab" type="button" data-auth-mode="signin" class="active" aria-pressed="true">Sign in</button><button id="signup-tab" type="button" data-auth-mode="signup" aria-pressed="false">Create account</button></div>
   <form id="auth-form">
-    <label for="email">Email address</label><input id="email" type="email" autocomplete="email" maxlength="254" placeholder="you@example.com" required>
+    <div id="signup-name-section" hidden>
+      <label for="full-name">Full name</label>
+      <input id="full-name" type="text" name="name" autocomplete="name" maxlength="80" placeholder="Your full name" disabled>
+    </div>
+    <label for="email">Email address</label>
+    <input id="email" type="email" name="email" autocomplete="email" maxlength="254" placeholder="you@example.com" required>
     <label for="password">Password <small id="password-hint"></small></label>
-    <div class="password-row"><input id="password" type="password" autocomplete="current-password" placeholder="Enter your password" required><button type="button" id="toggle-password" aria-label="Show password" aria-pressed="false">Show</button></div>
+    <div class="password-row">
+      <input id="password" type="password" name="password" autocomplete="current-password" placeholder="Enter your password" required>
+      <button type="button" id="toggle-password" aria-label="Show password" aria-pressed="false">Show</button>
+    </div>
+    <p id="password-guidance" class="auth-help" hidden>Use at least 12 characters. A longer, unique password is more secure.</p>
     <div id="confirm-password-section" hidden>
       <label for="confirm-password">Confirm password</label>
-      <input id="confirm-password" type="password" autocomplete="new-password" placeholder="Re-enter your password" disabled>
+      <div class="password-row">
+        <input id="confirm-password" type="password" autocomplete="new-password" placeholder="Re-enter your password" disabled>
+        <button type="button" id="toggle-confirm-password" aria-label="Show confirmation password" aria-pressed="false">Show</button>
+      </div>
     </div>
     <div id="forgot-password-row" class="forgot-password-row"><button type="button" id="forgot-password" class="forgot-link">Forgot password?</button></div>
     <p id="form-message" class="form-message" role="status" aria-live="polite"></p>
     <button class="button button-primary auth-submit" type="submit" id="auth-submit">Sign in →</button>
   </form>
   <div id="google-auth-section" class="google-auth-section">
-    <div class="auth-divider" aria-hidden="true"><span>or</span></div>
-    <button id="google-signin" type="button" class="button google-button"><span class="google-g" aria-hidden="true">G</span><span id="google-label">Continue with Google</span></button>
+    <div class="auth-divider" aria-hidden="true"><span>or continue with</span></div>
+    <button id="google-signin" type="button" class="button google-button">
+      <svg class="google-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="20" height="20" aria-hidden="true" focusable="false">
+        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.3 5.48-4.87 7.18l7.73 6C44.31 38.03 46.98 31.88 46.98 24.55z"/>
+        <path fill="#FBBC05" d="M10.53 28.59A14.41 14.41 0 0 1 9.75 24c0-1.59.27-3.13.76-4.59l-7.98-6.2A23.87 23.87 0 0 0 0 24c0 3.87.93 7.51 2.56 10.78l7.97-6.19z"/>
+        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.91-5.8l-7.73-6c-2.15 1.45-4.92 2.3-8.18 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+      </svg>
+      <span id="google-label">Continue with Google</span>
+    </button>
     <p id="google-message" class="form-message" role="status" aria-live="polite"></p>
     <button id="google-redirect" type="button" class="google-redirect" hidden>Google popup not working? Continue in this tab</button>
   </div>
