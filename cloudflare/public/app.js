@@ -1,4 +1,4 @@
-import { formatMalaysiaTime } from "./time-format.js";
+import { formatMalaysiaTime } from "./time-format.js?v=myt-seconds-20261026-2";
 import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
 "use strict";
 (() => {
