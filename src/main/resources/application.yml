@@ -1,6 +1,6 @@
 spring:
   application:
-    name: zrain-auth-starter
+    name: zrain-links
   profiles:
     default: local
   jpa:
@@ -12,8 +12,8 @@ spring:
 zrain:
   jwt:
     secret-base64: ${ZRAIN_JWT_SECRET_BASE64:}
-    issuer: ${ZRAIN_JWT_ISSUER:zrain-auth-starter}
-    audience: ${ZRAIN_JWT_AUDIENCE:zrain-auth-starter-api}
+    issuer: ${ZRAIN_JWT_ISSUER:zrain-links}
+    audience: ${ZRAIN_JWT_AUDIENCE:zrain-links-api}
     access-minutes: ${ZRAIN_JWT_ACCESS_MINUTES:15}
 
 server:
@@ -24,3 +24,6 @@ server:
 springdoc:
   swagger-ui:
     enabled: true
+
+zrain-links:
+  base-url: ${ZRAIN_LINKS_BASE_URL:http://localhost:8080}

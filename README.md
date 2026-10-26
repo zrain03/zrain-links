@@ -1,99 +1,56 @@
-# Zrain Auth Starter
+# Zrain Links
 
-A reusable **Java 21 / Spring Boot 4.1.2** authentication foundation with Spring Security, registration, password hashing, JWT, role-based authorization, H2, Swagger, Maven Wrapper and automated tests.
+A new Spring Boot URL-shortening project built from the independently maintained [Zrain Auth Starter](https://github.com/zrain03/zrain-auth-starter).
 
-**[Explore the public website and browser-only playground](https://zrain03.github.io/zrain-auth-starter/)** (website requires GitHub Pages to be enabled once).
+## Current development status
+A **work-in-progress backend slice** is being reviewed in the `feature/links-foundation` branch. It is not yet a finished product, and the new link features are **not yet verified by the Maven build**.
 
-> **Important:** This repository is a self-hosted **starter template**, not a shared hosted identity provider. The website playground is a JavaScript simulation: **no real accounts, credentials, server sessions, or signed JWTs** are created. Hosted authentication for third-party apps would require a separate OAuth 2.0 / OpenID Connect authorization server with appropriate security and operations.
+### Implemented on the development branch
+- Reused register/login and JWT authorization from the starter (existing core previously verified in its original repository).
+- Authenticated `POST /api/v1/links`: create a random short code or specify an optional `customAlias` (3–30 lowercase letters, digits, hyphens). Existing aliases and reserved paths are rejected.
+- Authenticated `GET /api/v1/links`: list the requesting account's links and click counts.
+- Authenticated `DELETE /api/v1/links/{id}`: delete only the requesting account's links.
+- Public `GET /{code}`: redirect and increment aggregate clicks. Legacy `GET /r/{code}` remains operational.
+- Authenticated `GET /api/v1/links/{id}/qr`: output the current owner's QR code as PNG.
+- Added integration tests for these behaviors (pending CI validation).
 
-## Requirements
+### Web interface
+A new responsive **Spring Boot-served frontend** lives at `src/main/resources/static/`: `index.html`, `app.css`, `app.js` and `favicon.svg`. It connects to real REST endpoints on the **same origin**, provides registration/login, account-specific short links, QR PNG downloads, visit counts and link deletion.
 
-- JDK **21**
-- Git (to clone locally)
-- Internet access the first time Maven Wrapper downloads Maven and dependencies
+The browser access token currently stays **only in memory**, not in localStorage; the user must sign in again after reloading. Do not deploy publicly until token/session UX, account recovery, abuse protection, safe redirect operations and deployment policy have been reviewed.
 
-You **do not need to install Maven globally**. Maven Wrapper scripts are included.
+### Database profiles
+- `local` and `test`: ephemeral H2 schema, Flyway disabled.
+- `prod`: PostgreSQL required via `DB_JDBC_URL`, `DB_USERNAME`, `DB_PASSWORD`, with Flyway migration `V1__create_users_and_links.sql` and schema validation.
+- Set `ZRAIN_LINKS_BASE_URL` to the externally accessible application origin so short links and QR codes use the correct hostname.
+- The PostgreSQL profile and migration are **not yet demonstrated against a deployed PostgreSQL instance**.
 
-## Get started on Windows (PowerShell)
+### Custom names and domains
+Use `POST /api/v1/links` with `{"destinationUrl":"https://example.com/page","customAlias":"randomgenerator"}` to create an example short URL such as `http://localhost:8081/randomgenerator`. Omitting `customAlias` produces a random name. The platform domain comes from `ZRAIN_LINKS_BASE_URL` and is controlled by the **operator**, not by arbitrary visitors.
 
-1. Click **Use this template** on GitHub and clone your new repository.
-2. In the cloned repository, create a fresh local signing secret for this PowerShell session:
+**Custom domain support is not live yet.** A user-owned domain (for example `go.example.com`) requires proof of ownership, DNS configuration, HTTPS certificates, verified host-based routing and domain lifecycle management. The app must never redirect using an unverified request Host header. Do not advertise user-supplied domains as operational until these safeguards and hosting are implemented and tested.
+
+### Next development work
+1. Confirm CI for the latest frontend, migration and configuration changes; review failures before merge.
+2. Replace the copied Auth Starter package names, documentation, static sample site and app icon with Zrain Links branding.
+3. Add persistent PostgreSQL schema migrations and separate development/test/production profiles. **H2 local is temporary and loses data on restart.**
+4. Security review: redirect abuse, phishing reports, URL/domain controls, abuse throttling, CSRF/CORS, account recovery and token lifecycle.
+5. Extend the working frontend with accessible notifications, richer analytics, user onboarding and admin moderation tools.
+6. Production deployment with secure signing secrets, domain/TLS, backups, logging, uptime monitoring, and a clear privacy policy.
+
+### Local build (after cloning the development branch)
 
 ```powershell
-$bytes = [byte[]]::new(32)
-$rng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
-try { $rng.GetBytes($bytes) } finally { $rng.Dispose() }
-$env:ZRAIN_JWT_SECRET_BASE64 = [Convert]::ToBase64String($bytes)
-$env:SPRING_PROFILES_ACTIVE = "local"
-```
-
-3. Build, test and start the API:
-
-```powershell
+git switch feature/links-foundation
 .\mvnw.cmd clean verify
-.\mvnw.cmd spring-boot:run
 ```
 
-4. Open **http://localhost:8080/swagger-ui.html**.
+Configure `ZRAIN_JWT_SECRET_BASE64` as a random base64 secret of at least 32 bytes before running the API. See the original Auth Starter README for the local key generator. The environment variable `ZRAIN_LINKS_BASE_URL` controls the public short-URL origin; its default is `http://localhost:8080`.
 
-On macOS/Linux, use `./mvnw clean verify` and `./mvnw spring-boot:run`, and export your secret securely.
+Do not deploy the current development branch publicly as a finished link shortening service. Zrain Auth Starter remains independent and unchanged.
 
-## Endpoints
-
-| Method | Path | Access |
-|---|---|---|
-| POST | `/api/v1/auth/register` | Public |
-| POST | `/api/v1/auth/login` | Public |
-| GET | `/api/v1/users/me` | JWT |
-| GET | `/api/v1/demo/public` | Public |
-| GET | `/api/v1/demo/protected` | JWT |
-| GET | `/api/v1/demo/admin` | ADMIN JWT |
-
-New registrations receive the `USER` role. Tokens default to 15 minutes.
-
-## Example API requests (PowerShell)
-
-```powershell
-$base = "http://localhost:8080"
-$body = @{ email="alex@example.com"; password="A-Unique-Test-Passphrase-123!" } | ConvertTo-Json
-Invoke-RestMethod "$base/api/v1/auth/register" -Method Post -ContentType "application/json" -Body $body
-$login = Invoke-RestMethod "$base/api/v1/auth/login" -Method Post -ContentType "application/json" -Body $body
-Invoke-RestMethod "$base/api/v1/users/me" -Headers @{ Authorization = "Bearer $($login.accessToken)" }
-```
-
-Avoid publishing real access tokens, passwords, signing keys or screenshots containing them.
-
-## Verification
-
-- **20 automated tests** passed locally on 26 October 2026 (0 failures, 0 errors). The previously confirmed GitHub Actions run passed **15 tests**; CI results for the five additional tests have not yet been independently confirmed.
-- Manually verified register 201, login 200, current-user 200, forbidden admin 403, and five negative API scenarios.
-- Run `.\mvnw.cmd clean verify` (Windows) or `./mvnw clean verify` (macOS/Linux) to repeat the build.
-
-A passing build does not establish full code coverage or a complete security assessment.
-
-## Website and deployment
-
-The responsive website lives in **`docs/index.html`**, `docs/site.css`, and `docs/site.js`. It is a **static website** and can run without a Spring Boot server.
-
-To publish it on GitHub Pages:
-
-1. Open repository **Settings → Pages**.
-2. Under **Build and deployment**, choose **Deploy from a branch**.
-3. Select **`main`**, directory **`/docs`**, and **Save**.
-4. When deployment reports success, open **https://zrain03.github.io/zrain-auth-starter/**.
-
-The playground intentionally simulates registration, login, user-profile access and admin authorization **entirely within the browser**. Its token is a nonfunctional marker (`SIMULATED.NOT_A_REAL_JWT.NOT_SIGNED`). Do not use it to authenticate real users or connect it to production credentials.
-
-GitHub Pages hosts **only the static frontend**. A real shared online identity provider requires a separate hosted backend with durable storage and substantial security controls.
-
-## Reusing the template
-
-Before using this as an application backend, change the application/package identifiers, issuer and audience, generate a unique signing key, replace in-memory H2 with durable storage and migrations, and review product-specific auth, CSRF/CORS, rate limiting, email verification, account recovery, session/token revocation, audit logging and deployment configuration.
-
-Do **not** share the same HS256 signing secret across applications. Do **not** present this simple REST login implementation as a multi-tenant OAuth/OIDC identity provider.
-
-See [Architecture](docs/ARCHITECTURE.md), [Security & limitations](docs/SECURITY.md), and [Release status & Zrain Links integration checklist](docs/RELEASE_STATUS.md).
-
-## License
-
-[MIT License](LICENSE). Developed by Zrain. Support: zrain.dev@gmail.com.
+### Public release blockers
+- Restrict phishing, malicious links and abusive usage; create reporting/moderation controls and apply rate limits.
+- Verify PostgreSQL/Flyway integration, backups, HTTPS and the target cloud deployment.
+- Review cross-user isolation, redirects and frontend security with tests and perform a manual end-to-end browser test.
+- The starter's documentation site copied in `/docs` is not the active Zrain Links frontend; do not publish it as the Links website.
