@@ -25,3 +25,6 @@ jobs:
 
       - name: Build and test
         run: ./mvnw -B clean verify
+
+      - name: Test Cloudflare link validation
+        run: node --test cloudflare/test/*.test.js
