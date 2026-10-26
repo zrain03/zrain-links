@@ -11,5 +11,5 @@ run_worker_first = true
 [[d1_databases]]
 binding = "DB"
 database_name = "zrain-links-db"
-database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+database_id = "3ea6ed8a-e6f9-4199-a13b-fab44876dbf9"
 migrations_dir = "migrations"
