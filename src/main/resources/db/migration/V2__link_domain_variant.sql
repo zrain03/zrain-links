@@ -1,0 +1,1 @@
+ALTER TABLE short_links ADD COLUMN domain_variant VARCHAR(10) NOT NULL DEFAULT 'PRIMARY';
