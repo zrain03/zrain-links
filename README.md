@@ -7,10 +7,10 @@ A **work-in-progress backend slice** is being reviewed in the `feature/links-fou
 
 ### Implemented on the development branch
 - Reused register/login and JWT authorization from the starter (existing core previously verified in its original repository).
-- Authenticated `POST /api/v1/links`: create a random nine-character short code pointing to an HTTPS URL.
+- Authenticated `POST /api/v1/links`: create a random short code or specify an optional `customAlias` (3–30 lowercase letters, digits, hyphens). Existing aliases and reserved paths are rejected.
 - Authenticated `GET /api/v1/links`: list the requesting account's links and click counts.
 - Authenticated `DELETE /api/v1/links/{id}`: delete only the requesting account's links.
-- Public `GET /r/{code}`: redirect and increment a basic aggregate click counter.
+- Public `GET /{code}`: redirect and increment aggregate clicks. Legacy `GET /r/{code}` remains operational.
 - Authenticated `GET /api/v1/links/{id}/qr`: output the current owner's QR code as PNG.
 - Added integration tests for these behaviors (pending CI validation).
 
@@ -24,6 +24,11 @@ The browser access token currently stays **only in memory**, not in localStorage
 - `prod`: PostgreSQL required via `DB_JDBC_URL`, `DB_USERNAME`, `DB_PASSWORD`, with Flyway migration `V1__create_users_and_links.sql` and schema validation.
 - Set `ZRAIN_LINKS_BASE_URL` to the externally accessible application origin so short links and QR codes use the correct hostname.
 - The PostgreSQL profile and migration are **not yet demonstrated against a deployed PostgreSQL instance**.
+
+### Custom names and domains
+Use `POST /api/v1/links` with `{"destinationUrl":"https://example.com/page","customAlias":"randomgenerator"}` to create an example short URL such as `http://localhost:8081/randomgenerator`. Omitting `customAlias` produces a random name. The platform domain comes from `ZRAIN_LINKS_BASE_URL` and is controlled by the **operator**, not by arbitrary visitors.
+
+**Custom domain support is not live yet.** A user-owned domain (for example `go.example.com`) requires proof of ownership, DNS configuration, HTTPS certificates, verified host-based routing and domain lifecycle management. The app must never redirect using an unverified request Host header. Do not advertise user-supplied domains as operational until these safeguards and hosting are implemented and tested.
 
 ### Next development work
 1. Confirm CI for the latest frontend, migration and configuration changes; review failures before merge.
