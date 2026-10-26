@@ -38,3 +38,24 @@ npm test
 npx wrangler d1 migrations apply zrain-links-db --local
 npm run dev
 ```
+
+## End-to-end local smoke test before public release
+
+Open two PowerShell terminals. In terminal A:
+
+```powershell
+cd "$HOME\Downloads\zrain-links\cloudflare"
+npx wrangler d1 migrations apply zrain-links-db --local
+npx wrangler dev --local
+```
+
+In terminal B:
+
+```powershell
+cd "$HOME\Downloads\zrain-links\cloudflare"
+node test/smoke.mjs
+npm audit --omit=dev
+npm audit
+```
+
+The smoke script uses a newly generated fictional account and checks register, login, auth, unsafe URL rejection, custom aliases, redirect, visit counter, QR and deletion. The script runs **only against local Wrangler/D1** and does not affect the already migrated remote database. Do not deploy publicly unless all checks pass and the vulnerability findings have been reviewed. The cloud-hosted password hashing cost must be validated against Workers Free limits before production.
