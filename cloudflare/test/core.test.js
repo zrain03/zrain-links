@@ -20,3 +20,12 @@ test("suggests safe names for human-entered titles", async () => {
   assert.equal(isValidAlias("Guess The Flag"), false);
   assert.deepEqual(aliasSuggestions("API"), []);
 });
+
+test("link creation uses canonical domain and never calls the removed origin helper", async () => {
+  const fs = await import("node:fs/promises");
+  const worker = await fs.readFile(new URL("../src/index.js", import.meta.url), "utf8");
+  assert.match(worker, /shortUrl: PUBLIC_LINK_ORIGIN \+ "\/" \+ code/);
+  assert.doesNotMatch(worker, /getOrigin\(request,\s*env\.PUBLIC_BASE_URL\)/);
+  assert.match(worker, /"ALIAS_TAKEN"/);
+  assert.match(worker, /\/api\/v1\/links\/availability/);
+});
