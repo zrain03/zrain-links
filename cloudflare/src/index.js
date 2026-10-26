@@ -1,6 +1,14 @@
 import { getOrigin, randomAlias, validateAlias, validateDestination } from "./core.js";
 import { renderSVG } from "uqr";
+import { createRemoteJWKSet, jwtVerify } from "jose";
 
+const FIREBASE_PROJECT = "zrain-links";
+const firebaseKeys = createRemoteJWKSet(new URL("https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com"));
+const allowedOrigins = new Set(["https://zrain-links.web.app", "https://zrain-links.firebaseapp.com", "https://zrain-links.zrain-dev.workers.dev"]);
+function corsHeaders(request) { const origin=request.headers.get("origin"); return origin && allowedOrigins.has(origin) ? {"access-control-allow-origin":origin,"vary":"Origin","access-control-allow-headers":"Authorization, Content-Type","access-control-allow-methods":"GET, POST, DELETE, OPTIONS"} : {}; }
+
+
+function withCors(response, cors) { const headers = new Headers(response.headers); for (const [key,value] of Object.entries(cors)) headers.set(key,value); return new Response(response.body,{status:response.status,headers}); }
 const json = (data, status = 200, headers = {}) => new Response(JSON.stringify(data), { status, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store", "x-content-type-options": "nosniff", ...headers } });
 const error = (code, message, status) => json({ status, code, message }, status);
 const now = () => Math.floor(Date.now() / 1000);
@@ -32,11 +40,29 @@ function passOf(value) {
 }
 async function authUser(request, db) {
   const bearer = request.headers.get("authorization") || "";
-  if (!/^Bearer [a-f0-9]{64}$/.test(bearer)) throw { status: 401, message: "Sign in to continue." };
-  const key = await hash(bearer.slice(7));
-  const record = await db.prepare("SELECT users.id, users.email FROM sessions JOIN users ON sessions.user_id = users.id WHERE sessions.token_hash = ? AND sessions.expires_at > ?").bind(key, now()).first();
-  if (!record) throw { status: 401, message: "Your session expired. Sign in again." };
-  return record;
+  if (!bearer.startsWith("Bearer ")) throw { status: 401, message: "Sign in to continue." };
+  const tokenValue = bearer.slice(7);
+  if (/^[a-f0-9]{64}$/.test(tokenValue)) {
+    const key = await hash(tokenValue);
+    const record = await db.prepare("SELECT users.id, users.email FROM sessions JOIN users ON sessions.user_id = users.id WHERE sessions.token_hash = ? AND sessions.expires_at > ?").bind(key, now()).first();
+    if (!record) throw { status: 401, message: "Session expired. Sign in again." };
+    return record;
+  }
+  try {
+    const { payload } = await jwtVerify(tokenValue, firebaseKeys, {
+      issuer: "https://securetoken.google.com/" + FIREBASE_PROJECT,
+      audience: FIREBASE_PROJECT,
+      algorithms: ["RS256"]
+    });
+    if (typeof payload.sub !== "string" || !payload.sub || typeof payload.email !== "string" || !payload.email_verified)
+      throw new Error("Email verification required");
+    const uid = "firebase:" + payload.sub;
+    await db.prepare("INSERT OR IGNORE INTO users (id,email,password_salt,password_hash,created_at) VALUES (?,?,?,?,?)")
+      .bind(uid, uid + "@firebase.invalid", "", "", now()).run();
+    return { id: uid, email: payload.email };
+  } catch {
+    throw { status: 401, message: "Sign in with Firebase and verify your email before creating links." };
+  }
 }
 async function throttle(db, request, action, max) {
   const client = request.headers.get("CF-Connecting-IP") || "unknown";
@@ -58,7 +84,16 @@ function isAlias(path) { return /^\/[a-zA-Z0-9][a-zA-Z0-9-]{2,29}$/.test(path); 
 const reserved = new Set(["api","actuator","r","favicon","favicon.svg","app.css","app.js","index.html","robots.txt","sitemap.xml"]);
 export default {
   async fetch(request, env) {
+    const cors = corsHeaders(request);
+    if (request.method === "OPTIONS" && new URL(request.url).pathname.startsWith("/api/"))
+      return new Response(null, {status:204,headers:cors});
+    const response = await handleRequest(request, env);
+    return withCors(response,cors);
+  }
+};
+async function handleRequest(request, env) {
     try {
+      const sendJson = json; const sendError = error;
       const url = new URL(request.url), path = url.pathname, method = request.method;
       const db = env.DB;
       if (!db) throw new Error("D1 database binding DB is missing.");
@@ -137,5 +172,4 @@ export default {
       }
       return error("NOT_FOUND","Not found.",404);
     } catch (e) { return wrap(e); }
-  }
-};
+}
