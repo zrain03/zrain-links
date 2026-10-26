@@ -35,7 +35,20 @@ For listing and deleting Firebase Authentication users, create a suitable Fireba
 
     Get-Content -LiteralPath "C:\secure\path\firebase-service-account.json" -Raw | npx wrangler secret put FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON
 
-This key is highly sensitive. Do not commit it, upload it to public/ or paste it into chat. Revoke/rotate it if exposed. If this secret is not configured, D1 link operations and stats work but Firebase account listing/deletion and orphan cleanup fail closed.
+Do NOT run the example placeholder path unchanged. If Get-Content cannot find that file, PowerShell may still run Wrangler and store an EMPTY value: a Wrangler "Success!" response does not prove the JSON was valid.
+
+Safer PowerShell upload with checks:
+
+    $keyFile = Read-Host "Enter the full path to the downloaded Firebase service-account JSON"
+    if (-not (Test-Path -LiteralPath $keyFile -PathType Leaf)) { throw "Service account JSON file does not exist. Secret not uploaded." }
+    $json = Get-Content -LiteralPath $keyFile -Raw -ErrorAction Stop
+    $account = $json | ConvertFrom-Json -ErrorAction Stop
+    if ($account.type -ne "service_account" -or $account.project_id -ne "zrain-links" -or [string]::IsNullOrWhiteSpace($account.private_key)) { throw "Not a valid Zrain Links Firebase service-account file." }
+    $json | npx wrangler secret put FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON
+
+This key is highly sensitive. Do not commit it, upload it to public/ or paste it into chat. Revoke/rotate it if exposed. If this secret is invalid, D1 link operations and stats work but Firebase account listing/deletion and orphan cleanup fail closed.
+
+When a delete action says recent Google verification is required, use the new "Verify with Google" button on the dashboard; sign out and sign back in as a fallback. The Worker requires confirmation within the last 15 minutes.
 
 Deploy the Worker and then Firebase Hosting:
 
