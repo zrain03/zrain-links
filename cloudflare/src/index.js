@@ -3,6 +3,7 @@ import { renderSVG } from "uqr";
 import { createRemoteJWKSet, jwtVerify } from "jose";
 
 const FIREBASE_PROJECT = "zrain-links";
+const PUBLIC_LINK_ORIGIN = "https://zrain-links.web.app";
 const firebaseKeys = createRemoteJWKSet(new URL("https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com"));
 const allowedOrigins = new Set(["https://zrain-links.web.app", "https://zrain-links.firebaseapp.com", "https://zrain-links.zrain-dev.workers.dev"]);
 function corsHeaders(request) { const origin=request.headers.get("origin"); return origin && allowedOrigins.has(origin) ? {"access-control-allow-origin":origin,"vary":"Origin","access-control-allow-headers":"Authorization, Content-Type","access-control-allow-methods":"GET, POST, DELETE, OPTIONS"} : {}; }
@@ -126,7 +127,7 @@ async function handleRequest(request, env) {
         if (path === "/api/v1/links" && method === "GET") {
           const user = await authUser(request, db);
           const result = await db.prepare("SELECT * FROM short_links WHERE owner_id = ? ORDER BY created_at DESC LIMIT 500").bind(user.id).all();
-          const origin = getOrigin(request, env.PUBLIC_BASE_URL);
+          const origin = PUBLIC_LINK_ORIGIN;
           return json(result.results.map(x => ({id:x.id,code:x.code,destinationUrl:x.destination_url,shortUrl:origin+"/"+x.code,clickCount:x.click_count,createdAt:new Date(x.created_at*1000).toISOString()})));
         }
         if (path === "/api/v1/links" && method === "POST") {
