@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:zrain-test;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  h2:
+    console:
+      enabled: false
+
+zrain:
+  jwt:
+    secret-base64: AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8=
+    issuer: zrain-auth-test
+    audience: zrain-auth-test-api
+    access-minutes: 15
+
+springdoc:
+  swagger-ui:
+    enabled: false
+  api-docs:
+    enabled: false

@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: zrain-auth-starter
+  profiles:
+    default: local
+  jpa:
+    open-in-view: false
+  h2:
+    console:
+      enabled: false
+
+zrain:
+  jwt:
+    secret-base64: ${ZRAIN_JWT_SECRET_BASE64:}
+    issuer: ${ZRAIN_JWT_ISSUER:zrain-auth-starter}
+    audience: ${ZRAIN_JWT_AUDIENCE:zrain-auth-starter-api}
+    access-minutes: ${ZRAIN_JWT_ACCESS_MINUTES:15}
+
+server:
+  error:
+    include-message: never
+    include-stacktrace: never
+
+springdoc:
+  swagger-ui:
+    enabled: true
