@@ -3,6 +3,32 @@
   const $ = id => document.getElementById(id);
   const modal = $("auth-dialog");
   let token = null, email = null, authMode = "signin", links = [], pendingUrl = null, latestLink = null;
+  let firebaseAuth, firebaseMethods, currentUser;
+  const API = "https://zrain-links.zrain-dev.workers.dev";
+  async function setupFirebase() {
+    if (!location.hostname.endsWith(".web.app") && !location.hostname.endsWith(".firebaseapp.com")) {
+      throw new Error("Please use zrain-links.web.app to create an account.");
+    }
+    const configResponse = await fetch("/__/firebase/init.json");
+    if (!configResponse.ok) throw new Error("Firebase Hosting configuration is unavailable.");
+    const config = await configResponse.json();
+    const app = await import("https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js");
+    firebaseMethods = await import("https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js");
+    firebaseAuth = firebaseMethods.getAuth(app.initializeApp(config));
+    await firebaseMethods.setPersistence(firebaseAuth, firebaseMethods.browserLocalPersistence);
+    firebaseMethods.onAuthStateChanged(firebaseAuth, async (user) => {
+      currentUser = user?.emailVerified ? user : null;
+      if (currentUser) {
+        email = user.email;
+        $("header-email").textContent = email;
+        show("header-signin", false); show("header-user", true); show("nav-my-links", true); show("my-links", true);
+        await refresh();
+      } else {
+        show("my-links", false); show("nav-my-links", false); show("header-signin", true); show("header-user", false);
+      }
+    });
+  }
+  setupFirebase().catch(error => { console.error("Firebase setup failed:", error.message); note("shorten-message", error.message); });
   const show = (id, yes) => { $(id).hidden = !yes; };
   const note = (id, text, success = false) => { const el = $(id); el.textContent = text; el.classList.toggle("ok", success); };
   function toast(text) {
@@ -13,17 +39,17 @@
   async function api(path, { method = "GET", body = null, auth = true } = {}) {
     const headers = {};
     if (body !== null) headers["Content-Type"] = "application/json";
-    if (auth && token) headers.Authorization = "Bearer " + token;
+    if (auth) {
+      if (!currentUser) throw new Error("Sign in and verify your email to continue.");
+      headers.Authorization = "Bearer " + await currentUser.getIdToken();
+    }
     let response;
-    try { response = await fetch(path, { method, headers, body: body === null ? undefined : JSON.stringify(body), cache: "no-store" }); }
+    try { response = await fetch(API + path, { method, headers, body: body === null ? undefined : JSON.stringify(body), cache: "no-store" }); }
     catch { throw new Error("Cannot connect to the server. Check your connection."); }
     if (!response.ok) {
       let reason = "";
       try { reason = (await response.json()).message || ""; } catch {}
-      if (response.status === 401 && auth) {
-        signout();
-        throw new Error("Your session has expired. Please sign in again.");
-      }
+      if (response.status === 401 && auth) throw new Error(reason || "Please verify your email and sign in again.");
       throw new Error(reason || "Request failed (" + response.status + ").");
     }
     if (response.status === 204) return null;
@@ -41,7 +67,7 @@
       ? "Preview: " + window.location.origin + "/" + alias
       : "Leave blank to generate a random name.";
   }
-  $("alias-prefix").textContent = window.location.host + " /";
+  $("alias-prefix").textContent = "zrain-links.web.app /";
   $("custom-alias").addEventListener("input", updateAliasPreview);
   function setMode(mode) {
     authMode = mode;
@@ -58,7 +84,7 @@
     note("form-message", "");
   }
   function signout() {
-    token = null; email = null; links = []; latestLink = null;
+    token = null; email = null; currentUser = null; links = []; latestLink = null;
     $("password").value = "";
     show("my-links", false); show("nav-my-links", false); show("header-signin", true); show("header-user", false); show("latest-result", false);
   }
@@ -67,26 +93,41 @@
     const button = $("auth-submit"); button.disabled = true; note("form-message", "");
     const accountEmail = $("email").value.trim(), password = $("password").value;
     try {
+      if (!firebaseAuth || !firebaseMethods) throw new Error("Firebase is not ready. Refresh the page.");
       if (authMode === "signup") {
-        await api("/api/v1/auth/register", { method: "POST", body: { email: accountEmail, password }, auth: false });
+        const result = await firebaseMethods.createUserWithEmailAndPassword(firebaseAuth, accountEmail, password);
+        await firebaseMethods.sendEmailVerification(result.user);
+        await firebaseMethods.signOut(firebaseAuth);
         setMode("signin");
-        note("form-message", "Account created! Sign in with the password you just chose.", true);
+        note("form-message", "Account created. Check your email verification link, then sign in.", true);
         return;
       }
-      const result = await api("/api/v1/auth/login", { method: "POST", body: { email: accountEmail, password }, auth: false });
-      if (!result.accessToken) throw new Error("Sign-in response did not include a token.");
-      token = result.accessToken; email = accountEmail;
+      const result = await firebaseMethods.signInWithEmailAndPassword(firebaseAuth, accountEmail, password);
+      if (!result.user.emailVerified) {
+        await firebaseMethods.signOut(firebaseAuth);
+        throw new Error("Verify your email before signing in. Check your inbox.");
+      }
+      currentUser = result.user;
+      email = result.user.email;
       $("header-email").textContent = email;
       show("header-signin", false); show("header-user", true); show("nav-my-links", true); show("my-links", true);
       $("password").value = "";
       closeAuth();
       await refresh();
-      if (pendingUrl !== null) {
+      if (pendingUrl) {
         const target = pendingUrl; pendingUrl = null;
         await createLink(target.url, target.alias);
       } else toast("Signed in successfully.");
-    } catch (error) { note("form-message", error.message); }
-    finally { button.disabled = false; }
+    } catch (error) {
+      const messages = {
+        "auth/email-already-in-use": "This email is already registered.",
+        "auth/invalid-credential": "Incorrect email or password.",
+        "auth/weak-password": "Choose a stronger password.",
+        "auth/operation-not-allowed": "Enable Email/Password in Firebase Authentication.",
+        "auth/too-many-requests": "Too many attempts. Try again later."
+      };
+      note("form-message", messages[error.code] || error.message);
+    } finally { button.disabled = false; }
   }
   async function createLink(url, alias) {
     const button = $("shorten-button"); button.disabled = true; note("shorten-message", "");
@@ -94,7 +135,7 @@
       if (!/^https:\/\//i.test(url)) throw new Error("Please enter a link starting with https://");
       const link = await api("/api/v1/links", { method: "POST", body: { destinationUrl: url, customAlias: alias || null } });
       latestLink = link;
-      $("result-url").textContent = link.shortUrl;
+      $("result-url").textContent = publicLink(link);
       $("result-url").href = link.shortUrl;
       $("result-destination").textContent = link.destinationUrl;
       show("latest-result", true);
@@ -112,9 +153,10 @@
     if (!/^https:\/\//i.test(url)) { note("shorten-message", "Please paste a public HTTPS website link."); return; }
     const alias = $("custom-alias").value.trim();
     if (alias && !/^[a-z0-9][a-z0-9-]{2,29}$/.test(alias)) { note("shorten-message", "Use 3–30 lowercase letters, numbers or hyphens for your custom name."); return; }
-    if (!token) { pendingUrl = { url, alias }; openAuth(true); return; }
+    if (!currentUser) { pendingUrl = { url, alias }; openAuth(true); return; }
     createLink(url, alias);
   }
+  const publicLink = link => "https://zrain-links.web.app/" + link.code;
   function render() {
     $("total-links").textContent = String(links.length);
     $("total-clicks").textContent = links.reduce((sum, l) => sum + (l.clickCount || 0), 0).toLocaleString();
@@ -170,7 +212,7 @@
   }
   document.querySelectorAll("[data-auth-mode]").forEach(b => b.addEventListener("click", () => setMode(b.dataset.authMode)));
   $("header-signin").addEventListener("click", () => openAuth(false));
-  $("header-signout").addEventListener("click", () => { signout(); toast("Signed out."); });
+  $("header-signout").addEventListener("click", async () => { if (firebaseAuth) await firebaseMethods.signOut(firebaseAuth); signout(); toast("Signed out."); });
   $("close-auth").addEventListener("click", closeAuth);
   modal.addEventListener("click", e => { if (e.target === modal) closeAuth(); });
   $("toggle-password").addEventListener("click", () => {
