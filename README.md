@@ -1,5 +1,25 @@
 # Zrain Links
 
+**Create recognizable links with names you choose.** Zrain Links is a custom-link manager, not primarily a URL shortener.
+
+## User flow
+
+1. Paste a public HTTPS destination URL.
+2. Choose a memorable **link name** (required by default), such as `claimmp`.
+3. Click **Create link**. If not signed in, complete sign-in/sign-up and the form will continue.
+4. Copy the new URL, download its QR code, or view it under **My links**.
+5. Optional: check **Shorten link automatically**. This disables the manual name field and generates a random alias instead.
+6. A secondary shorter **domain** is a separate deployment feature and is only shown in the Spring Boot version when an actual second hostname is configured.
+
+The project currently has **two frontend deployment variants**, both redesigned with the same custom-link-first interface:
+- Java Spring Boot local frontend: `src/main/resources/static/`.
+- Firebase/Cloudflare frontend: `cloudflare/public/`.
+
+An actual permanent public service still requires verified domains, persistent storage, uptime/backup operations and abuse prevention. Running the Java backend with local H2 does **not** make links permanent.
+
+---
+
+
 A new Spring Boot URL-shortening project built from the independently maintained [Zrain Auth Starter](https://github.com/zrain03/zrain-auth-starter).
 
 ## Current development status
