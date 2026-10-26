@@ -1,0 +1,32 @@
+{
+  "hosting": {
+    "public": "cloudflare/public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "redirects": [
+      {
+        "regex": "^/(?P<code>[a-z0-9][a-z0-9-]{2,29})$",
+        "destination": "https://zrain-links.zrain-dev.workers.dev/:code",
+        "type": 302
+      }
+    ],
+    "headers": [
+      {
+        "source": "**",
+        "headers": [
+          {
+            "key": "X-Content-Type-Options",
+            "value": "nosniff"
+          },
+          {
+            "key": "Referrer-Policy",
+            "value": "strict-origin-when-cross-origin"
+          }
+        ]
+      }
+    ]
+  }
+}
