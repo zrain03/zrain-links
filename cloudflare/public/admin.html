@@ -38,6 +38,7 @@
     <div class="admin-tabs" role="group" aria-label="Admin areas">
       <button type="button" id="tab-links" class="active" aria-pressed="true">All links</button>
       <button type="button" id="tab-users" aria-pressed="false">Firebase users</button>
+      <button type="button" id="tab-d1" aria-pressed="false">D1 records</button>
       <button type="button" id="refresh-admin">Refresh data</button>
     </div>
     <section id="links-panel" class="admin-panel" aria-labelledby="links-heading">
@@ -56,6 +57,12 @@
       <p id="users-message" class="admin-panel-message" role="status" aria-live="polite"></p>
       <div id="admin-users-list" class="admin-list"></div>
       <div class="admin-page-nav"><button type="button" id="users-next">Load more users →</button></div>
+    </section>
+    <section id="d1-panel" class="admin-panel" aria-labelledby="d1-heading" hidden>
+      <div class="admin-panel-heading"><div><h2 id="d1-heading">Stored D1 user records</h2>
+        <p>Includes records from Firebase accounts already deleted. Cleanup is allowed only after Firebase confirms that the UID no longer exists.</p></div></div>
+      <p id="d1-message" class="admin-panel-message" role="status" aria-live="polite"></p>
+      <div id="d1-accounts-list" class="admin-list"></div>
     </section>
   </div>
 </main>
