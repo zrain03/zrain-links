@@ -2,7 +2,7 @@ import {formatMalaysiaTime} from "./time-format.js";
 
 const $ = id => document.getElementById(id);
 const API = "https://zrain-links.zrain-dev.workers.dev";
-let auth, firebase, currentUser, nextUserToken = null, offset = 0, totalLinks = 0, allUsers = [], activeArea = "links";
+let auth, firebase, currentUser, nextUserToken = null, offset = 0, totalLinks = 0, allUsers = [], activeArea = "links", d1AccountsLoaded = false;
 const note = (id, message) => { $(id).textContent = message; };
 function el(tag, content, className) {
   const node = document.createElement(tag);
@@ -114,14 +114,44 @@ async function loadUsers(reset = false) {
     note("users-message", "Showing " + allUsers.length + " Firebase account(s).");
   } catch (error) { note("users-message", error.message); }
 }
+async function loadD1Accounts() {
+  note("d1-message", "Loading D1 records…");
+  try {
+    const data = await adminApi("/api/v1/admin/d1-accounts");
+    const list = $("d1-accounts-list");
+    list.replaceChildren();
+    for (const account of data.accounts) {
+      const row = makeEntry(account.uid, [
+        "Created: " + accountDate(account.createdAt),
+        "Links: " + account.linkCount + ". Purging also deletes this record's links."
+      ], "Purge if deleted", async () => {
+        const typed = window.prompt("Cleanup is only allowed if this user no longer exists in Firebase.\nType the exact UID:\n" + account.uid);
+        if (typed === null) return;
+        if (typed !== account.uid) { note("d1-message", "UID did not match."); return; }
+        try {
+          await adminApi("/api/v1/admin/d1-accounts/" + encodeURIComponent(account.uid), { method: "DELETE", body: {confirm:typed} });
+          note("d1-message", "Orphaned D1 account and links removed.");
+          await Promise.all([loadD1Accounts(), refreshOverview()]);
+        } catch (error) { note("d1-message", error.message); }
+      });
+      list.append(row);
+    }
+    if (!data.accounts.length) list.append(el("p", "No Firebase-linked D1 records found."));
+    d1AccountsLoaded = true;
+    note("d1-message", "Showing up to 200 records. Only Firebase-deleted accounts may be purged.");
+  } catch (error) { note("d1-message", error.message); }
+}
 function showArea(area) {
   activeArea = area;
   $("links-panel").hidden = area !== "links";
   $("users-panel").hidden = area !== "users";
+  $("d1-panel").hidden = area !== "d1";
   $("tab-links").classList.toggle("active", area === "links");
   $("tab-users").classList.toggle("active", area === "users");
+  $("tab-d1").classList.toggle("active", area === "d1");
   $("tab-links").setAttribute("aria-pressed", String(area === "links"));
   $("tab-users").setAttribute("aria-pressed", String(area === "users"));
+  $("tab-d1").setAttribute("aria-pressed", String(area === "d1"));
 }
 async function initialize() {
   try {
@@ -146,7 +176,8 @@ async function initialize() {
 }
 $("tab-links").addEventListener("click", () => showArea("links"));
 $("tab-users").addEventListener("click", () => { showArea("users"); if (!allUsers.length) loadUsers(true); });
-$("refresh-admin").addEventListener("click", () => { refreshOverview().catch(e => note("admin-status", e.message)); activeArea === "links" ? loadLinks() : loadUsers(true); });
+$("tab-d1").addEventListener("click", () => { showArea("d1"); if (!d1AccountsLoaded) loadD1Accounts(); });
+$("refresh-admin").addEventListener("click", () => { refreshOverview().catch(e => note("admin-status", e.message)); if (activeArea === "links") loadLinks(); else if (activeArea === "users") loadUsers(true); else loadD1Accounts(); });
 $("admin-search-form").addEventListener("submit", e => { e.preventDefault(); offset = 0; loadLinks(); });
 $("links-prev").addEventListener("click", () => { offset = Math.max(0, offset - 50); loadLinks(); });
 $("links-next").addEventListener("click", () => { offset += 50; loadLinks(); });
