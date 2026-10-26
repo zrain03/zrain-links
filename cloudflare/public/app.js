@@ -180,7 +180,7 @@
       if (!/^https:\/\//i.test(url)) throw new Error("Please enter a link starting with https://");
       const link = await api("/api/v1/links", { method: "POST", body: { destinationUrl: url, customAlias: alias || null } });
       latestLink = link;
-      $("result-url").textContent = publicLink(link);
+      $("result-url").textContent = publicShortUrl(link);
       $("result-url").href = publicShortUrl(link);
       $("result-destination").textContent = link.destinationUrl;
       show("latest-result", true);
