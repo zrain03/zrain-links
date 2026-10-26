@@ -97,3 +97,29 @@ body{background:linear-gradient(180deg,#fffdfb,#fff7f2 70%,#fffaf6);color:var(--
   .auth-dialog{width:calc(100vw - 20px);max-width:calc(100vw - 20px);max-height:calc(100dvh - 20px);padding:17px 19px;border-radius:16px}
   .auth-dialog h2{font-size:21px}
 }
+
+
+/* Common authentication UI for all screen states: login, signup and recovery. */
+.auth-dialog [hidden]{display:none!important}
+.auth-dialog .forgot-password-row{display:flex;justify-content:flex-end;margin:-2px 0 10px}
+.auth-dialog .forgot-password-row .forgot-link{margin:0}
+.auth-dialog #confirm-password-section label{margin-top:0}
+.auth-dialog .reset-password-panel{padding-top:7px}
+.auth-dialog .reset-password-panel h3{font-size:18px;letter-spacing:-.35px;margin:5px 0}
+.auth-dialog .reset-password-panel>p{font-size:12px;color:#6d7885;line-height:1.6;margin:0 0 18px}
+.auth-dialog .reset-password-panel form{margin:0}
+.auth-dialog .back-to-signin,
+.auth-dialog .google-redirect{
+  appearance:none;display:inline-flex;align-items:center;justify-content:center;
+  padding:6px 3px;background:transparent;border:0;border-radius:5px;
+  color:#b74d32;font-size:12px;line-height:1.5;font-weight:750;
+  text-decoration:underline;text-underline-offset:3px;
+}
+.auth-dialog .back-to-signin{margin:13px 0 0}
+.auth-dialog .google-redirect{width:100%;margin-top:7px}
+.auth-dialog .google-auth-section .form-message{margin:7px 0 0;text-align:center}
+.auth-dialog #auth-form .form-message:empty,
+.auth-dialog #reset-password-form .form-message:empty{display:none}
+.auth-dialog .google-button:disabled{opacity:.65;cursor:wait}
+.auth-dialog #auth-tabs button{cursor:pointer}
+.auth-dialog #auth-tabs button:not(.active):hover{color:#ba4d34}
