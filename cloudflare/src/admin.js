@@ -136,6 +136,37 @@ export async function handleAdmin(request, env, db) {
       linkCount: counts.get("firebase:" + u.localId) || 0
     })) });
   }
+  if (method === "GET" && path === "/api/v1/admin/d1-accounts") {
+    const rows = await db.prepare(
+      "SELECT u.id, u.created_at, COUNT(l.id) AS link_count FROM users u LEFT JOIN short_links l ON l.owner_id = u.id WHERE u.id LIKE 'firebase:%' GROUP BY u.id ORDER BY u.created_at DESC LIMIT 200"
+    ).all();
+    return json({ accounts: (rows.results || []).map(row => ({
+      uid: row.id.slice("firebase:".length), createdAt: dateIso(row.created_at), linkCount: row.link_count
+    })) });
+  }
+  const orphanDelete = path.match(/^\/api\/v1\/admin\/d1-accounts\/([^/]+)$/);
+  if (method === "DELETE" && orphanDelete) {
+    if (!recentAuth(admin)) return fail(403, "Sign out and sign in with Google again before deleting.");
+    const uid = decodeURIComponent(orphanDelete[1]);
+    if (!validId(uid)) return fail(400, "Invalid user ID.");
+    if (uid === env.ZRAIN_ADMIN_FIREBASE_UID) return fail(403, "Admin account is protected.");
+    if (!env.FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON) return fail(503, "Firebase account verification is not configured.");
+    if (await readConfirmation(request) !== uid) return fail(400, "Type the exact UID to confirm.");
+    const access = await tokenForFirebase(env);
+    const info = await firebaseCall(access, "lookup", { method: "POST", body: { localId: [uid] } });
+    if ((info.users || []).some(u => u.localId === uid)) {
+      return fail(409, "This Firebase user still exists. Delete it from the Firebase users tab instead.");
+    }
+    const ownerId = "firebase:" + uid;
+    const existing = await db.prepare("SELECT id FROM users WHERE id = ?").bind(ownerId).first();
+    if (!existing) return fail(404, "D1 account record no longer exists.");
+    await db.batch([
+      db.prepare("DELETE FROM short_links WHERE owner_id = ?").bind(ownerId),
+      db.prepare("DELETE FROM sessions WHERE user_id = ?").bind(ownerId),
+      db.prepare("DELETE FROM users WHERE id = ?").bind(ownerId)
+    ]);
+    return json({ deleted: true });
+  }
   const userDelete = path.match(/^\/api\/v1\/admin\/users\/([^/]+)$/);
   if (method === "DELETE" && userDelete) {
     if (!recentAuth(admin)) return fail(403, "Sign out and sign in with Google again before deleting.");
