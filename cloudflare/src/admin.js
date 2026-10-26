@@ -1,3 +1,4 @@
+import { adminIdentityMatches } from "./admin-auth.js";
 import { createRemoteJWKSet, jwtVerify, SignJWT, importPKCS8 } from "jose";
 
 const PROJECT = "zrain-links";
@@ -8,10 +9,6 @@ const json = (value, status = 200) => new Response(JSON.stringify(value), {
   status, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store", "x-content-type-options": "nosniff" }
 });
 
-export function adminIdentityMatches(payload, adminUid) {
-  return !!adminUid && payload?.sub === adminUid && payload?.email === ADMIN_EMAIL &&
-    payload?.email_verified === true && payload?.firebase?.sign_in_provider === "google.com";
-}
 function fail(status, message) { return json({ message }, status); }
 function validId(value) { return typeof value === "string" && value.length > 0 && value.length <= 128 && /^[a-zA-Z0-9_-]+$/.test(value); }
 async function readConfirmation(request) {
