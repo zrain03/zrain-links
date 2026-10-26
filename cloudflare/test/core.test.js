@@ -44,3 +44,12 @@ test("password recovery and Google authentication use Firebase SDK", async () =>
   assert.match(script, /signInWithPopup\(firebaseAuth, provider\)/);
   assert.match(script, /formatMalaysiaTime\(link.createdAt\)/);
 });
+
+test("account linking preserves Firebase UID and timestamps use MYT", async () => {
+  const fs = await import("node:fs/promises");
+  const script = await fs.readFile(new URL("../public/app.js", import.meta.url), "utf8");
+  assert.match(script, /linkWithPopup\(firebaseAuth\.currentUser, provider\)/);
+  assert.match(script, /signInWithPopup\(firebaseAuth, provider\)/);
+  assert.match(script, /sendPasswordResetEmail\(firebaseAuth, address\)/);
+  assert.match(script, /formatMalaysiaTime\(link\.createdAt\)/);
+});
