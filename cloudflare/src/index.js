@@ -59,6 +59,8 @@ async function authUser(request, db) {
     if (typeof payload.sub !== "string" || !payload.sub || typeof payload.email !== "string" || !payload.email_verified)
       throw new Error("Email verification required");
     const uid = "firebase:" + payload.sub;
+    const deleted = await db.prepare("SELECT uid FROM deleted_firebase_uids WHERE uid = ?").bind(payload.sub).first();
+    if (deleted) throw new Error("This Firebase account has been deleted.");
     await db.prepare("INSERT OR IGNORE INTO users (id,email,password_salt,password_hash,created_at) VALUES (?,?,?,?,?)")
       .bind(uid, uid + "@firebase.invalid", "", "", now()).run();
     return { id: uid, email: payload.email };
