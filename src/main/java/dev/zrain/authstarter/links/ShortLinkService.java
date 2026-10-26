@@ -11,6 +11,7 @@ import java.security.SecureRandom;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+import org.springframework.dao.DataIntegrityViolationException;
 
 @Service
 public class ShortLinkService {
@@ -26,9 +27,37 @@ public class ShortLinkService {
 
     @Transactional
     public LinkResponse create(UUID ownerId, String destinationUrl) {
+        return create(ownerId, destinationUrl, null);
+    }
+
+    public LinkResponse create(UUID ownerId, String destinationUrl, String alias) {
         String destination = validateDestination(destinationUrl);
-        String code = randomCode();
-        return toResponse(links.saveAndFlush(new ShortLink(ownerId, code, destination)));
+        boolean custom = alias != null && !alias.isBlank();
+        String code = custom ? validateAlias(alias) : randomCode();
+        if (custom && links.existsByCodeIgnoreCase(code)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "This custom name is already taken.");
+        }
+        try {
+            return toResponse(links.saveAndFlush(new ShortLink(ownerId, code, destination)));
+        } catch (DataIntegrityViolationException exception) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "This short name is already taken. Try another.");
+        }
+    }
+
+    static String validateAlias(String value) {
+        String alias = value.trim();
+        if (!alias.matches("[a-z0-9][a-z0-9-]{2,29}") || alias.endsWith("-")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Use 3–30 lowercase letters, numbers or hyphens; no hyphen at the end.");
+        }
+        if (List.of("api", "r", "admin", "login", "logout", "signup", "signin",
+                "register", "assets", "static", "docs", "swagger-ui", "actuator",
+                "favicon", "favicon.svg", "index", "index.html", "app", "app.js", "app.css",
+                "robots", "health", "help", "terms", "privacy", "dashboard",
+                "links", "my-links", "account", "settings", "support").contains(alias)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "That name is reserved.");
+        }
+        return alias;
     }
 
     @Transactional(readOnly = true)
@@ -53,7 +82,7 @@ public class ShortLinkService {
 
     private LinkResponse toResponse(ShortLink link) {
         return new LinkResponse(link.getId(), link.getCode(), link.getDestinationUrl(),
-                baseUrl + "/r/" + link.getCode(), link.getClickCount(), link.getCreatedAt());
+                baseUrl + "/" + link.getCode(), link.getClickCount(), link.getCreatedAt());
     }
 
     static String validateDestination(String input) {
