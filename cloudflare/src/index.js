@@ -1,4 +1,4 @@
-import { getOrigin, randomAlias, validateAlias, validateDestination } from "./core.js";
+import { randomAlias, validateAlias, validateDestination } from "./core.js";
 import { renderSVG } from "uqr";
 import { createRemoteJWKSet, jwtVerify } from "jose";
 
