@@ -1,4 +1,4 @@
-import {formatMalaysiaTime} from "./time-format.js";
+import {formatMalaysiaTime} from "./time-format.js?v=myt-seconds-20261026-2";
 
 const $ = id => document.getElementById(id);
 const API = "https://zrain-links.zrain-dev.workers.dev";
@@ -11,6 +11,36 @@ function el(tag, content, className) {
   return node;
 }
 function accountDate(iso) { return iso ? formatMalaysiaTime(iso) : "Not available"; }
+async function verifyGoogleAgain() {
+  const button = $("reauth-google");
+  if (!currentUser || !firebase || !auth) {
+    note("reauth-message", "Please sign in with Google before deleting records.");
+    return;
+  }
+  button.disabled = true;
+  note("reauth-message", "Opening Google for secure confirmation…");
+  try {
+    const uid = currentUser.uid;
+    const provider = new firebase.GoogleAuthProvider();
+    provider.setCustomParameters({prompt:"select_account"});
+    const credential = await firebase.reauthenticateWithPopup(currentUser, provider);
+    if (!credential.user || credential.user.uid !== uid || auth.currentUser?.uid !== uid) {
+      throw new Error("Please verify using the same administrator account.");
+    }
+    await credential.user.getIdToken(true);
+    note("reauth-message", "Google confirmed. You may delete records for the next 15 minutes.");
+  } catch (error) {
+    const messages = {
+      "auth/popup-blocked": "Your browser blocked the Google popup. Allow popups and try again.",
+      "auth/popup-closed-by-user": "Google verification was cancelled.",
+      "auth/user-mismatch": "Use the same authorized Google account.",
+      "auth/credential-already-in-use": "Please use the authorized administrator account."
+    };
+    note("reauth-message", messages[error?.code] || error?.message || "Google verification failed. Try again.");
+  } finally {
+    button.disabled = false;
+  }
+}
 async function adminApi(path, options = {}) {
   if (!currentUser) throw new Error("Please sign in as the administrator.");
   const headers = { Authorization: "Bearer " + await currentUser.getIdToken(), ...(options.body ? { "content-type": "application/json" } : {}) };
@@ -19,7 +49,13 @@ async function adminApi(path, options = {}) {
     ...(options.body ? { body: JSON.stringify(options.body) } : {}), cache: "no-store"
   });
   const result = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(result.message || "Request failed (" + response.status + ").");
+  if (!response.ok) {
+    const message = result.message || "Request failed (" + response.status + ").";
+    if (response.status === 403 && /sign in with Google again before deleting|recent Google verification/i.test(message)) {
+      throw new Error("For security, verify with Google again above, then retry deletion.");
+    }
+    throw new Error(message);
+  }
   return result;
 }
 function makeEntry(title, paragraphs, buttonLabel, onDelete, protectedRow = false) {
@@ -64,8 +100,8 @@ async function loadLinks() {
         if (typed !== link.code) { note("links-message", "Deletion cancelled: link name did not match."); return; }
         try {
           await adminApi("/api/v1/admin/links/" + encodeURIComponent(link.id), { method: "DELETE", body: { confirm: typed } });
-          note("links-message", "Link deleted. Its short URL no longer redirects.");
           await Promise.all([loadLinks(), refreshOverview()]);
+          note("links-message", "Link deleted. Its short URL no longer redirects.");
         } catch (error) { note("links-message", error.message); }
       });
       list.append(row);
@@ -130,8 +166,8 @@ async function loadD1Accounts() {
         if (typed !== account.uid) { note("d1-message", "UID did not match."); return; }
         try {
           await adminApi("/api/v1/admin/d1-accounts/" + encodeURIComponent(account.uid), { method: "DELETE", body: {confirm:typed} });
-          note("d1-message", "Orphaned D1 account and links removed.");
           await Promise.all([loadD1Accounts(), refreshOverview()]);
+          note("d1-message", "Orphaned D1 account and links removed.");
         } catch (error) { note("d1-message", error.message); }
       }, account.isAdmin);
       list.append(row);
@@ -174,6 +210,7 @@ async function initialize() {
     });
   } catch (error) { note("admin-status", error.message); }
 }
+$("reauth-google").addEventListener("click", verifyGoogleAgain);
 $("tab-links").addEventListener("click", () => showArea("links"));
 $("tab-users").addEventListener("click", () => { showArea("users"); if (!allUsers.length) loadUsers(true); });
 $("tab-d1").addEventListener("click", () => { showArea("d1"); if (!d1AccountsLoaded) loadD1Accounts(); });
