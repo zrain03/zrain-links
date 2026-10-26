@@ -28,3 +28,8 @@ jobs:
 
       - name: Test Cloudflare link validation
         run: node --test cloudflare/test/*.test.js
+      - name: Verify Cloudflare Worker can be bundled
+        working-directory: cloudflare
+        run: |
+          npm install --no-audit --no-fund
+          npx wrangler deploy --dry-run --outdir dist
