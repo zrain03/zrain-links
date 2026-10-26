@@ -61,13 +61,29 @@
     window.setTimeout(() => $("email").focus(), 0);
   }
   function closeAuth() { if (modal.open) modal.close(); }
-  function updateAliasPreview() {
-    const alias = $("custom-alias").value.trim();
-    $("alias-preview").textContent = alias
-      ? "Preview: " + window.location.origin + "/" + alias
-      : "Leave blank to generate a random name.";
+  function autoMode() {
+    return $("auto-shorten").checked;
   }
-  $("alias-prefix").textContent = "zrain-links.web.app /";
+  function updateAliasPreview() {
+    const automatic = autoMode();
+    const input = $("custom-alias");
+    input.disabled = automatic;
+    input.required = !automatic;
+    $("alias-fieldset").classList.toggle("is-automatic", automatic);
+    const name = input.value.trim();
+    const domain = window.location.origin;
+    $("alias-prefix").textContent = new URL(domain).host + "/";
+    $("preview-url").textContent = new URL(domain).host + "/" + (automatic ? "aB7k9Q2" : (name || "your-name"));
+    $("preview-mode").textContent = automatic ? "Automatic short name" : "Custom link name";
+    $("alias-preview").textContent = automatic
+      ? "We'll generate a random link name for you."
+      : "3–30 lowercase letters, numbers or hyphens. Each name must be unique.";
+  }
+  function updateDestinationPreview() {
+    const url = $("long-url").value.trim();
+    $("preview-destination").textContent = url || "Add a destination URL";
+  }
+  
   $("custom-alias").addEventListener("input", updateAliasPreview);
   function setMode(mode) {
     authMode = mode;
@@ -77,7 +93,7 @@
       b.setAttribute("aria-pressed", String(active));
     });
     $("auth-submit").textContent = mode === "signin" ? "Sign in →" : "Create account →";
-    $("auth-caption").textContent = mode === "signin" ? "Sign in to create and manage your links." : "Create an account to save your short links.";
+    $("auth-caption").textContent = mode === "signin" ? "Sign in to create and manage your links." : "Create an account to save your links.";
     $("password").autocomplete = mode === "signin" ? "current-password" : "new-password";
     $("password").minLength = mode === "signin" ? 1 : 12;
     $("password-hint").textContent = mode === "signin" ? "" : "(at least 12 characters)";
@@ -98,7 +114,11 @@
         const result = await firebaseMethods.createUserWithEmailAndPassword(firebaseAuth, accountEmail, password);
         await firebaseMethods.sendEmailVerification(result.user);
         await firebaseMethods.signOut(firebaseAuth);
-        setMode("signin");
+        $("auto-shorten").addEventListener("change", updateAliasPreview);
+  $("long-url").addEventListener("input", updateDestinationPreview);
+  updateAliasPreview();
+  updateDestinationPreview();
+  setMode("signin");
         note("form-message", "Account created. Check your email verification link, then sign in.", true);
         return;
       }
@@ -141,6 +161,7 @@
       show("latest-result", true);
       $("long-url").value = "";
       $("custom-alias").value = "";
+      $("auto-shorten").checked = false;
       updateAliasPreview();
       await refresh();
       $("latest-result").scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -151,8 +172,8 @@
     event.preventDefault();
     const url = $("long-url").value.trim();
     if (!/^https:\/\//i.test(url)) { note("shorten-message", "Please paste a public HTTPS website link."); return; }
-    const alias = $("custom-alias").value.trim();
-    if (alias && !/^[a-z0-9][a-z0-9-]{2,29}$/.test(alias)) { note("shorten-message", "Use 3–30 lowercase letters, numbers or hyphens for your custom name."); return; }
+    const alias = autoMode() ? "" : $("custom-alias").value.trim();
+    if (!autoMode() && !/^[a-z0-9][a-z0-9-]{2,29}$/.test(alias)) { note("shorten-message", "Choose a link name with 3–30 lowercase letters, numbers or hyphens, or tick automatic shortening."); return; }
     if (!currentUser) { pendingUrl = { url, alias }; openAuth(true); return; }
     createLink(url, alias);
   }
@@ -164,7 +185,7 @@
     if (!links.length) {
       const empty = document.createElement("div"); empty.className = "empty-links";
       const heading = document.createElement("strong"); heading.textContent = "No links yet";
-      const info = document.createElement("p"); info.textContent = "Paste a URL above to create your first short link.";
+      const info = document.createElement("p"); info.textContent = "Paste a URL above to create your first link.";
       empty.append(heading, info); $("links-list").append(empty); return;
     }
     for (const link of links) {
@@ -199,7 +220,7 @@
     catch (error) { note("list-status", error.message); }
   }
   async function copyLink(url) {
-    try { await navigator.clipboard.writeText(url); toast("Short link copied!"); }
+    try { await navigator.clipboard.writeText(url); toast("Link copied!"); }
     catch { toast("Copy unavailable. Select the link and copy it manually."); }
   }
   async function downloadQr(link) {
