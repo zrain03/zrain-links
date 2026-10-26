@@ -290,5 +290,9 @@
   $("refresh-links").addEventListener("click", refresh);
   $("result-copy").addEventListener("click", () => { if (latestLink) copyLink(latestLink.shortUrl); });
   $("result-qr").addEventListener("click", () => { if (latestLink) downloadQr(latestLink); });
+  $("auto-shorten").addEventListener("change", updateAliasPreview);
+  $("long-url").addEventListener("input", updateDestinationPreview);
+  updateAliasPreview();
+  updateDestinationPreview();
   setMode("signin");
-})();
+  })();
