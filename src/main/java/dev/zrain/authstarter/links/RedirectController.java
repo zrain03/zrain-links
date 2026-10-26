@@ -11,9 +11,9 @@ public class RedirectController {
 
     public RedirectController(ShortLinkService service) { this.service = service; }
 
-    @GetMapping("/r/{code}")
+    @GetMapping({"/r/{code}", "/{code:[a-zA-Z0-9][a-zA-Z0-9-]{2,29}}"})
     public ResponseEntity<Void> redirect(@PathVariable String code) {
-        if (!code.matches("[A-Za-z0-9]{9}")) return ResponseEntity.notFound().build();
+        if (!code.matches("[A-Za-z0-9][A-Za-z0-9-]{2,29}")) return ResponseEntity.notFound().build();
         String destination = service.destinationAndCountClick(code);
         return ResponseEntity.status(HttpStatus.FOUND)
                 .location(URI.create(destination))
