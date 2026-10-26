@@ -5,26 +5,62 @@
   let token = null, email = null, authMode = "signin", links = [], pendingUrl = null, latestLink = null;
   let firebaseAuth, firebaseMethods, currentUser;
   const API = "https://zrain-links.zrain-dev.workers.dev";
+  function verificationView(user) {
+    $("verify-email").textContent = user.email || "your email";
+    show("verification-panel", true);
+    show("auth-tabs", false);
+    show("auth-form", false);
+    note("verification-message", "");
+    if (!modal.open) modal.showModal();
+  }
+  function authFormView() {
+    show("verification-panel", false);
+    show("auth-tabs", true);
+    show("auth-form", true);
+  }
+  async function signedIn(user) {
+    currentUser = user;
+    email = user.email;
+    $("header-email").textContent = email;
+    show("header-signin", false);
+    show("header-user", true);
+    show("nav-my-links", true);
+    show("my-links", true);
+    closeAuth();
+    await refresh();
+    if (pendingUrl) {
+      const target = pendingUrl;
+      pendingUrl = null;
+      await createLink(target.url, target.alias);
+    }
+  }
   async function setupFirebase() {
     if (!location.hostname.endsWith(".web.app") && !location.hostname.endsWith(".firebaseapp.com")) {
-      throw new Error("Please use zrain-links.web.app to create an account.");
+      throw new Error("Open the published Firebase website to sign in.");
     }
-    const configResponse = await fetch("/__/firebase/init.json");
-    if (!configResponse.ok) throw new Error("Firebase Hosting configuration is unavailable.");
-    const config = await configResponse.json();
+    const response = await fetch("/__/firebase/init.json");
+    if (!response.ok) throw new Error("Firebase Hosting configuration is unavailable.");
+    const config = await response.json();
     const app = await import("https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js");
     firebaseMethods = await import("https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js");
     firebaseAuth = firebaseMethods.getAuth(app.initializeApp(config));
     await firebaseMethods.setPersistence(firebaseAuth, firebaseMethods.browserLocalPersistence);
-    firebaseMethods.onAuthStateChanged(firebaseAuth, async (user) => {
-      currentUser = user?.emailVerified ? user : null;
-      if (currentUser) {
-        email = user.email;
-        $("header-email").textContent = email;
-        show("header-signin", false); show("header-user", true); show("nav-my-links", true); show("my-links", true);
-        await refresh();
+    firebaseMethods.onAuthStateChanged(firebaseAuth, async user => {
+      if (!user) {
+        currentUser = null;
+        show("my-links", false);
+        show("nav-my-links", false);
+        show("header-signin", true);
+        show("header-user", false);
+        return;
+      }
+      await user.reload().catch(() => {});
+      if (firebaseAuth.currentUser?.emailVerified) {
+        if (!currentUser || currentUser.uid !== user.uid) await signedIn(user);
+        else currentUser = user;
       } else {
-        show("my-links", false); show("nav-my-links", false); show("header-signin", true); show("header-user", false);
+        currentUser = null;
+        verificationView(user);
       }
     });
   }
@@ -56,6 +92,7 @@
     return response.headers.get("content-type")?.includes("application/json") ? response.json() : response;
   }
   function openAuth(forShortening = false) {
+    authFormView();
     show("auth-context", forShortening);
     if (!modal.open) modal.showModal();
     window.setTimeout(() => $("email").focus(), 0);
@@ -113,31 +150,17 @@
       if (authMode === "signup") {
         const result = await firebaseMethods.createUserWithEmailAndPassword(firebaseAuth, accountEmail, password);
         await firebaseMethods.sendEmailVerification(result.user);
-        await firebaseMethods.signOut(firebaseAuth);
-        $("auto-shorten").addEventListener("change", updateAliasPreview);
-  $("long-url").addEventListener("input", updateDestinationPreview);
-  updateAliasPreview();
-  updateDestinationPreview();
-  setMode("signin");
-        note("form-message", "Account created. Check your email verification link, then sign in.", true);
+        $("password").value = "";
+        verificationView(result.user);
         return;
       }
       const result = await firebaseMethods.signInWithEmailAndPassword(firebaseAuth, accountEmail, password);
       if (!result.user.emailVerified) {
-        await firebaseMethods.signOut(firebaseAuth);
-        throw new Error("Verify your email before signing in. Check your inbox.");
+        verificationView(result.user);
+        return;
       }
-      currentUser = result.user;
-      email = result.user.email;
-      $("header-email").textContent = email;
-      show("header-signin", false); show("header-user", true); show("nav-my-links", true); show("my-links", true);
       $("password").value = "";
-      closeAuth();
-      await refresh();
-      if (pendingUrl) {
-        const target = pendingUrl; pendingUrl = null;
-        await createLink(target.url, target.alias);
-      } else toast("Signed in successfully.");
+      await signedIn(result.user);
     } catch (error) {
       const messages = {
         "auth/email-already-in-use": "This email is already registered.",
@@ -232,6 +255,26 @@
     } catch (error) { toast(error.message); }
   }
   document.querySelectorAll("[data-auth-mode]").forEach(b => b.addEventListener("click", () => setMode(b.dataset.authMode)));
+  $("verified-button").addEventListener("click", async () => {
+    const user = firebaseAuth?.currentUser;
+    if (!user) { authFormView(); return; }
+    try {
+      await user.reload();
+      if (user.emailVerified) { await user.getIdToken(true); await signedIn(user); }
+      else note("verification-message", "Email not verified yet. Open your verification email, then try again.");
+    } catch (e) { note("verification-message", e.message); }
+  });
+  $("resend-verification").addEventListener("click", async () => {
+    const user = firebaseAuth?.currentUser;
+    if (!user) return;
+    try { await firebaseMethods.sendEmailVerification(user); note("verification-message", "New verification email sent.", true); }
+    catch (e) { note("verification-message", e.message); }
+  });
+  $("switch-account").addEventListener("click", async () => {
+    await firebaseMethods.signOut(firebaseAuth);
+    authFormView();
+    setMode("signin");
+  });
   $("header-signin").addEventListener("click", () => openAuth(false));
   $("header-signout").addEventListener("click", async () => { if (firebaseAuth) await firebaseMethods.signOut(firebaseAuth); signout(); toast("Signed out."); });
   $("close-auth").addEventListener("click", closeAuth);
