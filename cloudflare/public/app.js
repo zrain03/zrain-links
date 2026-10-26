@@ -1,3 +1,4 @@
+import { formatMalaysiaTime } from "./time-format.js";
 import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
 "use strict";
 (() => {
@@ -157,6 +158,7 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
     $("password").autocomplete = mode === "signin" ? "current-password" : "new-password";
     $("password").minLength = mode === "signin" ? 1 : 12;
     $("password-hint").textContent = mode === "signin" ? "" : "(at least 12 characters)";
+    $("forgot-password").hidden = mode !== "signin";
     note("form-message", "");
   }
   function signout() {
@@ -271,7 +273,7 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
       const target = document.createElement("p"); target.className = "destination"; target.textContent = link.destinationUrl;
       const meta = document.createElement("div"); meta.className = "link-meta";
       const visits = document.createElement("span"); visits.textContent = (link.clickCount || 0) + " visits";
-      const created = document.createElement("span"); created.textContent = new Date(link.createdAt).toLocaleDateString();
+      const created = document.createElement("span"); created.textContent = formatMalaysiaTime(link.createdAt);
       meta.append(visits, created); body.append(anchor, target, meta);
       const actions = document.createElement("div"); actions.className = "link-actions";
       function action(name, handler, extra = "") {
@@ -327,6 +329,52 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
     await firebaseMethods.signOut(firebaseAuth);
     authFormView();
     setMode("signin");
+  });
+  $("google-signin").addEventListener("click", async () => {
+    const button = $("google-signin");
+    button.disabled = true;
+    note("form-message", "");
+    try {
+      if (!firebaseAuth || !firebaseMethods) throw new Error("Authentication is still loading. Try again.");
+      const provider = new firebaseMethods.GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: "select_account" });
+      const result = await firebaseMethods.signInWithPopup(firebaseAuth, provider);
+      if (!result.user.emailVerified) throw new Error("Please verify your Google email before continuing.");
+      await signedIn(result.user);
+    } catch (error) {
+      const known = {
+        "auth/account-exists-with-different-credential": "This email already has an account using a different sign-in method. Sign in with the original method first to keep access to existing links.",
+        "auth/popup-blocked": "Your browser blocked Google sign-in. Allow pop-ups and try again.",
+        "auth/popup-closed-by-user": "Google sign-in was cancelled.",
+        "auth/operation-not-allowed": "Google sign-in is not yet enabled for this application.",
+        "auth/unauthorized-domain": "This website domain is not authorized for Google sign-in.",
+        "auth/cancelled-popup-request": "Another sign-in window was opened. Try again."
+      };
+      note("form-message", known[error.code] || error.message || "Google sign-in failed. Please try again.");
+    } finally { button.disabled = false; }
+  });
+  $("forgot-password").addEventListener("click", async () => {
+    const address = $("email").value.trim();
+    if (!address || !$("email").checkValidity()) {
+      note("form-message", "Enter your email address above, then select Forgot password.");
+      $("email").focus();
+      return;
+    }
+    const button = $("forgot-password");
+    button.disabled = true;
+    try {
+      if (!firebaseAuth || !firebaseMethods) throw new Error("Authentication is still loading.");
+      await firebaseMethods.sendPasswordResetEmail(firebaseAuth, address);
+      note("form-message", "If an account can be recovered with this email, you'll receive reset instructions. Check your inbox and spam folder.", true);
+    } catch (error) {
+      if (error.code === "auth/too-many-requests") {
+        note("form-message", "Too many reset requests. Please try again later.");
+      } else if (error.code === "auth/invalid-email") {
+        note("form-message", "Enter a valid email address.");
+      } else {
+        note("form-message", "Password reset could not be requested right now. Try again later.");
+      }
+    } finally { button.disabled = false; }
   });
   $("header-signin").addEventListener("click", () => openAuth(false));
   $("header-signout").addEventListener("click", async () => { if (firebaseAuth) await firebaseMethods.signOut(firebaseAuth); signout(); toast("Signed out."); });
