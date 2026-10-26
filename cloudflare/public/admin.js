@@ -133,7 +133,7 @@ async function loadD1Accounts() {
           note("d1-message", "Orphaned D1 account and links removed.");
           await Promise.all([loadD1Accounts(), refreshOverview()]);
         } catch (error) { note("d1-message", error.message); }
-      });
+      }, account.isAdmin);
       list.append(row);
     }
     if (!data.accounts.length) list.append(el("p", "No Firebase-linked D1 records found."));
