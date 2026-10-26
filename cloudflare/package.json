@@ -6,13 +6,15 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
-    "test": "node --test"
+    "test": "node --test",
+    "build:pages": "node scripts/build-pages.mjs"
   },
   "dependencies": {
     "uqr": "^0.1.3"
   },
   "devDependencies": {
-    "wrangler": "^4.0.0"
+    "wrangler": "^4.0.0",
+    "esbuild": "^0.28.2"
   },
   "overrides": {
     "undici": "7.30.1"
