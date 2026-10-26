@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
-    "test": "node --test",
-    "build:pages": "node scripts/build-pages.mjs"
+    "test": "node --test test/core.test.js",
+    "build:pages": "node scripts/build-pages.mjs",
+    "smoke": "node test/smoke.mjs"
   },
   "dependencies": {
     "uqr": "^0.1.3",
