@@ -35,16 +35,37 @@
     window.setTimeout(() => $("email").focus(), 0);
   }
   function closeAuth() { if (modal.open) modal.close(); }
-  function setMode(mode) {
-    authMode = mode;
-    function updateAliasPreview() {
+  let domains = {primary: window.location.origin, shortDomain: "", shortAvailable: false};
+  function selectedShortDomain() {
+    return domains.shortAvailable && $("use-short-domain").checked;
+  }
+  function updateAliasPreview() {
+    const base = selectedShortDomain() ? domains.shortDomain : domains.primary;
     const alias = $("custom-alias").value.trim();
+    $("alias-prefix").textContent = new URL(base).host + " /";
     $("alias-preview").textContent = alias
-      ? "Preview: " + window.location.origin + "/" + alias
+      ? "Preview: " + base + "/" + alias
       : "Leave blank to generate a random name.";
   }
-  $("alias-prefix").textContent = window.location.host + " /";
+  async function loadDomains() {
+    try {
+      const data = await api("/api/v1/links/domains", {auth:false});
+      domains = data;
+      const active = Boolean(data.shortAvailable && data.shortDomain);
+      show("domain-option", active);
+      if (!active) $("use-short-domain").checked = false;
+      $("domain-hint").textContent = active
+        ? "Choose your regular link domain or the shorter address."
+        : "Shorter domain is not connected yet. Your regular domain will be used.";
+    } catch {
+      $("domain-hint").textContent = "Domain options could not be checked. The regular domain will be used.";
+    }
+    updateAliasPreview();
+  }
   $("custom-alias").addEventListener("input", updateAliasPreview);
+  $("use-short-domain").addEventListener("change", updateAliasPreview);
+    function setMode(mode) {
+    authMode = mode;
   document.querySelectorAll("[data-auth-mode]").forEach(b => {
       const active = b.dataset.authMode === mode;
       b.classList.toggle("active", active);
@@ -83,16 +104,16 @@
       await refresh();
       if (pendingUrl !== null) {
         const target = pendingUrl; pendingUrl = null;
-        await createLink(target.url, target.alias);
+        await createLink(target.url, target.alias, target.shortDomain);
       } else toast("Signed in successfully.");
     } catch (error) { note("form-message", error.message); }
     finally { button.disabled = false; }
   }
-  async function createLink(url, alias) {
+  async function createLink(url, alias, shortDomain = false) {
     const button = $("shorten-button"); button.disabled = true; note("shorten-message", "");
     try {
       if (!/^https:\/\//i.test(url)) throw new Error("Please enter a link starting with https://");
-      const link = await api("/api/v1/links", { method: "POST", body: { destinationUrl: url, customAlias: alias || null } });
+      const link = await api("/api/v1/links", { method: "POST", body: { destinationUrl: url, customAlias: alias || null, useShortDomain: shortDomain } });
       latestLink = link;
       $("result-url").textContent = link.shortUrl;
       $("result-url").href = link.shortUrl;
@@ -100,6 +121,7 @@
       show("latest-result", true);
       $("long-url").value = "";
       $("custom-alias").value = "";
+      $("use-short-domain").checked = false;
       updateAliasPreview();
       await refresh();
       $("latest-result").scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -112,8 +134,9 @@
     if (!/^https:\/\//i.test(url)) { note("shorten-message", "Please paste a public HTTPS website link."); return; }
     const alias = $("custom-alias").value.trim();
     if (alias && !/^[a-z0-9][a-z0-9-]{2,29}$/.test(alias)) { note("shorten-message", "Use 3–30 lowercase letters, numbers or hyphens for your custom name."); return; }
-    if (!token) { pendingUrl = { url, alias }; openAuth(true); return; }
-    createLink(url, alias);
+    const shortDomain = selectedShortDomain();
+    if (!token) { pendingUrl = { url, alias, shortDomain }; openAuth(true); return; }
+    createLink(url, alias, shortDomain);
   }
   function render() {
     $("total-links").textContent = String(links.length);
@@ -185,4 +208,5 @@
   $("result-copy").addEventListener("click", () => { if (latestLink) copyLink(latestLink.shortUrl); });
   $("result-qr").addEventListener("click", () => { if (latestLink) downloadQr(latestLink); });
   setMode("signin");
+  loadDomains();
 })();
