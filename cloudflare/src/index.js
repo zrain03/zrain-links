@@ -1,4 +1,5 @@
 import { getOrigin, randomAlias, validateAlias, validateDestination } from "./core.js";
+import { renderSVG } from "uqr";
 
 const json = (data, status = 200, headers = {}) => new Response(JSON.stringify(data), { status, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store", "x-content-type-options": "nosniff", ...headers } });
 const error = (code, message, status) => json({ status, code, message }, status);
@@ -116,7 +117,7 @@ export default {
           const user = await authUser(request,db);
           const link = await db.prepare("SELECT id,code FROM short_links WHERE id=? AND owner_id=?").bind(qr[1],user.id).first();
           if (!link) return error("NOT_FOUND","Link not found.",404);
-          return error("UNAVAILABLE","QR generation will be available in the next version.",501);
+          return new Response(renderSVG(getOrigin(request,env.PUBLIC_BASE_URL)+"/"+link.code), {headers:{"content-type":"image/svg+xml; charset=utf-8","content-disposition":"attachment; filename=\"zrain-links-"+link.code+".svg\"","cache-control":"no-store"}});
         }
         return error("NOT_FOUND","API endpoint not found.",404);
       }
@@ -130,7 +131,10 @@ export default {
           }
         }
       }
-      if (method === "GET" || method === "HEAD") return env.ASSETS.fetch(request);
+      if (method === "GET" || method === "HEAD") {
+        if (isAlias(path) || path.startsWith("/r/")) return error("NOT_FOUND","Short link not found.",404);
+        return env.ASSETS.fetch(request);
+      }
       return error("NOT_FOUND","Not found.",404);
     } catch (e) { return wrap(e); }
   }
