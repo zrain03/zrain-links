@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f8f7f2">
+<meta name="description" content="Zrain Links — create, organize and share links with QR codes and simple analytics.">
+<title>Zrain Links — Your links, thoughtfully organized.</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/app.css">
+<script src="/app.js" defer></script>
+</head>
+<body>
+<a href="#main" class="skip">Skip to content</a>
+<header class="header"><div class="shell nav"><a class="logo" href="/"><span class="zmark">Z</span><span>zrain<span class="slash">/</span>links</span></a><div class="nav-right"><span class="nav-status"><i></i> Your personal link studio</span><a class="nav-link" href="https://github.com/zrain03/zrain-links" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div></div></header>
+<main id="main" class="shell">
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="overline"><span class="dot"></span> SHORT LINKS, SIMPLIFIED</p>
+      <h1>Make every link<br><em>more useful.</em></h1>
+      <p class="lead">Shorten long URLs, create a scannable QR code, and see how often people visit. Everything in one simple space.</p>
+      <div class="hero-tags"><span>✳ Short links</span><span>✳ QR codes</span><span>✳ Click counts</span></div>
+    </div>
+    <div class="hero-card" aria-hidden="true"><div class="illustration-head"><span>YOUR LINK STUDIO</span><span class="illustration-live">● ONLINE WHEN DEPLOYED</span></div><div class="fake-url">https://example.com/a/very-long-address</div><div class="illustration-arrow">↓</div><div class="short-result"><div><small>YOUR SHORT LINK</small><strong>your-domain/r/Ab7xK2mQ9</strong></div><span>↗</span></div><div class="illustration-bottom"><span>◎ Scan & share</span><span>↗ Track visits</span></div></div>
+  </section>
+  <section class="app-area" aria-label="Link management">
+    <div class="area-heading"><div><p class="overline">YOUR WORKSPACE</p><h2>Ready when you are.</h2></div><p>Create an account to save your links. Already have one? Sign in below.</p></div>
+    <section class="auth-card" id="auth-section" aria-labelledby="auth-heading">
+      <div class="auth-intro"><span class="section-icon">⌁</span><h3 id="auth-heading">Welcome to Zrain Links</h3><p id="auth-caption">Sign in to manage your own short links and QR codes.</p></div>
+      <div class="auth-body">
+        <div class="auth-tabs" role="tablist" aria-label="Account action"><button id="signin-tab" role="tab" aria-selected="true" aria-controls="auth-form" type="button" class="active" data-auth-mode="signin">Sign in</button><button id="signup-tab" role="tab" aria-selected="false" aria-controls="auth-form" type="button" data-auth-mode="signup">Create account</button></div>
+        <form id="auth-form" aria-labelledby="auth-heading">
+          <label for="email">Email address</label><input id="email" name="email" type="email" placeholder="you@example.com" maxlength="254" autocomplete="email" required>
+          <label for="password">Password <span id="password-hint" class="hint">12 or more characters</span></label><input id="password" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" minlength="1" required>
+          <p id="form-message" class="form-message" role="status" aria-live="polite"></p>
+          <button id="auth-submit" type="submit" class="button primary">Sign in <span aria-hidden="true">→</span></button>
+        </form><p class="auth-small">Your account is private to this Zrain Links installation. Do not reuse a password from another service.</p>
+      </div>
+    </section>
+    <section id="dashboard" class="dashboard" hidden aria-labelledby="dash-title">
+      <div class="dash-bar"><div><p class="overline">YOUR DASHBOARD</p><h3 id="dash-title">Good to have you here.</h3><p id="signed-in-as"></p></div><button id="signout" type="button" class="button outline">Sign out</button></div>
+      <div class="metrics"><article><span>Total links</span><strong id="total-links">0</strong><small>Created in your account</small></article><article><span>Total visits</span><strong id="total-clicks">0</strong><small>Across your short links</small></article><article><span>QR ready</span><strong id="total-qrs">0</strong><small>Shareable codes</small></article></div>
+      <div class="workspace-grid">
+        <section class="create-panel" aria-labelledby="create-title"><p class="overline">CREATE</p><h3 id="create-title">A shorter way to share.</h3><p>Paste a public HTTPS address. We'll create a short link and QR code just for you.</p>
+          <form id="create-form"><label for="long-url">Destination URL</label><input id="long-url" name="destination" type="url" placeholder="https://example.com/my-page" maxlength="2048" inputmode="url" required><span class="input-note">Only public HTTPS URLs are allowed.</span><p id="create-message" class="form-message" role="status" aria-live="polite"></p><button type="submit" id="create-button" class="button primary">Create short link <span aria-hidden="true">↗</span></button></form>
+        </section>
+        <aside class="guide-panel"><span class="guide-spark">✳</span><p class="overline">HOW IT WORKS</p><h3>Three steps.<br>One tidy link.</h3><ol><li><strong>Paste</strong><span>Add a public HTTPS URL.</span></li><li><strong>Shorten</strong><span>We give it a new short address.</span></li><li><strong>Share</strong><span>Copy your link or save its QR image.</span></li></ol></aside>
+      </div>
+      <section class="links-section" aria-labelledby="links-title"><div class="links-top"><div><p class="overline">YOUR COLLECTION</p><h3 id="links-title">Your short links</h3></div><button type="button" id="refresh-links" class="button outline">↻ Refresh</button></div><p id="list-status" class="list-status" role="status" aria-live="polite"></p><div id="links-list" class="links-list"></div></section>
+    </section>
+  </section>
+  <section class="faq-section"><div><p class="overline">A FEW USEFUL ANSWERS</p><h2>Good to know.</h2></div><div class="faq-list"><details><summary>Will my short links still work when I close the browser?</summary><p>With a properly deployed backend and persistent database, yes. On the local H2 demo profile, data is reset when the Java server stops.</p></details><details><summary>Can people use my QR code without signing in?</summary><p>Yes. Only the link owner needs an account to manage or download the QR. Anyone with a working short-link address or QR code can open its destination.</p></details><details><summary>What does the visit counter show?</summary><p>It counts requests to each short link. It does not currently measure unique visitors or detailed device/location analytics.</p></details><details><summary>Is this the same as Zrain Auth Cloud?</summary><p>No. Accounts in this application belong to the Zrain Links backend. The separate Zrain Auth Cloud identity service has not been built.</p></details></div></section>
+</main>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<footer class="shell footer"><div><span class="zmark small">Z</span><strong>Zrain</strong><span>One ecosystem. Many useful tools.</span></div><div><a href="mailto:zrain.dev@gmail.com">Contact</a><a href="https://github.com/zrain03/zrain-links" target="_blank" rel="noopener noreferrer">Source code ↗</a></div></footer>
+</body></html>
