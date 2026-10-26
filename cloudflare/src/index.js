@@ -1,3 +1,4 @@
+import { handleAdmin } from "./admin.js";
 import { randomAlias, validateAlias, validateDestination } from "./core.js";
 import { renderSVG } from "uqr";
 import { createRemoteJWKSet, jwtVerify } from "jose";
@@ -110,6 +111,7 @@ async function handleRequest(request, env) {
         return json({ name: code, available: !taken, shortUrl: PUBLIC_LINK_ORIGIN + "/" + code });
       }
       if (path.startsWith("/api/v1/")) {
+        if (path.startsWith("/api/v1/admin/")) return await handleAdmin(request, env, db);
         if (method === "POST" && path === "/api/v1/auth/register") {
           await throttle(db, request, "signup", 12);
           const body = await readBody(request), email = emailOf(body.email), password = passOf(body.password);
