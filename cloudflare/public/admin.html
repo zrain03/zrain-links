@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#fffaf6">
+  <title>Admin Dashboard — Zrain Links</title>
+  <link rel="icon" href="/zrain-logo.webp" type="image/webp">
+  <link rel="stylesheet" href="/app.css?v=admin-20261026-1">
+  <link rel="stylesheet" href="/admin.css?v=admin-20261026-1">
+  <script type="module" src="/admin.js?v=admin-20261026-1"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="container topbar-inner">
+    <a class="brand" href="/"><img src="/zrain-logo.webp" alt="" width="40" height="40"><span><strong>Zrain</strong> Links</span></a>
+    <nav class="topnav" aria-label="Navigation">
+      <a href="/">Create link</a>
+      <a class="current" href="/admin.html" aria-current="page">Admin dashboard</a>
+    </nav>
+    <button id="sign-out" class="button button-outline" type="button" hidden>Sign out</button>
+  </div>
+</header>
+<main class="container admin-main" id="main">
+  <div class="admin-heading">
+    <div><p class="eyebrow">PRIVATE MANAGEMENT</p><h1>Admin dashboard</h1>
+      <p>Manage Zrain Links users, short links and traffic.</p></div>
+    <a class="button button-outline" href="/">← Back to website</a>
+  </div>
+  <p id="admin-status" class="admin-status" role="status" aria-live="polite">Checking administrator access…</p>
+  <div id="admin-content" hidden>
+    <section class="admin-stats" aria-label="Platform statistics">
+      <article><span>Short links</span><strong id="metric-links">—</strong></article>
+      <article><span>Total visits</span><strong id="metric-visits">—</strong></article>
+      <article><span>Known D1 accounts</span><strong id="metric-users">—</strong></article>
+    </section>
+    <div class="admin-tabs" role="group" aria-label="Admin areas">
+      <button type="button" id="tab-links" class="active" aria-pressed="true">All links</button>
+      <button type="button" id="tab-users" aria-pressed="false">Firebase users</button>
+      <button type="button" id="refresh-admin">Refresh data</button>
+    </div>
+    <section id="links-panel" class="admin-panel" aria-labelledby="links-heading">
+      <div class="admin-panel-heading"><div><h2 id="links-heading">All short links</h2><p>Search by alias, destination or owner ID.</p></div></div>
+      <form id="admin-search-form" class="admin-search">
+        <label for="link-query">Search links</label>
+        <div><input id="link-query" type="search" maxlength="100" placeholder="Search all links…" autocomplete="off">
+          <button type="submit" class="button button-primary">Search</button></div>
+      </form>
+      <p id="links-message" class="admin-panel-message" role="status" aria-live="polite"></p>
+      <div id="admin-links-list" class="admin-list"></div>
+      <div class="admin-page-nav"><button type="button" id="links-prev">← Previous</button><span id="links-page-label"></span><button type="button" id="links-next">Next →</button></div>
+    </section>
+    <section id="users-panel" class="admin-panel" aria-labelledby="users-heading" hidden>
+      <div class="admin-panel-heading"><div><h2 id="users-heading">Firebase accounts</h2><p>Deleting an account also deletes the links that belong to it.</p></div></div>
+      <p id="users-message" class="admin-panel-message" role="status" aria-live="polite"></p>
+      <div id="admin-users-list" class="admin-list"></div>
+      <div class="admin-page-nav"><button type="button" id="users-next">Load more users →</button></div>
+    </section>
+  </div>
+</main>
+<footer class="footer"><div class="container footer-inner"><div class="footer-brand"><strong>Developed by Zrain</strong></div><div class="footer-links"><a href="/">Zrain Links</a></div></div></footer>
+</body>
+</html>
