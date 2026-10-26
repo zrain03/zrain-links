@@ -14,12 +14,23 @@ A **work-in-progress backend slice** is being reviewed in the `feature/links-fou
 - Authenticated `GET /api/v1/links/{id}/qr`: output the current owner's QR code as PNG.
 - Added integration tests for these behaviors (pending CI validation).
 
+### Web interface
+A new responsive **Spring Boot-served frontend** lives at `src/main/resources/static/`: `index.html`, `app.css`, `app.js` and `favicon.svg`. It connects to real REST endpoints on the **same origin**, provides registration/login, account-specific short links, QR PNG downloads, visit counts and link deletion.
+
+The browser access token currently stays **only in memory**, not in localStorage; the user must sign in again after reloading. Do not deploy publicly until token/session UX, account recovery, abuse protection, safe redirect operations and deployment policy have been reviewed.
+
+### Database profiles
+- `local` and `test`: ephemeral H2 schema, Flyway disabled.
+- `prod`: PostgreSQL required via `DB_JDBC_URL`, `DB_USERNAME`, `DB_PASSWORD`, with Flyway migration `V1__create_users_and_links.sql` and schema validation.
+- Set `ZRAIN_LINKS_BASE_URL` to the externally accessible application origin so short links and QR codes use the correct hostname.
+- The PostgreSQL profile and migration are **not yet demonstrated against a deployed PostgreSQL instance**.
+
 ### Next development work
-1. Validate dependencies, compilation, integration tests and route security on GitHub Actions; correct failures before merge.
+1. Confirm CI for the latest frontend, migration and configuration changes; review failures before merge.
 2. Replace the copied Auth Starter package names, documentation, static sample site and app icon with Zrain Links branding.
 3. Add persistent PostgreSQL schema migrations and separate development/test/production profiles. **H2 local is temporary and loses data on restart.**
 4. Security review: redirect abuse, phishing reports, URL/domain controls, abuse throttling, CSRF/CORS, account recovery and token lifecycle.
-5. Build the user-facing link management frontend, accessible QR downloads, analytics dashboard and admin moderation tools.
+5. Extend the working frontend with accessible notifications, richer analytics, user onboarding and admin moderation tools.
 6. Production deployment with secure signing secrets, domain/TLS, backups, logging, uptime monitoring, and a clear privacy policy.
 
 ### Local build (after cloning the development branch)
@@ -32,3 +43,9 @@ git switch feature/links-foundation
 Configure `ZRAIN_JWT_SECRET_BASE64` as a random base64 secret of at least 32 bytes before running the API. See the original Auth Starter README for the local key generator. The environment variable `ZRAIN_LINKS_BASE_URL` controls the public short-URL origin; its default is `http://localhost:8080`.
 
 Do not deploy the current development branch publicly as a finished link shortening service. Zrain Auth Starter remains independent and unchanged.
+
+### Public release blockers
+- Restrict phishing, malicious links and abusive usage; create reporting/moderation controls and apply rate limits.
+- Verify PostgreSQL/Flyway integration, backups, HTTPS and the target cloud deployment.
+- Review cross-user isolation, redirects and frontend security with tests and perform a manual end-to-end browser test.
+- The starter's documentation site copied in `/docs` is not the active Zrain Links frontend; do not publish it as the Links website.
