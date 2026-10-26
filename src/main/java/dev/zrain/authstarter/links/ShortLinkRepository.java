@@ -10,11 +10,8 @@ import java.util.UUID;
 public interface ShortLinkRepository extends JpaRepository<ShortLink, UUID> {
     Optional<ShortLink> findByCode(String code);
     boolean existsByCodeIgnoreCase(String code);
-    Optional<ShortLink> findByCodeAndCustomDomainIsNull(String code);
-    Optional<ShortLink> findByCodeAndCustomDomain(String code, String customDomain);
     List<ShortLink> findByOwnerIdOrderByCreatedAtDesc(UUID ownerId);
     Optional<ShortLink> findByIdAndOwnerId(UUID id, UUID ownerId);
-    boolean existsByCustomDomain(String customDomain);
 
     @Modifying
     @Query("update ShortLink l set l.clickCount = l.clickCount + 1 where l.id = :id")
