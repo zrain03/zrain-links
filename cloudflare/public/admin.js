@@ -202,7 +202,8 @@ async function initialize() {
       $("sign-out").hidden = !user;
       if (!user) { note("admin-status", "Access restricted. Sign in using your authorized Google account on the main website."); return; }
       try {
-        await adminApi("/api/v1/admin/me");
+        const capabilities = await adminApi("/api/v1/admin/me");
+        $("admin-config-warning").hidden = !!capabilities.firebaseManagementConfigured;
         $("admin-status").hidden = true;
         $("admin-content").hidden = false;
         await Promise.all([refreshOverview(), loadLinks()]);
