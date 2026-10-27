@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
-    "test": "node --test test/core.test.js test/auth-ui.test.js test/admin.test.js test/visits.test.js test/qr-preview.test.js test/zrain-ui.test.js",
+    "test": "node --test test/core.test.js test/auth-ui.test.js test/admin.test.js test/visits.test.js test/qr-preview.test.js test/zrain-ui.test.js test/section-nav.test.js",
     "build:pages": "node scripts/build-pages.mjs",
     "smoke": "node test/smoke.mjs",
     "ui:sync": "node scripts/sync-zrain-ui.mjs",
