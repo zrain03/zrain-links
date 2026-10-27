@@ -1,0 +1,21 @@
+/* One small QR preview dialog shared by Direct Links and Visits Links. */
+.qr-dialog{width:min(410px,calc(100vw - 24px));max-height:calc(100dvh - 28px);overflow:auto;border:1px solid #eadbd1;border-radius:20px;background:#fffdfb;padding:23px;box-shadow:0 30px 90px #24334650;color:#1b2938}
+.qr-dialog::backdrop{background:rgba(22,33,47,.55)}
+.qr-dialog__top{display:flex;align-items:start;justify-content:space-between;gap:12px}
+.qr-dialog__top h2{margin:0;font-size:21px;letter-spacing:-.55px}
+.qr-dialog__top button{border:0;border-radius:8px;background:#fff1e9;color:#9f4a34;font-size:23px;line-height:1;width:34px;height:34px;display:grid;place-items:center}
+.qr-dialog__intro{margin:6px 0 17px;color:#78869a;font-size:12px;line-height:1.6}
+.qr-dialog__image{display:grid;place-items:center;background:#fff;border:1px solid #eddcd2;border-radius:15px;padding:19px;min-height:260px}
+.qr-dialog__image img{display:block;width:min(242px,100%);height:auto;aspect-ratio:1;object-fit:contain}
+.qr-dialog__image img[hidden]{display:none}
+.qr-dialog__image p{font-size:12px;color:#7e8895;text-align:center;margin:0}
+.qr-dialog__link{display:block;margin:16px 0 8px;text-align:center;color:#b85035;font-size:12px;font-weight:750;overflow-wrap:anywhere}
+.qr-dialog__link:hover{text-decoration:underline}
+.qr-dialog__error{margin:8px 0;font-size:12px;color:#ae4538;text-align:center}
+.qr-dialog__actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:18px}
+.qr-dialog__actions .button{min-height:44px;padding:10px;font-size:12px}
+.qr-dialog__actions .button-primary{background:#c45335;color:#fff}
+.qr-dialog__actions .button-primary:hover{background:#a9402b}
+.qr-dialog__actions .button-outline{color:#b85035;border-color:#e7cec0}
+.qr-dialog__actions .button-outline:hover{background:#fff2e9}
+@media(max-width:440px){.qr-dialog{padding:18px}.qr-dialog__image{min-height:235px;padding:14px}.qr-dialog__actions{grid-template-columns:1fr}}
