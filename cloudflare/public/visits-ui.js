@@ -1,5 +1,5 @@
 import {formatMalaysiaTime} from "./time-format.js?v=myt-seconds-20261026-2";
-import {isValidAlias} from "./alias-utils.js";
+
 
 const $ = id => document.getElementById(id);
 const API = "https://zrain-links.zrain-dev.workers.dev";
@@ -45,10 +45,10 @@ function preview(){
     note.textContent="A random short link will be generated when you publish. The name cannot be edited.";
   } else if (!title) {
     link.textContent="zrain-links.web.app/your-title";
-    note.textContent="The public link is generated from your title and cannot be edited.";
-  } else if (isValidAlias(derived)) {
-    link.textContent=boundLink(derived);
-    note.textContent="Based on your title. If this name is taken, change the title or enable shortening.";
+    note.textContent="Your title becomes the link name with a random four-letter suffix.";
+  } else if (isValidVisitsPrefix(derived)) {
+    link.textContent=boundLink(derived+"-XXXX");
+    note.textContent="A different four-letter suffix is added when you publish, keeping your title in the URL.";
   } else {
     link.textContent="zrain-links.web.app/…";
     note.textContent="Choose a title that produces at least 3 URL-safe letters or numbers, or enable shortening.";
@@ -132,7 +132,10 @@ async function openPicker(){
   $("visits-picker").showModal();$("visits-search").focus();
 }
 function slug(text){
-  return text.normalize("NFKD").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,30).replace(/-+$/,"");
+  return text.normalize("NFKD").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,25).replace(/-+$/,"");
+}
+function isValidVisitsPrefix(name){
+  return /^[a-z0-9][a-z0-9-]{2,24}$/.test(name) && !name.endsWith("-");
 }
 function boundLink(code){return PUBLIC+encodeURIComponent(code)}
 async function submit(event){
@@ -143,7 +146,7 @@ async function submit(event){
   const name=slug(title);
   if(!destination.startsWith("https://")){message("visits-message","Use a public HTTPS destination.");return}
   if(title.length<3||title.length>90){message("visits-message","Use a title with 3–90 characters.");return}
-  if(!automatic&&!isValidAlias(name)){
+  if(!automatic&&!isValidVisitsPrefix(name)){
     message("visits-message","This title cannot form a valid public link. Change the title or enable automatic shortening.");return;
   }
   if(!actions.length){message("visits-message","Choose at least one action. Visit a page is optional.");return}
@@ -218,7 +221,7 @@ async function refreshList(){
 $("visits-title").addEventListener("input",preview);
 $("visits-auto-shorten").addEventListener("change",preview);
 $("visits-add-page").addEventListener("click",()=>{
-  addAction({id:"visit_page",label:"Visit a page",platform:"Other"});
+  addAction({id:"visit_page",label:"Visit a page",platform:"Website"});
 });
 $("visits-add-action").addEventListener("click",openPicker);
 $("visits-picker-close").addEventListener("click",()=>$("visits-picker").close());
