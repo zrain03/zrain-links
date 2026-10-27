@@ -133,3 +133,10 @@ test("publishing a duplicate title retries a new mixed-case suffix without alter
   assert.equal(inserted[0].args[2],result.code);
   assert.equal(inserted[0].args[3],result.code.toLowerCase());
 });
+
+test("visitor create-your-own-link opens the Visits builder, not Direct Links", async()=>{
+  const [visitor,home]=await Promise.all([read("../public/visit.html"),read("../public/index.html")]);
+  assert.match(visitor, /href="\/#visits-links">Create your own link<\/a>/);
+  assert.match(home, /id="visits-links"/);
+  assert.doesNotMatch(visitor, /href="\/">Create your own link<\/a>/);
+});
