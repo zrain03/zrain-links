@@ -63,3 +63,23 @@
 @media(max-width:1150px){.visits-hero{grid-template-columns:1fr}.visits-intro{padding:8px 0}.visits-editor{grid-template-columns:1.3fr .8fr}.visits-intro h2{max-width:660px}}
 @media(max-width:780px){.two-modes{flex-direction:column;align-items:stretch}.visits-editor{grid-template-columns:1fr}.visits-preview{position:static}.visits-picker-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:520px){.visits-intro h2{font-size:41px}.two-modes{padding:19px}.mode-choices{flex-wrap:wrap;border-radius:13px}.visit-page-feature{flex-direction:column;align-items:stretch}.visit-page-feature .button{width:100%}.visits-action-row{grid-template-columns:minmax(0,1fr) auto}.visits-action-row input{grid-row:2;grid-column:1/-1}.visits-picker-grid{grid-template-columns:1fr}}
+
+/* Public visitor action flow: existing Zrain header/footer, dedicated unlock surface. */
+.visit-page-main{min-height:65vh;padding:54px 0 95px;display:flex;justify-content:center}
+.visit-page-card{width:min(640px,100%);height:max-content;background:#fffdfa;border:1px solid #ebddd4;border-radius:22px;padding:32px;box-shadow:0 14px 45px #562f2211}
+.visit-page-card h1{font-size:clamp(28px,4vw,41px);letter-spacing:-1.3px;line-height:1.2;margin:9px 0}
+.visit-page-card>p{color:#728092;font-size:13px;line-height:1.7}
+.visit-page-card .visits-preview-stats{margin:20px 0 25px}
+.visit-page-actions{display:grid;gap:12px;margin:15px 0 22px}
+.visit-step{border:1px solid #e9dcd3;background:#fff9f5;border-radius:13px;padding:15px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.visit-step strong{display:block;font-size:13px;color:#243247}
+.visit-step small{font-size:11px;color:#8793a2}
+.visit-step-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.visit-open-action{display:inline-flex;align-items:center;justify-content:center;padding:10px 13px;border-radius:9px;background:#c45335;color:white;font-size:12px;font-weight:750;white-space:nowrap}
+.visit-open-action:hover{background:#a53a25;text-decoration:none}
+.visit-step-actions button{border:1px solid #d9bbac;background:white;border-radius:9px;padding:9px 12px;color:#a54933;font-weight:750;font-size:11px}
+.visit-step-actions button:disabled{opacity:.45;cursor:not-allowed}
+.visit-unlock-button{width:100%;min-height:49px;font-size:14px}
+.visit-unlock-button:disabled{background:#dedbd8;box-shadow:none;color:#777}
+.visit-page-card .visit-honesty{font-size:11px;color:#818b95;margin-top:17px}
+@media(max-width:570px){.visit-page-main{padding:30px 0 65px}.visit-page-card{padding:22px}.visit-step{align-items:stretch;flex-direction:column}.visit-step-actions{justify-content:stretch}.visit-step-actions>*{flex:1}}
