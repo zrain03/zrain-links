@@ -13,3 +13,6 @@ target/
 *.mv.db
 *.trace.db
 .DS_Store
+
+# Firebase Hosting local deployment cache
+.firebase/
