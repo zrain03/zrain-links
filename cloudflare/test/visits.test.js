@@ -7,9 +7,9 @@ const read = path => readFile(new URL(path,import.meta.url),"utf8");
 test("Visit a page is prominently supported but not a required action type",()=>{
   assert.equal(ACTION_CATALOG[0].id,"visit_page");
   assert.ok(ACTION_CATALOG.length>=20 && ACTION_CATALOG.length<=30);
-  const allowed=new Set(["Other","YouTube","Instagram","TikTok","X / Twitter","Facebook","Reddit","LinkedIn","Pinterest","Snapchat","Threads"]);
+  const allowed=new Set(["Website","YouTube","Instagram","TikTok","X / Twitter","Facebook","Reddit","LinkedIn","Pinterest","Snapchat","Threads"]);
   assert.ok(ACTION_CATALOG.every(action=>allowed.has(action.platform)));
-  assert.equal(ACTION_CATALOG.filter(action=>action.platform==="Other").length,1);
+  assert.equal(ACTION_CATALOG.filter(action=>action.platform==="Website").length,1);
   assert.ok(!ACTION_CATALOG.some(action=>["GitHub","Spotify","Roblox","Discord","Telegram","Google Play Store"].includes(action.platform)));
   assert.equal(ACTION_LABELS.get("github_star").label,"Star repository"); // old published links remain readable
   assert.throws(()=>validateVisitsActions([{type:"github_star",url:"https://github.com/zrain03/zrain-links"}]));
