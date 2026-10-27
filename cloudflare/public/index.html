@@ -12,9 +12,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/app.css?v=admin-20261026-1">
   <link rel="stylesheet" href="/brand.css?v=zrain-shared-20261026-1">
-  <link rel="stylesheet" href="/visits.css?v=visits-20261027-1">
+  <link rel="stylesheet" href="/visits.css?v=visits-20261027-2">
   <script type="module" src="/app.js?v=admin-20261026-2"></script>
-  <script type="module" src="/visits-ui.js?v=visits-20261027-1"></script>
+  <script type="module" src="/visits-ui.js?v=visits-20261027-2"></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -134,11 +134,14 @@
         <div class="field-block"><label for="visits-title">2. Link title <span class="required-star">*</span></label>
           <p class="field-explanation">The name visitors see on your unlock page.</p>
           <input id="visits-title" type="text" maxlength="90" minlength="3" placeholder="e.g. Free resource pack" required></div>
-        <div class="field-block"><label for="visits-alias">3. Public link name <span class="required-star">*</span></label>
-          <p class="field-explanation">3–30 lowercase letters, numbers or hyphens. Separate from Direct Link names.</p>
-          <div class="alias-input"><span class="alias-prefix">zrain-links.web.app/</span><input id="visits-alias" type="text" maxlength="30" pattern="[a-z0-9][a-z0-9-]{2,29}" placeholder="my-resource" required></div></div>
+        <div class="option-box visits-auto-option">
+          <label class="check-row" for="visits-auto-shorten">
+            <input type="checkbox" id="visits-auto-shorten">
+            <span><strong>Shorten link automatically</strong><small>Optional: generate a short random name instead of using your link title.</small></span>
+          </label>
+        </div>
         <div class="field-block">
-          <label>4. Actions before unlock <span class="required-star">*</span></label>
+          <label>3. Actions before unlock <span class="required-star">*</span></label>
           <p class="field-explanation">Choose 1–20 actions. Visitors open each action and mark it complete.</p>
           <div class="visit-page-feature">
             <div><strong>↗ Visit a page</strong><small>The quickest option — send visitors to a website first.</small></div>
@@ -155,6 +158,11 @@
     <aside class="preview-card visits-preview">
       <span class="preview-eyebrow">LIVE UNLOCK PREVIEW</span>
       <h3 id="visits-preview-title">Your link title</h3>
+      <div class="visits-public-preview">
+        <span class="preview-eyebrow">PUBLIC LINK</span>
+        <strong id="visits-preview-url">zrain-links.web.app/your-title</strong>
+        <small id="visits-preview-link-note">Generated automatically from your title. The name cannot be edited.</small>
+      </div>
       <div class="visits-preview-stats"><span>♧ 0 unlocked</span><span>◉ 0 views</span></div>
       <div id="visits-preview-steps" class="visits-preview-steps"><p>Choose an action to preview your visitor journey.</p></div>
       <button class="button visits-locked" type="button" disabled>🔒 Unlock link</button>
@@ -165,7 +173,7 @@
 <section class="zrain-feature-grid visits-features" aria-label="For Visits Links">
   <article><span class="feature-icon coral">↗</span><h3>Visit a page</h3><p>Prominently add a visit action — or choose another platform.</p></article>
   <article><span class="feature-icon orange">✧</span><h3>Action builder</h3><p>Set up to 20 ordered actions for visitors to complete.</p></article>
-  <article><span class="feature-icon blue">▦</span><h3>Platform choices</h3><p>YouTube, Discord, social, music, gaming and more.</p></article>
+  <article><span class="feature-icon blue">▦</span><h3>Social actions</h3><p>Choose YouTube, Instagram, TikTok, Facebook, X and other social platforms.</p></article>
   <article><span class="feature-icon coral">◉</span><h3>Unlock preview</h3><p>See how your title and action list will appear.</p></article>
   <article><span class="feature-icon blue">▣</span><h3>Separate collection</h3><p>Keep Visits Links apart from Direct Links.</p></article>
   <article><span class="feature-icon orange">▥</span><h3>Views & unlocks</h3><p>View page loads and visitor-confirmed unlocks.</p></article>
