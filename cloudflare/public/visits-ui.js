@@ -229,6 +229,7 @@ $("visits-picker").addEventListener("click",event=>{if(event.target===$("visits-
 $("visits-search").addEventListener("input",renderCatalog);
 $("visits-form").addEventListener("submit",submit);
 $("visits-copy-result").addEventListener("click",()=>{if(latest)copy(boundLink(latest.code))});
+$("visits-qr-result").addEventListener("click",()=>{if(latest)showQr(latest)});
 $("visits-refresh").addEventListener("click",refreshList);
 window.addEventListener("zrain-auth-change",refreshList);
 try {
