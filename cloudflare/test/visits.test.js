@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFile} from "node:fs/promises";
-import {ACTION_CATALOG, ACTION_LABELS, validateVisitsTitle, createVisitsAlias, randomVisitsAlias, validateVisitsActions, validateAcknowledgements} from "../src/visits-core.js";
+import {ACTION_CATALOG, ACTION_LABELS, validateVisitsTitle, createVisitsAlias, titleVisitsAlias, randomVisitsAlias, validateVisitsActions, validateAcknowledgements} from "../src/visits-core.js";
 
 const read = path => readFile(new URL(path,import.meta.url),"utf8");
 test("Visit a page is prominently supported but not a required action type",()=>{
@@ -30,9 +30,13 @@ test("rejects invalid action URLs, private destinations, and spoofed platform do
 });
 test("separate link names and acknowledgements are validated",()=>{
   assert.equal(validateVisitsTitle(" My launch "),"My launch");
-  assert.equal(createVisitsAlias("Guess The Flag",""),"guess-the-flag");
-  assert.throws(()=>createVisitsAlias("admin"));
+  assert.equal(createVisitsAlias("Guess The Flag"),"guess-the-flag");
   assert.equal(createVisitsAlias("claim mp"),"claim-mp");
+  assert.equal(createVisitsAlias("admin"),"admin"); // suffix means this is no longer a reserved public route
+  assert.match(titleVisitsAlias("claim mp"),/^claim-mp-[A-Za-z]{4}$/);
+  assert.match(titleVisitsAlias("admin"),/^admin-[A-Za-z]{4}$/);
+  assert.ok(titleVisitsAlias("A very long title that is much longer than thirty characters").length<=30);
+  assert.notEqual(titleVisitsAlias("claim mp"),titleVisitsAlias("claim mp"));
   assert.match(randomVisitsAlias(),/^[a-z0-9]{9}$/);
   assert.throws(()=>validateVisitsTitle("x"));
   assert.equal(validateAcknowledgements([1,0],2),true);
@@ -67,7 +71,14 @@ test("independent Visits Link APIs and public unlock do not break direct redirec
   assert.match(builder,/\$\("visits-preview-url"\)/);
   assert.doesNotMatch(builder,/\$\("visits-alias"\)/);
   assert.match(visits,/randomVisitsAlias\(\)/);
+  assert.match(visits,/titleVisitsAlias\(title\)/);
   assert.match(visits,/createVisitsAlias\(title\)/);
+  assert.match(visits,/attempt<12/);
+  assert.match(visits,/bind\(lower\)\.first\(\)/);
+  assert.match(visits,/bind\(linkId,user\.id,code,lower,title,destination,stamp\)/);
+  assert.match(visits,/bind\(pub\[1\]\.toLowerCase\(\)\)/);
+  assert.match(visits,/bind\(unlock\[1\]\.toLowerCase\(\)\)/);
+  assert.match(visits,/\[a-zA-Z0-9\]/);
   assert.match(visits,/if \(body\?\.customAlias != null\)/);
   assert.match(html,/id="visits-add-page"/);
   assert.match(html,/id="visits-picker"/);
@@ -76,4 +87,11 @@ test("independent Visits Link APIs and public unlock do not break direct redirec
   assert.match(visitor,/completed\.size===actions\.length/);
   assert.match(admin,/FROM visits_links/);
   assert.match(admin,/DELETE FROM visits_links WHERE owner_id/);
+});
+
+test("Zrain Links public pages avoid em dash punctuation",async()=>{
+  for (const path of ["../public/index.html","../public/visit.html","../public/admin.html",
+    "../public/visit-page.js","../public/visits-ui.js","../public/visits.css"]) {
+    assert.doesNotMatch(await read(path),/—/,path);
+  }
 });
