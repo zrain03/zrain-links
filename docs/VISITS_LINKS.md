@@ -1,13 +1,13 @@
-# Zrain Links — Visits Links (action-based unlock)
+# Zrain Links - Visits Links (action-based unlock)
 
 The same Zrain Links website now contains **two independent link types**:
 
 - **Direct Links:** unchanged direct redirect, QR, copy and visit counters.
-- **Visits Links:** separate D1 tables, owner APIs and visitor unlock pages. Creator supplies a destination URL, a title, and between 1 and 20 ordered actions. The public short name is **read-only and automatically derived from the title**, with an optional **Shorten link automatically** checkbox to generate a random name instead.
+- **Visits Links:** separate D1 tables, owner APIs and visitor unlock pages. Creator supplies a destination URL, a title, and between 1 and 20 ordered actions. The public short name is **read-only and generated from a title prefix plus a random four-letter suffix**, e.g. `claim-mp-MsAg`. If it collides with an existing Direct or Visits Link, the backend generates a different suffix. The optional **Shorten link automatically** checkbox instead creates a fully random short name without the title prefix.
 
 The **Visit a page** action is prominently available through its own Add button and the first option in the action picker, but **no particular action type is mandatory**. Users can select any supported platform action and provide an official HTTPS URL.
 The picker now offers **Visit a page and social media only** (YouTube, Instagram, TikTok, Facebook, X, Reddit, LinkedIn, Pinterest, Snapchat, Threads). Music, gaming, developer, app-store and messaging choices are no longer offered for *new* Visits Links. Existing previously published actions retain their original labels and remain usable.
-The public URL appears in **Live Unlock Preview**, not as an editable builder field. If a title-generated name is already taken, change the title or enable automatic shortening.
+The public URL appears in **Live Unlock Preview**, not as an editable builder field. The backend retries a new random suffix if a title-based name is taken. The preview shows an `XXXX` placeholder until the final name is generated at publish time.
 
 ## How visitors use a Visits Link
 
@@ -91,4 +91,4 @@ The new shared public pages are `/visit.html`, `/visits-ui.js`, `/visit-page.js`
 - Signed-out users must sign in before creating or managing either type.
 - Test a narrow mobile viewport and a desktop browser; test with fresh user data before publishing broadly.
 
-Do not claim live functionality until remote migration, both deploys, and these manual checks complete successfully.
+For this frontend and routing update, do not re-run the already-applied D1 migration. Run automated tests and deploy both Worker and Firebase Hosting.
