@@ -2,6 +2,22 @@
 
 **Create recognizable links with names you choose.** Zrain Links is a custom-link manager, not primarily a URL shortener.
 
+## Shared Zrain UI: official Git dependency
+
+The **Firebase / Cloudflare frontend** in `cloudflare/public` uses the pinned GitHub dependency `@zrain/ui` from [zrain03/zrain-ui](https://github.com/zrain03/zrain-ui). Its `brand.css`, `zrain-ui.js` and `zrain-logo.webp` are synchronized from the dependency, not maintained as independent design files. Changes to Direct/Visits Link behavior remain in this repository.
+
+To update and publish the latest code on the `feature/links-foundation` branch using PowerShell:
+
+```powershell
+git pull --ff-only origin feature/links-foundation
+.\deploy-zrain-links.ps1
+```
+
+The deploy script runs `npm install`, `npm run ui:sync`, `npm test`, Cloudflare Worker deployment and Firebase Hosting deployment, stopping on errors. A plain Git push or pull **does not update the live website**. Local authentication with Wrangler/Firebase is still required, and frontend changes should be checked in a browser.
+
+The package is pinned to commit `af77e6782bdfa168296c1fe14061d72a1e400c55` for reproducible builds. When upgrading to a newer Zrain UI version, explicitly update the Git dependency SHA, run `npm install`, sync, test and commit the changed assets and lockfile. CI checks that the locally served assets match the pinned upstream package.
+
+
 ## User flow
 
 1. Paste a public HTTPS destination URL.
