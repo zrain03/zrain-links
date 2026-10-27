@@ -140,3 +140,11 @@ test("visitor create-your-own-link opens the Visits builder, not Direct Links", 
   assert.match(home, /id="visits-links"/);
   assert.doesNotMatch(visitor, /href="\/">Create your own link<\/a>/);
 });
+
+test("Visits Links appears above Direct Links without changing either workspace", async()=>{
+  const html=await read("../public/index.html");
+  assert.ok(html.indexOf('id="visits-links"') < html.indexOf('id="create"'));
+  assert.ok(html.indexOf('id="visits-form"') < html.indexOf('id="shorten-form"'));
+  assert.match(html,/id="visits-result"/);
+  assert.match(html,/id="latest-result"/);
+});
