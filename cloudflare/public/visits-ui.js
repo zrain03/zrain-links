@@ -55,9 +55,15 @@ function drawActions(){
     const field=node("input");field.type="url";field.value=action.url;field.placeholder=action.id==="visit_page"?"https://example.com/page":"Paste official action URL";
     field.required=true;field.maxLength=2048;field.setAttribute("aria-label",action.label+" URL");
     field.addEventListener("input",()=>{action.url=field.value.trim()});
+    const controls=node("div",undefined,"visits-row-controls");
+    const up=node("button","↑");up.type="button";up.disabled=index===0;up.setAttribute("aria-label","Move action up");
+    up.addEventListener("click",()=>{[actions[index-1],actions[index]]=[actions[index],actions[index-1]];drawActions()});
+    const down=node("button","↓");down.type="button";down.disabled=index===actions.length-1;down.setAttribute("aria-label","Move action down");
+    down.addEventListener("click",()=>{[actions[index+1],actions[index]]=[actions[index],actions[index+1]];drawActions()});
     const remove=node("button","×");remove.type="button";remove.setAttribute("aria-label","Remove "+action.label);
     remove.addEventListener("click",()=>{actions.splice(index,1);drawActions()});
-    row.append(title,field,remove);root.append(row);
+    controls.append(up,down,remove);
+    row.append(title,field,controls);root.append(row);
   });
   $("visits-add-action").disabled=actions.length>=20;
   $("visits-add-page").disabled=actions.length>=20;
