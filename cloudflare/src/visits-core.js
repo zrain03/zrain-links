@@ -1,6 +1,6 @@
-import { validateAlias, validateDestination } from "./core.js";
+import { validateAlias, validateDestination, randomAlias } from "./core.js";
 
-export const ACTION_CATALOG = Object.freeze([
+const ALL_ACTION_CATALOG = Object.freeze([
   ["visit_page","Other","Visit a page",[]],
   ["youtube_subscribe","YouTube","Subscribe to channel",["youtube.com"]],
   ["youtube_notifications","YouTube","Turn on channel notifications",["youtube.com"]],
@@ -52,16 +52,30 @@ export const ACTION_CATALOG = Object.freeze([
   ["audiomack_follow","Audiomack","Follow artist",["audiomack.com"]]
 ].map(([id,platform,label,hosts])=>({id,platform,label,hosts})));
 
+const SOCIAL_PLATFORMS = new Set([
+  "YouTube","Instagram","TikTok","X / Twitter","Facebook",
+  "Reddit","LinkedIn","Pinterest","Snapchat","Threads"
+]);
+// The public catalog only exposes Visit a page and social-media actions.
+// Historical links keep their original action labels and remain usable.
+export const ACTION_CATALOG = Object.freeze(ALL_ACTION_CATALOG.filter(
+  action => action.id === "visit_page" || SOCIAL_PLATFORMS.has(action.platform)
+));
+export const ACTION_LABELS = new Map(ALL_ACTION_CATALOG.map(action => [action.id, action]));
 const byId = new Map(ACTION_CATALOG.map(action => [action.id, action]));
 export function validateVisitsTitle(input) {
   if (typeof input !== "string" || input.trim().length < 3 || input.trim().length > 90)
     throw new Error("Enter a link title between 3 and 90 characters.");
   return input.trim();
 }
-export function createVisitsAlias(title, requested) {
-  if (requested) return validateAlias(requested);
+export function createVisitsAlias(title) {
   const derived = title.normalize("NFKD").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,30).replace(/-+$/,"");
   return validateAlias(derived);
+}
+export function randomVisitsAlias() {
+  // Existing Direct Links also use randomAlias; lower-case it because Visits
+  // Link public routes accept lower-case names only.
+  return randomAlias().toLowerCase();
 }
 export function validateVisitsActions(actions) {
   if (!Array.isArray(actions) || actions.length < 1 || actions.length > 20)
