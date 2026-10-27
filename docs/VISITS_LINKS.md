@@ -3,9 +3,11 @@
 The same Zrain Links website now contains **two independent link types**:
 
 - **Direct Links:** unchanged direct redirect, QR, copy and visit counters.
-- **Visits Links:** separate D1 tables, owner APIs and visitor unlock pages. Creator supplies a destination URL, a link title, a public short name, and between 1 and 20 ordered actions.
+- **Visits Links:** separate D1 tables, owner APIs and visitor unlock pages. Creator supplies a destination URL, a title, and between 1 and 20 ordered actions. The public short name is **read-only and automatically derived from the title**, with an optional **Shorten link automatically** checkbox to generate a random name instead.
 
 The **Visit a page** action is prominently available through its own Add button and the first option in the action picker, but **no particular action type is mandatory**. Users can select any supported platform action and provide an official HTTPS URL.
+The picker now offers **Visit a page and social media only** (YouTube, Instagram, TikTok, Facebook, X, Reddit, LinkedIn, Pinterest, Snapchat, Threads). Music, gaming, developer, app-store and messaging choices are no longer offered for *new* Visits Links. Existing previously published actions retain their original labels and remain usable.
+The public URL appears in **Live Unlock Preview**, not as an editable builder field. If a title-generated name is already taken, change the title or enable automatic shortening.
 
 ## How visitors use a Visits Link
 
@@ -27,6 +29,23 @@ The **Visit a page** action is prominently available through its own Add button 
 ### Admin
 
 The existing UID-pinned Admin Dashboard manages both types from the All links list, identifies each type, includes Visits Link views in aggregate statistics, and deletes both types when a Firebase user is permanently deleted or a deleted account's D1 records are purged. Existing admin security and audit controls remain in force.
+
+## Updating an already migrated production instance (27 Oct 2026)
+
+If migration `0003_visits_links.sql` was already applied successfully, **do not reapply any database migration or reset D1** for this title/shortening/catalog refinement. It changes only the Worker and frontend.
+
+```powershell
+cd C:\Users\kul_mu.nazri\Downloads\zrain-links
+git status --short
+git pull --ff-only origin feature/links-foundation
+cd cloudflare
+npm test
+npx wrangler deploy
+cd ..
+firebase deploy --only hosting --project zrain-links
+```
+
+Stop if `git pull` or `npm test` fails. Keep prior Git stash untouched; don't automatically pop it over the updated UI.
 
 ## Deploy safely (PowerShell)
 
