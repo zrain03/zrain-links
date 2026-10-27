@@ -108,7 +108,7 @@ export async function handleAdmin(request, env, db) {
       clickCount:row.click_count,linkType:row.link_type,createdAt:dateIso(row.created_at)
     }))});
   }
-  const linkDelete=path.match(/^\\/api\\/v1\\/admin\\/links\\/([0-9a-f-]{36})$/);
+  const linkDelete=path.match(new RegExp("^/api/v1/admin/links/([0-9a-f-]{36})$"));
   if(method==="DELETE" && linkDelete){
     if(!recentAuth(admin))return fail(403,"Recent Google verification required. Click Verify with Google, then try again.");
     const record=await db.prepare("SELECT id,code,'direct' AS link_type FROM short_links WHERE id = ? UNION ALL SELECT id,code,'visits' AS link_type FROM visits_links WHERE id = ?").bind(linkDelete[1],linkDelete[1]).first();
