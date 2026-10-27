@@ -1,5 +1,5 @@
-/* Zrain Shared Branding • same visual system for Zrain Links and Zrain Auth Starter.
-   Keep this file identical in both projects. Page-specific UI remains independent. */
+/* Zrain UI v1.0.0: shared design tokens, header and footer.
+   Keep this file identical across products. Application content remains independent. */
 :root {
   --zrain-brand-ink: #121e2a;
   --zrain-brand-muted: #667286;
@@ -189,4 +189,51 @@ body {
   .zrain-header .zrain-header__inner { flex-wrap: wrap; }
   .zrain-header .topnav { order: 3; flex: 1 0 100%; justify-content: flex-start; }
   .zrain-header .account-actions { margin-left: auto; }
+}
+
+/* Zrain UI: the logo and "Zrain" open the ecosystem.
+   Product name links back to the individual product. */
+.zrain-header .zrain-brand__home {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  font-family: "Inter", "Segoe UI", Arial, sans-serif;
+  font-weight: 800;
+  font-size: 17px;
+  line-height: 1.35;
+  letter-spacing: -.4px;
+  color: var(--zrain-brand-ink);
+  text-decoration: none;
+}
+.zrain-header .zrain-brand__name { font-weight: 800; }
+.zrain-header .zrain-brand__product {
+  font-size: 17px;
+  line-height: 1.35;
+  font-weight: 500;
+  text-decoration: none;
+}
+.zrain-header .zrain-brand__home:hover,
+.zrain-header .zrain-brand__product:hover,
+.zrain-footer .zrain-footer__home:hover { text-decoration: none; }
+.zrain-header .zrain-brand__home:focus-visible,
+.zrain-header .zrain-brand__product:focus-visible,
+.zrain-footer .zrain-footer__home:focus-visible {
+  outline: 3px solid #c68066;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+.zrain-footer .zrain-footer__home {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  color: var(--zrain-brand-ink);
+  text-decoration: none;
+}
+.zrain-footer .zrain-footer__home:hover .zrain-footer__copy strong {
+  color: var(--zrain-brand-accent);
+}
+@media (max-width: 700px) {
+  .zrain-header .zrain-brand__home { font-size: 14px; gap: 7px; }
+  .zrain-header .zrain-brand__product { font-size: 14px; }
 }
