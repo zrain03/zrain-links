@@ -1,4 +1,4 @@
-import {ACTION_CATALOG, ACTION_LABELS, createVisitsAlias, randomVisitsAlias, validateVisitsTitle, validateVisitsActions, validateAcknowledgements} from "./visits-core.js";
+import {ACTION_CATALOG, ACTION_LABELS, createVisitsAlias, titleVisitsAlias, randomVisitsAlias, validateVisitsTitle, validateVisitsActions, validateAcknowledgements} from "./visits-core.js";
 import {validateDestination} from "./core.js";
 import {renderSVG} from "uqr";
 
@@ -26,19 +26,19 @@ export async function handleVisits(request,db,deps) {
   const url=new URL(request.url), path=url.pathname, method=request.method;
   if (method==="GET" && path==="/api/v1/visits/catalog")
     return json(ACTION_CATALOG.map(({id,platform,label})=>({id,platform,label})));
-  const pub=path.match(/^\/api\/v1\/visits\/public\/([a-z0-9][a-z0-9-]{2,29})$/);
+  const pub=path.match(/^\/api\/v1\/visits\/public\/([a-zA-Z0-9][a-zA-Z0-9-]{2,29})$/);
   if (pub && method==="GET") {
-    const row=await db.prepare("SELECT * FROM visits_links WHERE code_lower = ?").bind(pub[1]).first();
+    const row=await db.prepare("SELECT * FROM visits_links WHERE code_lower = ?").bind(pub[1].toLowerCase()).first();
     if (!row) return fail(404,"Visits Link not found.");
     // Counts page loads, not guaranteed unique humans; avoid conflating views with unlocks.
     await db.prepare("UPDATE visits_links SET view_count = view_count + 1 WHERE id = ?").bind(row.id).run();
     return json({...rowToPublic({...row,view_count:row.view_count+1}),actions:await actionsFor(db,row.id),
       verification:"Actions use visitor acknowledgement; external follows/subscriptions are not automatically verified."});
   }
-  const unlock=path.match(/^\/api\/v1\/visits\/public\/([a-z0-9][a-z0-9-]{2,29})\/unlock$/);
+  const unlock=path.match(/^\/api\/v1\/visits\/public\/([a-zA-Z0-9][a-zA-Z0-9-]{2,29})\/unlock$/);
   if (unlock && method==="POST") {
     await throttle(db,request,"visits-unlock",120);
-    const row=await db.prepare("SELECT id,destination_url FROM visits_links WHERE code_lower = ?").bind(unlock[1]).first();
+    const row=await db.prepare("SELECT id,destination_url FROM visits_links WHERE code_lower = ?").bind(unlock[1].toLowerCase()).first();
     if (!row) return fail(404,"Visits Link not found.");
     const actions=await actionsFor(db,row.id);
     const body=await readBody(request);
@@ -59,35 +59,36 @@ export async function handleVisits(request,db,deps) {
       return fail(400,"Automatic shortening must be enabled or disabled.");
     const automatic=body?.autoShorten === true;
     const actions=userInput(()=>validateVisitsActions(body?.actions));
-    // When automatic shortening is off, the public name always follows the title.
-    // When on, retry safely if a generated name collides with either link type.
-    let code=automatic ? randomVisitsAlias() : userInput(()=>createVisitsAlias(title));
-    let available=false;
-    for (let attempt=0;attempt<(automatic ? 8 : 1);attempt++) {
-      if (attempt) code=randomVisitsAlias();
-      const taken=await db.prepare("SELECT code_lower FROM link_names WHERE code_lower = ?").bind(code).first();
-      if (!taken) { available=true; break; }
-    }
-    if (!available) return fail(409,automatic
-      ? "Could not generate an available short name. Please try again."
-      : "This title produces a link name that is already used. Change the title or enable automatic shortening.");
+    // Every normal Visits Link gets a fresh title-based suffix, even when the
+    // unsuffixed title is available. Automatic shortening keeps its independent
+    // random-only option, just like Direct Links.
+    if (!automatic) userInput(()=>createVisitsAlias(title));
     const parsedDestination=new URL(destination);
-    if (["zrain-links.web.app","zrain-links.firebaseapp.com"].includes(parsedDestination.hostname.toLowerCase())
-        && parsedDestination.pathname.toLowerCase()==="/"+code)
-      return fail(400,"A Visits Link cannot redirect back to itself.");
     const linkId=id(),stamp=now();
-    try{
-      await db.batch([
-        db.prepare("INSERT INTO visits_links (id,owner_id,code,code_lower,title,destination_url,created_at,view_count,unlock_count) VALUES (?,?,?,?,?,?,?,0,0)")
-          .bind(linkId,user.id,code,code,title,destination,stamp),
-        ...actions.map((a,index)=>db.prepare("INSERT INTO visits_actions(link_id,position,type,action_url) VALUES (?,?,?,?)")
-          .bind(linkId,index,a.type,a.url))
-      ]);
-    }catch(e){
-      if(/UNIQUE constraint/i.test(String(e?.message))) return fail(409,"This link name is already taken. Change the title, enable automatic shortening or try again.");
-      throw e;
+    for (let attempt=0;attempt<12;attempt++) {
+      const code=automatic ? randomVisitsAlias() : titleVisitsAlias(title);
+      const lower=code.toLowerCase();
+      const taken=await db.prepare("SELECT code_lower FROM link_names WHERE code_lower = ?").bind(lower).first();
+      if (taken) continue;
+      if (["zrain-links.web.app","zrain-links.firebaseapp.com"].includes(parsedDestination.hostname.toLowerCase())
+          && parsedDestination.pathname.toLowerCase()==="/"+lower)
+        return fail(400,"A Visits Link cannot redirect back to itself.");
+      try {
+        await db.batch([
+          db.prepare("INSERT INTO visits_links (id,owner_id,code,code_lower,title,destination_url,created_at,view_count,unlock_count) VALUES (?,?,?,?,?,?,?,0,0)")
+            .bind(linkId,user.id,code,lower,title,destination,stamp),
+          ...actions.map((a,index)=>db.prepare("INSERT INTO visits_actions(link_id,position,type,action_url) VALUES (?,?,?,?)")
+            .bind(linkId,index,a.type,a.url))
+        ]);
+      } catch (e) {
+        // A second request can claim the same name after the availability
+        // check; D1's shared link_names constraint remains authoritative.
+        if (/UNIQUE constraint/i.test(String(e?.message))) continue;
+        throw e;
+      }
+      return json({...rowToPublic({id:linkId,code,title,created_at:stamp,view_count:0,unlock_count:0}),actions},201);
     }
-    return json({...rowToPublic({id:linkId,code,title,created_at:stamp,view_count:0,unlock_count:0}),actions},201);
+    return fail(409,"Could not generate an available link name. Please try again.");
   }
   if(path==="/api/v1/visits" && method==="GET"){
     const user=await authUser(request,db);
