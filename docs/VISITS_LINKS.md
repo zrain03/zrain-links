@@ -11,7 +11,7 @@ The public URL appears in **Live Unlock Preview**, not as an editable builder fi
 
 ## How visitors use a Visits Link
 
-1. Open the public URL, e.g. `https://zrain-links.web.app/my-campaign`. Firebase Hosting redirects it to the Cloudflare Worker, which redirects a Visits Link to `/visit.html?code=my-campaign`. Ordinary Direct Links continue to redirect immediately.
+1. Open the public URL, e.g. `https://zrain-links.web.app/my-campaign-MsAg`. Firebase Hosting redirects it to the Cloudflare Worker, which redirects a Visits Link to `/visit.html?code=my-campaign-MsAg`. Ordinary Direct Links continue to redirect immediately.
 2. The public unlock page displays the link title, action list, page-view count and unlock count. The final destination is **not sent by the details API before unlock**.
 3. Each action offers a clickable external URL with `target="_blank"` and `rel="noopener noreferrer"`. After opening an action, the visitor may mark it complete.
 4. Once all actions are acknowledged, the visitor can choose **Unlock link**. The Worker validates that all action positions are present, increments the unlock counter, and returns the final HTTPS destination.
