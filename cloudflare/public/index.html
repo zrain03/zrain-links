@@ -12,10 +12,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/app.css?v=admin-20261026-1">
   <link rel="stylesheet" href="/brand.css?v=zrain-ui-1.0.0">
-  <link rel="stylesheet" href="/visits.css?v=visits-20261027-3">
+  <link rel="stylesheet" href="/visits.css?v=visits-first-20261027-4">
   <link rel="stylesheet" href="/qr-preview.css?v=qr-preview-20261027-1">
   <script type="module" src="/app.js?v=qr-preview-20261027-1"></script>
   <script type="module" src="/visits-ui.js?v=qr-preview-20261027-1"></script>
+  <script type="module" src="/link-section-nav.js?v=visits-first-20261027-1"></script>
   <script type="module" src="/zrain-ui-config.js?v=1.0.0"></script>
 </head>
 <body>
@@ -24,8 +25,8 @@
   <div class="container topbar-inner zrain-header__inner">
     <div class="brand zrain-brand"><a class="zrain-brand__home" href="https://zrain.web.app" aria-label="Zrain ecosystem home"><img src="/zrain-logo.webp" class="brand-logo-image zrain-brand__logo" alt="" width="42" height="42"><strong class="zrain-brand__name">Zrain</strong></a><a class="zrain-brand__product" href="/" aria-label="Zrain Links home">Links</a></div>
     <nav class="topnav" aria-label="Site navigation">
-      <a class="current" href="#create">Direct links</a>
-      <a id="nav-visits" href="#visits-links">Visits links</a>
+      <a id="nav-visits" class="current" href="#visits-links" aria-current="location">Visits links</a>
+      <a href="#create">Direct links</a>
       <a id="nav-my-links" href="#my-links" hidden>My links</a>
       <a id="nav-admin" href="/admin.html" hidden>Admin</a>
     </nav>
@@ -36,12 +37,6 @@
   </div>
 </header>
 <main id="main" class="container">
-<!-- Visits Links: separate feature, storage and unlock journey from Direct Links. -->
-<section class="two-modes" aria-label="Two ways to share">
-  <div><p class="eyebrow">MORE WAYS TO SHARE</p><h2>One brand, two link experiences.</h2>
-    <p>Direct links take visitors straight to a page. Visits links let you choose actions visitors acknowledge before unlocking the destination.</p></div>
-  <div class="mode-choices"><a href="#create">↗ Direct links</a><a href="#visits-links" class="selected">✦ Visits links</a></div>
-</section>
 <section id="visits-links" class="visits-hero" aria-labelledby="visits-heading">
   <div class="visits-intro">
     <p class="eyebrow">✦ VISITS LINKS</p>
@@ -110,6 +105,12 @@
   <h2 id="visits-result-title">Your Visits Link is ready</h2><p>Share this link to show visitors your action-based unlock page.</p>
   <a id="visits-result-url" class="result-url" target="_blank" rel="noopener noreferrer"></a>
   <div class="result-actions"><button type="button" class="button button-outline" id="visits-copy-result">Copy link</button><button type="button" class="button button-outline" id="visits-qr-result">QR code</button></div>
+</section>
+<!-- Visits Links: separate feature, storage and unlock journey from Direct Links. -->
+<section class="two-modes" aria-label="Two ways to share">
+  <div><p class="eyebrow">MORE WAYS TO SHARE</p><h2>One brand, two link experiences.</h2>
+    <p>Direct links take visitors straight to a page. Visits links let you choose actions visitors acknowledge before unlocking the destination.</p></div>
+  <div class="mode-choices"><a href="#visits-links" class="selected" aria-current="location">✦ Visits links</a><a href="#create">↗ Direct links</a></div>
 </section>
 <div class="zrain-hero-layout">
   <section id="create" class="page-intro">
@@ -195,17 +196,20 @@
 </dialog>
 
   <section id="my-links" class="library" hidden aria-labelledby="links-title">
-    <div class="library-heading"><div><p class="eyebrow">YOUR COLLECTION</p><h2 id="links-title">My links</h2><p>View your created links and see how many visits they've received.</p></div><button type="button" id="refresh-links" class="button button-outline">Refresh</button></div>
-    <div id="connect-google-panel" class="connect-google-panel" hidden><div><strong>Use Google to access this account</strong><p>Connect Google to your existing Zrain Links account without changing your saved links.</p></div><button type="button" id="connect-google" class="button button-outline">Connect Google</button><p id="connect-google-message" class="form-message" role="status" aria-live="polite"></p></div>
-    <div class="library-stats"><div><span>Links created</span><strong id="total-links">0</strong></div><div><span>Total visits</span><strong id="total-clicks">0</strong></div></div>
-    <p id="list-status" class="form-message" role="status" aria-live="polite"></p>
-    <div id="links-list" class="links-list"></div>
+    <div class="library-heading"><div><p class="eyebrow">YOUR COLLECTION</p><h2 id="links-title">My links</h2><p>Manage your Visits Links and Direct Links together.</p></div></div>
     <section class="visits-my-links" aria-labelledby="visits-list-heading">
       <div class="library-heading"><div><p class="eyebrow">SEPARATE COLLECTION</p><h3 id="visits-list-heading">My Visits Links</h3><p>Action-based links, page views and unlocks, separate from Direct Links.</p></div>
         <button type="button" id="visits-refresh" class="button button-outline">Refresh Visits Links</button></div>
       <div class="library-stats"><div><span>Visits links created</span><strong id="visits-count">0</strong></div><div><span>Unlocks recorded</span><strong id="visits-unlocks">0</strong></div></div>
       <p id="visits-list-message" class="form-message" role="status" aria-live="polite"></p>
       <div id="visits-list" class="links-list"></div>
+    </section>
+    <section class="direct-my-links" aria-labelledby="direct-list-heading">
+      <div class="library-heading"><div><p class="eyebrow">DIRECT LINKS COLLECTION</p><h3 id="direct-list-heading">My Direct Links</h3><p>Links that open their destination immediately, without any unlock steps.</p></div><button type="button" id="refresh-links" class="button button-outline">Refresh Direct Links</button></div>
+    <div id="connect-google-panel" class="connect-google-panel" hidden><div><strong>Use Google to access this account</strong><p>Connect Google to your existing Zrain Links account without changing your saved links.</p></div><button type="button" id="connect-google" class="button button-outline">Connect Google</button><p id="connect-google-message" class="form-message" role="status" aria-live="polite"></p></div>
+    <div class="library-stats"><div><span>Links created</span><strong id="total-links">0</strong></div><div><span>Total visits</span><strong id="total-clicks">0</strong></div></div>
+    <p id="list-status" class="form-message" role="status" aria-live="polite"></p>
+    <div id="links-list" class="links-list"></div>
     </section>
   </section>
 </main>
