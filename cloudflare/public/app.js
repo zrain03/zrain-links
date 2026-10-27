@@ -64,6 +64,7 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
     }).catch(() => show("nav-admin", false));
     closeAuth();
     await refresh();
+    window.dispatchEvent(new Event("zrain-auth-change"));
     if (pendingUrl) {
       const target = pendingUrl;
       pendingUrl = null;
@@ -89,6 +90,7 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
     firebaseMethods.onAuthStateChanged(firebaseAuth, async user => {
       if (!user) {
         currentUser = null;
+        window.dispatchEvent(new Event("zrain-auth-change"));
         show("my-links", false);
         show("nav-my-links", false);
         show("nav-admin", false);
@@ -223,6 +225,7 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
     note("google-message", "");
   }
   function signout() {
+    window.dispatchEvent(new Event("zrain-auth-change"));
     token = null; email = null; currentUser = null; links = []; latestLink = null;
     show("connect-google-panel", false);
     $("password").value = "";
@@ -528,6 +531,13 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
   $("result-qr").addEventListener("click", () => { if (latestLink) downloadQr(latestLink); });
   $("auto-shorten").addEventListener("change", () => { updateAliasPreview(); checkAliasAvailability(); });
   $("long-url").addEventListener("input", updateDestinationPreview);
+  // The two independent link experiences reuse the existing verified Firebase session.
+  // No separate auth account, and no credentials exposed globally.
+  window.ZrainVisitsBridge = {
+    getUser: () => currentUser,
+    openAuth: () => openAuth(false),
+    api: (path, options) => api(path, options)
+  };
   updateAliasPreview();
   updateDestinationPreview();
   setMode("signin");
