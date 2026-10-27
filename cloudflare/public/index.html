@@ -13,8 +13,9 @@
   <link rel="stylesheet" href="/app.css?v=admin-20261026-1">
   <link rel="stylesheet" href="/brand.css?v=zrain-shared-20261026-1">
   <link rel="stylesheet" href="/visits.css?v=visits-20261027-3">
-  <script type="module" src="/app.js?v=admin-20261026-2"></script>
-  <script type="module" src="/visits-ui.js?v=visits-20261027-3"></script>
+  <link rel="stylesheet" href="/qr-preview.css?v=qr-preview-20261027-1">
+  <script type="module" src="/app.js?v=qr-preview-20261027-1"></script>
+  <script type="module" src="/visits-ui.js?v=qr-preview-20261027-1"></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -95,7 +96,7 @@
 <section class="zrain-feature-grid" aria-label="What Zrain Links can do">
   <article><span class="feature-icon coral">⌁</span><h3>Custom names</h3><p>Pick a name that feels like yours and is easy to remember.</p></article>
   <article><span class="feature-icon orange">↗</span><h3>Optional shortening</h3><p>Need something shorter? Turn on automatic link naming.</p></article>
-  <article><span class="feature-icon blue">▦</span><h3>QR codes</h3><p>Download a QR code for the link you have created.</p></article>
+  <article><span class="feature-icon blue">▦</span><h3>QR codes</h3><p>Preview your QR code, then download it if you want to.</p></article>
   <article><span class="feature-icon blue">⧉</span><h3>Copy &amp; share</h3><p>Copy a link in a click and share it anywhere.</p></article>
   <article><span class="feature-icon orange">▥</span><h3>Visit counts</h3><p>See how many times someone has opened each link.</p></article>
   <article><span class="feature-icon coral">✦</span><h3>Your collection</h3><p>Keep all your links together and manage them yourself.</p></article>
@@ -103,10 +104,10 @@
 <section class="zrain-steps" aria-label="How it works"><strong>HOW IT WORKS</strong><span><b>1</b> Paste destination</span><span class="separator">→</span><span><b>2</b> Choose your name</span><span class="separator">→</span><span><b>3</b> Create &amp; share</span></section>
 
   <section id="latest-result" class="result-card" hidden aria-labelledby="result-heading">
-    <div class="result-heading"><span class="result-check" aria-hidden="true">✓</span><div><h2 id="result-heading">Your link is ready</h2><p>Copy it or download a QR code to share it.</p></div></div>
+    <div class="result-heading"><span class="result-check" aria-hidden="true">✓</span><div><h2 id="result-heading">Your link is ready</h2><p>Copy your link or preview its QR code before downloading.</p></div></div>
     <a id="result-url" class="result-url" href="#" target="_blank" rel="noopener noreferrer"></a>
     <p class="original-url">Goes to: <span id="result-destination"></span></p>
-    <div class="result-actions"><button id="result-copy" class="button button-primary" type="button">Copy link</button><button id="result-qr" class="button button-outline" type="button">Download QR</button><a class="link-text" href="#my-links">My links →</a></div>
+    <div class="result-actions"><button id="result-copy" class="button button-primary" type="button">Copy link</button><button id="result-qr" class="button button-outline" type="button">QR code</button><a class="link-text" href="#my-links">My links →</a></div>
   </section>
 
 <!-- Visits Links: separate feature, storage and unlock journey from Direct Links. -->
@@ -208,6 +209,23 @@
   </section>
 </main>
 
+<dialog id="qr-dialog" class="qr-dialog" aria-labelledby="qr-dialog-title">
+  <div class="qr-dialog__top">
+    <h2 id="qr-dialog-title">Your QR code</h2>
+    <button type="button" id="qr-dialog-close" aria-label="Close QR preview">×</button>
+  </div>
+  <p class="qr-dialog__intro">Scan to open your link, or download the QR code when you're ready.</p>
+  <div class="qr-dialog__image">
+    <p id="qr-dialog-loading" role="status">Loading QR code…</p>
+    <img id="qr-dialog-image" alt="QR code for the selected Zrain Link" hidden>
+  </div>
+  <a id="qr-dialog-url" class="qr-dialog__link" href="#" target="_blank" rel="noopener noreferrer"></a>
+  <p id="qr-dialog-error" class="qr-dialog__error" role="alert" hidden></p>
+  <div class="qr-dialog__actions">
+    <button type="button" id="qr-dialog-dismiss" class="button button-outline">Close</button>
+    <button type="button" id="qr-dialog-download" class="button button-primary" disabled>Download QR</button>
+  </div>
+</dialog>
 <dialog id="auth-dialog" class="auth-dialog" aria-labelledby="auth-title">
   <div class="dialog-top"><img src="/zrain-logo.webp" class="brand-logo-image" alt="" width="38" height="38"><button type="button" id="close-auth" class="dialog-close" aria-label="Close sign in">×</button></div>
   <h2 id="auth-title">Welcome to Zrain Links</h2><p id="auth-caption">Sign in to create and manage links.</p>
