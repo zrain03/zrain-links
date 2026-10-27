@@ -102,6 +102,13 @@
 </section>
 <section class="zrain-steps" aria-label="How it works"><strong>HOW IT WORKS</strong><span><b>1</b> Paste destination</span><span class="separator">→</span><span><b>2</b> Choose your name</span><span class="separator">→</span><span><b>3</b> Create &amp; share</span></section>
 
+  <section id="latest-result" class="result-card" hidden aria-labelledby="result-heading">
+    <div class="result-heading"><span class="result-check" aria-hidden="true">✓</span><div><h2 id="result-heading">Your link is ready</h2><p>Copy it or download a QR code to share it.</p></div></div>
+    <a id="result-url" class="result-url" href="#" target="_blank" rel="noopener noreferrer"></a>
+    <p class="original-url">Goes to: <span id="result-destination"></span></p>
+    <div class="result-actions"><button id="result-copy" class="button button-primary" type="button">Copy link</button><button id="result-qr" class="button button-outline" type="button">Download QR</button><a class="link-text" href="#my-links">My links →</a></div>
+  </section>
+
 <!-- Visits Links: separate feature, storage and unlock journey from Direct Links. -->
 <section class="two-modes" aria-label="Two ways to share">
   <div><p class="eyebrow">MORE WAYS TO SHARE</p><h2>One brand, two link experiences.</h2>
@@ -176,13 +183,6 @@
   <div id="visits-picker-tabs" class="visits-picker-tabs"></div>
   <div id="visits-picker-options" class="visits-picker-options"></div>
 </dialog>
-
-  <section id="latest-result" class="result-card" hidden aria-labelledby="result-heading">
-    <div class="result-heading"><span class="result-check" aria-hidden="true">✓</span><div><h2 id="result-heading">Your link is ready</h2><p>Copy it or download a QR code to share it.</p></div></div>
-    <a id="result-url" class="result-url" href="#" target="_blank" rel="noopener noreferrer"></a>
-    <p class="original-url">Goes to: <span id="result-destination"></span></p>
-    <div class="result-actions"><button id="result-copy" class="button button-primary" type="button">Copy link</button><button id="result-qr" class="button button-outline" type="button">Download QR</button><a class="link-text" href="#my-links">My links →</a></div>
-  </section>
 
   <section id="my-links" class="library" hidden aria-labelledby="links-title">
     <div class="library-heading"><div><p class="eyebrow">YOUR COLLECTION</p><h2 id="links-title">My links</h2><p>View your created links and see how many visits they've received.</p></div><button type="button" id="refresh-links" class="button button-outline">Refresh</button></div>
