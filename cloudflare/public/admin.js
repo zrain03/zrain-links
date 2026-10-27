@@ -92,8 +92,9 @@ async function loadLinks() {
     totalLinks = data.total;
     for (const link of data.links) {
       const row = makeEntry(link.code, [
+        "Type: " + (link.linkType === "visits" ? "Visits Link · action unlock" : "Direct Link"),
         link.destinationUrl, "Owner: " + link.ownerId,
-        "Created: " + accountDate(link.createdAt) + "  ·  " + link.clickCount + " visits"
+        "Created: " + accountDate(link.createdAt) + "  ·  " + link.clickCount + (link.linkType === "visits" ? " views" : " visits")
       ], "Delete link", async () => {
         const typed = window.prompt("Permanently delete this short link? Type the exact link name:\n" + link.code);
         if (typed === null) return;
