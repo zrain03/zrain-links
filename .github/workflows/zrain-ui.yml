@@ -1,0 +1,25 @@
+name: Zrain UI dependency checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-ui:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cloudflare
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install pinned GitHub dependency
+        run: npm install --no-audit --no-fund
+      - name: Run Zrain UI sync verification and app tests
+        run: npm test
