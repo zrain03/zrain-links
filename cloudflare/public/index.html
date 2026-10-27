@@ -11,17 +11,18 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/app.css?v=admin-20261026-1">
-  <link rel="stylesheet" href="/brand.css?v=zrain-shared-20261026-1">
+  <link rel="stylesheet" href="/brand.css?v=zrain-ui-1.0.0">
   <link rel="stylesheet" href="/visits.css?v=visits-20261027-3">
   <link rel="stylesheet" href="/qr-preview.css?v=qr-preview-20261027-1">
   <script type="module" src="/app.js?v=qr-preview-20261027-1"></script>
   <script type="module" src="/visits-ui.js?v=qr-preview-20261027-1"></script>
+  <script type="module" src="/zrain-ui-config.js?v=1.0.0"></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="topbar zrain-header">
   <div class="container topbar-inner zrain-header__inner">
-    <a class="brand zrain-brand" href="/" aria-label="Zrain Links home"><img src="/zrain-logo.webp" class="brand-logo-image zrain-brand__logo" alt="" width="42" height="42"><span class="zrain-brand__label"><strong>Zrain</strong><span class="zrain-brand__product">Links</span></span></a>
+    <div class="brand zrain-brand"><a class="zrain-brand__home" href="https://zrain.web.app" aria-label="Zrain ecosystem home"><img src="/zrain-logo.webp" class="brand-logo-image zrain-brand__logo" alt="" width="42" height="42"><strong class="zrain-brand__name">Zrain</strong></a><a class="zrain-brand__product" href="/" aria-label="Zrain Links home">Links</a></div>
     <nav class="topnav" aria-label="Site navigation">
       <a class="current" href="#create">Direct links</a>
       <a id="nav-visits" href="#visits-links">Visits links</a>
@@ -296,8 +297,10 @@
 <footer class="footer zrain-footer">
   <div class="container footer-inner zrain-footer__inner">
     <div class="footer-brand zrain-footer__identity">
-      <img src="/zrain-logo.webp" class="brand-logo-image zrain-footer__logo" alt="" width="38" height="38">
-      <span class="zrain-footer__copy"><strong>Developed by Zrain</strong><small>One ecosystem. Many useful tools.</small></span>
+      <a class="zrain-footer__home" href="https://zrain.web.app" aria-label="Developed by Zrain. Open Zrain ecosystem home">
+        <img src="/zrain-logo.webp" class="brand-logo-image zrain-footer__logo" alt="" width="38" height="38">
+        <span class="zrain-footer__copy"><strong>Developed by Zrain</strong><small>One ecosystem. A variety of useful tools.</small></span>
+      </a>
     </div>
     <div class="footer-links zrain-footer__links">
       <a href="mailto:zrain.dev@gmail.com">Contact</a>
