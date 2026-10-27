@@ -5,7 +5,8 @@ const API = "https://zrain-links.zrain-dev.workers.dev";
 const PUBLIC = "https://zrain-links.web.app/";
 const catalog = [];
 const actions = [];
-let saved=[],selectedCategory="All",aliasEdited=false,latest=null,loaded=false;
+const DRAFT_KEY="zrain-links:visits-draft";
+let saved=[],selectedCategory="All",aliasEdited=false,latest=null;
 const categories=["All","Video","Social","Messaging","Music","Developer","Apps","Gaming","Other"];
 const categoryOf = platform => ({
   YouTube:"Video",Vimeo:"Video",Rumble:"Video",
@@ -132,6 +133,8 @@ async function submit(event){
   if(!actions.length){message("visits-message","Choose at least one action. Visit a page is optional.");return}
   if(actions.some(a=>!a.url)){message("visits-message","Enter a URL for every selected action.");return}
   if(!window.ZrainVisitsBridge?.getUser()){
+    try { sessionStorage.setItem(DRAFT_KEY,JSON.stringify({destination,title,alias,actions})); }
+    catch { /* Session storage may be unavailable in private browsing. */ }
     message("visits-message","Sign in to publish. Your form is kept here, so you can submit it afterward.");
     window.ZrainVisitsBridge?.openAuth();
     return;
@@ -142,6 +145,7 @@ async function submit(event){
       destinationUrl:destination,title,customAlias:alias,
       actions:actions.map(a=>({type:a.id,url:a.url}))
     }});
+    try { sessionStorage.removeItem(DRAFT_KEY); } catch {}
     const href=boundLink(latest.code);$("visits-result-url").href=href;$("visits-result-url").textContent=href;
     $("visits-result").hidden=false;
     $("visits-result").scrollIntoView({behavior:"smooth",block:"center"});
@@ -209,4 +213,15 @@ $("visits-form").addEventListener("submit",submit);
 $("visits-copy-result").addEventListener("click",()=>{if(latest)copy(boundLink(latest.code))});
 $("visits-refresh").addEventListener("click",refreshList);
 window.addEventListener("zrain-auth-change",refreshList);
+try {
+  const pending=JSON.parse(sessionStorage.getItem(DRAFT_KEY)||"null");
+  if(pending && Array.isArray(pending.actions) && pending.actions.length<=20){
+    $("visits-destination").value=typeof pending.destination==="string"?pending.destination:"";
+    $("visits-title").value=typeof pending.title==="string"?pending.title:"";
+    $("visits-alias").value=typeof pending.alias==="string"?pending.alias:"";
+    aliasEdited=true;
+    actions.push(...pending.actions.filter(a=>a && typeof a.id==="string" && typeof a.url==="string"));
+  }
+  sessionStorage.removeItem(DRAFT_KEY);
+} catch { /* Ignore invalid or unavailable session storage. */ }
 renderTabs();drawActions();
