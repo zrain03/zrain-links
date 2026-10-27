@@ -1,7 +1,7 @@
 import { validateAlias, validateDestination, randomAlias } from "./core.js";
 
 const ALL_ACTION_CATALOG = Object.freeze([
-  ["visit_page","Other","Visit a page",[]],
+  ["visit_page","Website","Visit a page",[]],
   ["youtube_subscribe","YouTube","Subscribe to channel",["youtube.com"]],
   ["youtube_notifications","YouTube","Turn on channel notifications",["youtube.com"]],
   ["youtube_like","YouTube","Like a video",["youtube.com","youtu.be"]],
