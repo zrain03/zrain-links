@@ -52,7 +52,13 @@ export async function handleVisits(request,db,deps) {
     const body=await readBody(request);
     const title=validateVisitsTitle(body?.title);
     const destination=validateDestination(body?.destinationUrl);
+    if (body?.customAlias != null && typeof body.customAlias !== "string")
+      return fail(400,"Public link name must be text.");
     const code=createVisitsAlias(title,body?.customAlias?.trim() || "");
+    const parsedDestination=new URL(destination);
+    if (["zrain-links.web.app","zrain-links.firebaseapp.com"].includes(parsedDestination.hostname.toLowerCase())
+        && parsedDestination.pathname.toLowerCase()==="/"+code)
+      return fail(400,"A Visits Link cannot redirect back to itself.");
     const actions=validateVisitsActions(body?.actions);
     if(await db.prepare("SELECT code_lower FROM link_names WHERE code_lower = ?").bind(code).first())
       return fail(409,"This short name is already used by a Direct Link or Visits Link.");
