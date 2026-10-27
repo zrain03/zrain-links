@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFile} from "node:fs/promises";
-import {activeSectionFromOffsets,sectionForHash,mountSectionNavigation} from "../public/link-section-nav.js";
+import {activeSectionFromOffsets,sectionForHash,mountSectionNavigation,readingLine} from "../public/link-section-nav.js";
 
 const read=path=>readFile(new URL(path,import.meta.url),"utf8");
 
@@ -19,7 +19,7 @@ test("Visits is first, the mode selector separates workspaces, and collections f
   assert.match(html,/id="links-title"/);
   assert.match(html,/id="visits-list"/);
   assert.match(html,/id="links-list"/);
-  assert.match(html,/src="\/link-section-nav\.js\?v=visits-first-20261027-1"/);
+  assert.match(html,/src="\/link-section-nav\.js\?v=scrollspy-20261027-2"/);
   assert.match(css,/\.direct-my-links\s*\{/);
   const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
   assert.equal(new Set(ids).size,ids.length,"HTML IDs must remain unique");
@@ -75,4 +75,58 @@ test("navigation and switch highlights update on click and scroll",()=>{
   section.hidden=true;
   controls.scroll();
   assert.ok(navDirect.classes.has("current"));
+});
+
+test("visible Direct Links beats a stale Visits hash at normal laptop zoom",()=>{
+  const line=readingLine(768,74);
+  assert.ok(line > 225, "reading line must reach visible Direct heading");
+  assert.equal(activeSectionFromOffsets({
+    directTop:205,collectionTop:1200,collectionVisible:false
+  },line),"create");
+  assert.equal(activeSectionFromOffsets({
+    directTop:590,collectionTop:1600,collectionVisible:false
+  },line),"visits-links");
+  assert.equal(activeSectionFromOffsets({
+    directTop:-700,collectionTop:190,collectionVisible:true
+  },line),"my-links");
+  assert.ok(readingLine(640,100)>100);
+});
+
+test("scroll position overrides stale hash after browser restores Direct Links",()=>{
+  let directTop=215;
+  const anchors=[];
+  for(const href of ["#visits-links","#create"]){
+    const attrs=new Map([["href",href]]);
+    const classes=new Set();
+    anchors.push({
+      href,classes,
+      getAttribute:key=>attrs.get(key),
+      setAttribute:(key,value)=>attrs.set(key,value),
+      removeAttribute:key=>attrs.delete(key),
+      closest:()=>null,
+      classList:{toggle:(name,enabled)=>enabled?classes.add(name):classes.delete(name)},
+      addEventListener:()=>{}
+    });
+  }
+  const handlers={};
+  const doc={
+    querySelector:()=>({getBoundingClientRect:()=>({height:74})}),
+    querySelectorAll:selector=>selector.includes(".topnav")?anchors:[],
+    getElementById:id=>id==="create"?{getBoundingClientRect:()=>({top:directTop})}:null
+  };
+  const win={
+    innerHeight:768,
+    location:{hash:"#visits-links"},
+    addEventListener:(name,callback)=>{handlers[name]=callback;},
+    requestAnimationFrame:callback=>callback()
+  };
+  mountSectionNavigation(doc,win);
+  assert.ok(anchors[1].classes.has("current"));
+  assert.ok(!anchors[0].classes.has("current"));
+  directTop=650;
+  handlers.scroll();
+  assert.ok(anchors[0].classes.has("current"));
+  directTop=200;
+  handlers.scroll();
+  assert.ok(anchors[1].classes.has("current"));
 });
