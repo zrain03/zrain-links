@@ -1,4 +1,4 @@
-import { validateAlias, validateDestination, randomAlias } from "./core.js";
+import { validateDestination, randomAlias } from "./core.js";
 
 const ALL_ACTION_CATALOG = Object.freeze([
   ["visit_page","Website","Visit a page",[]],
@@ -68,13 +68,23 @@ export function validateVisitsTitle(input) {
     throw new Error("Enter a link title between 3 and 90 characters.");
   return input.trim();
 }
+const VISITS_SUFFIX_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz";
 export function createVisitsAlias(title) {
-  const derived = title.normalize("NFKD").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,30).replace(/-+$/,"");
-  return validateAlias(derived);
+  // Reserve 5 of the 30 allowed characters for "-" plus a 4-letter suffix.
+  const derived = title.normalize("NFKD").toLowerCase().replace(/[^a-z0-9]+/g,"-")
+    .replace(/^-+|-+$/g,"").slice(0,25).replace(/-+$/,"");
+  if (!/^[a-z0-9][a-z0-9-]{2,24}$/.test(derived) || derived.endsWith("-"))
+    throw new Error("Use a title with at least 3 URL-safe letters or numbers, or enable automatic shortening.");
+  return derived;
+}
+export function titleVisitsAlias(title) {
+  const prefix = createVisitsAlias(title);
+  const bytes = crypto.getRandomValues(new Uint8Array(4));
+  const suffix = Array.from(bytes, byte => VISITS_SUFFIX_ALPHABET[byte % VISITS_SUFFIX_ALPHABET.length]).join("");
+  return prefix + "-" + suffix;
 }
 export function randomVisitsAlias() {
-  // Existing Direct Links also use randomAlias; lower-case it because Visits
-  // Link public routes accept lower-case names only.
+  // Shortening enabled: use an independent short code, without title prefix.
   return randomAlias().toLowerCase();
 }
 export function validateVisitsActions(actions) {
