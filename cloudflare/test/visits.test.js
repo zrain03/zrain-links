@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {readFile} from "node:fs/promises";
 import {ACTION_CATALOG, ACTION_LABELS, validateVisitsTitle, createVisitsAlias, titleVisitsAlias, randomVisitsAlias, validateVisitsActions, validateAcknowledgements} from "../src/visits-core.js";
+import {handleVisits} from "../src/visits.js";
 
 const read = path => readFile(new URL(path,import.meta.url),"utf8");
 test("Visit a page is prominently supported but not a required action type",()=>{
@@ -94,4 +95,41 @@ test("Zrain Links public pages avoid em dash punctuation",async()=>{
     "../public/visit-page.js","../public/visits-ui.js","../public/visits.css"]) {
     assert.doesNotMatch(await read(path),/—/,path);
   }
+});
+
+test("publishing a duplicate title retries a new mixed-case suffix without altering the title",async()=>{
+  let checked=0, inserted=[];
+  const db={
+    prepare(sql){
+      return {bind(...args){
+        const query={sql,args,first:async()=>{
+          if(sql.startsWith("SELECT code_lower FROM link_names")){
+            checked++;
+            return checked===1?{code_lower:"taken"}:null;
+          }
+          throw new Error("Unexpected query: "+sql);
+        }};
+        return query;
+      }};
+    },
+    async batch(statements){inserted=statements;return [{meta:{changes:1}}];}
+  };
+  const request=new Request("https://zrain-links.zrain-dev.workers.dev/api/v1/visits",{method:"POST"});
+  const response=await handleVisits(request,db,{
+    authUser:async()=>({id:"owner"}),
+    throttle:async()=>{},
+    readBody:async()=>({
+      title:"claim mp",destinationUrl:"https://example.org/final",autoShorten:false,
+      actions:[{type:"visit_page",url:"https://example.org/start"}]
+    }),
+    id:()=>"test-link-id",now:()=>1793095200
+  });
+  assert.equal(response.status,201);
+  const result=await response.json();
+  assert.equal(result.title,"claim mp");
+  assert.match(result.code,/^claim-mp-[A-Za-z]{4}$/);
+  assert.equal(checked,2);
+  assert.equal(inserted.length,2);
+  assert.equal(inserted[0].args[2],result.code);
+  assert.equal(inserted[0].args[3],result.code.toLowerCase());
 });
