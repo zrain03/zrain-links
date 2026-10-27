@@ -28,14 +28,14 @@ function render(){
   });
 }
 async function load(){
-  if(!code || !/^[a-z0-9][a-z0-9-]{2,29}$/.test(code)){
+  if(!code || !/^[a-zA-Z0-9][a-zA-Z0-9-]{2,29}$/.test(code)){
     $("visit-heading").textContent="Invalid link";$("visit-error").textContent="This Visits Link address is invalid.";return;
   }
   try{
     const response=await fetch(API+"/api/v1/visits/public/"+encodeURIComponent(code),{cache:"no-store"});
     const data=await response.json();
     if(!response.ok)throw Error(data.message||"Visits Link unavailable");
-    $("visit-heading").textContent=data.title;document.title=data.title+" — Zrain Links";
+    $("visit-heading").textContent=data.title;document.title=data.title+" | Zrain Links";
     $("visit-views").textContent="◉ "+data.views+" views";
     $("visit-unlocks").textContent="♧ "+data.unlocks+" unlocks";
     $("visit-intro").textContent="Open each action, then confirm you completed it to unlock the destination.";
