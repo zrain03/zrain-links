@@ -1,4 +1,5 @@
 import {formatMalaysiaTime} from "./time-format.js?v=myt-seconds-20261026-2";
+import {openQrPreview} from "./qr-preview.js?v=qr-preview-20261027-1";
 
 
 const $ = id => document.getElementById(id);
@@ -179,13 +180,12 @@ async function copy(href){
   try{await navigator.clipboard.writeText(href);message("visits-list-message","Link copied.",true);}
   catch{window.prompt("Copy this link:",href)}
 }
-async function qr(link){
-  try{
-    const response=await window.ZrainVisitsBridge.api("/api/v1/visits/"+encodeURIComponent(link.id)+"/qr");
-    const blob=await response.blob(),tmp=URL.createObjectURL(blob),a=node("a");
-    a.href=tmp;a.download="zrain-visits-"+link.code+".svg";document.body.append(a);a.click();a.remove();
-    setTimeout(()=>URL.revokeObjectURL(tmp),1500);
-  }catch(error){message("visits-list-message",error.message)}
+function showQr(link){
+  return openQrPreview({
+    fetchQr:()=>window.ZrainVisitsBridge.api("/api/v1/visits/"+encodeURIComponent(link.id)+"/qr"),
+    shortUrl:boundLink(link.code),
+    fileName:"zrain-visits-"+link.code+".svg"
+  });
 }
 function showList(){
   $("visits-count").textContent=String(saved.length);
@@ -201,7 +201,7 @@ function showList(){
     const bar=node("div",undefined,"link-actions");
     const button=(label,handler,extra="")=>{const b=node("button",label,extra);b.type="button";b.addEventListener("click",handler);bar.append(b)};
     button("Copy",()=>copy(boundLink(link.code)));
-    button("QR code",()=>qr(link));
+    button("QR code",()=>showQr(link));
     button("Delete",async()=>{
       if(!window.confirm("Delete this Visits Link? Its unlock page and statistics will be removed permanently."))return;
       try{await api("/api/v1/visits/"+encodeURIComponent(link.id),{method:"DELETE",auth:true});
