@@ -1,4 +1,5 @@
 import { handleAdmin } from "./admin.js";
+import { handleVisits } from "./visits.js";
 import { randomAlias, validateAlias, validateDestination } from "./core.js";
 import { renderSVG } from "uqr";
 import { createRemoteJWKSet, jwtVerify } from "jose";
@@ -108,12 +109,14 @@ async function handleRequest(request, env) {
       if (method === "GET" && path === "/api/v1/links/availability") {
         await throttle(db, request, "alias-check", 120);
         const code = validateAlias(url.searchParams.get("name"));
-        const taken = !!(await db.prepare("SELECT id FROM short_links WHERE code_lower = ?")
+        const taken = !!(await db.prepare("SELECT code_lower FROM link_names WHERE code_lower = ?")
           .bind(code.toLowerCase()).first());
         return json({ name: code, available: !taken, shortUrl: PUBLIC_LINK_ORIGIN + "/" + code });
       }
       if (path.startsWith("/api/v1/")) {
         if (path.startsWith("/api/v1/admin/")) return await handleAdmin(request, env, db);
+        if (path === "/api/v1/visits" || path.startsWith("/api/v1/visits/"))
+          return await handleVisits(request, db, {authUser,readBody,throttle,now,id});
         if (method === "POST" && path === "/api/v1/auth/register") {
           await throttle(db, request, "signup", 12);
           const body = await readBody(request), email = emailOf(body.email), password = passOf(body.password);
@@ -152,7 +155,7 @@ async function handleRequest(request, env) {
           if (custom && typeof body.customAlias !== "string")
             return error("VALIDATION_ERROR", "Your link name must be text.", 400);
           const code = custom ? validateAlias(body.customAlias) : randomAlias();
-          if (await db.prepare("SELECT id FROM short_links WHERE code_lower = ?").bind(code.toLowerCase()).first())
+          if (await db.prepare("SELECT code_lower FROM link_names WHERE code_lower = ?").bind(code.toLowerCase()).first())
             return error("ALIAS_TAKEN", "This link name is already taken. Choose another name.", 409);
           const linkId = id(), stamp = now();
           try {
@@ -192,6 +195,11 @@ async function handleRequest(request, env) {
             await db.prepare("UPDATE short_links SET click_count = click_count + 1 WHERE id = ?").bind(link.id).run();
             return new Response(null,{status:302,headers:{Location:link.destination_url,"cache-control":"no-store","referrer-policy":"no-referrer"}});
           }
+          const visit = await db.prepare("SELECT id,code FROM visits_links WHERE code_lower = ?").bind(code.toLowerCase()).first();
+          if (visit) return new Response(null,{status:302,headers:{
+            Location:PUBLIC_LINK_ORIGIN+"/visit.html?code="+encodeURIComponent(visit.code),
+            "cache-control":"no-store","referrer-policy":"no-referrer"
+          }});
         }
       }
       if (method === "GET" || method === "HEAD") {
