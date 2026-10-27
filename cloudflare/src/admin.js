@@ -86,38 +86,41 @@ export async function handleAdmin(request, env, db) {
   }
   if (method === "GET" && path === "/api/v1/admin/overview") {
     const [links, users] = await Promise.all([
-      db.prepare("SELECT COUNT(*) AS total_links, COALESCE(SUM(click_count),0) AS total_visits FROM short_links").first(),
+      db.prepare("SELECT (SELECT COUNT(*) FROM short_links) + (SELECT COUNT(*) FROM visits_links) AS total_links, (SELECT COALESCE(SUM(click_count),0) FROM short_links) + (SELECT COALESCE(SUM(view_count),0) FROM visits_links) AS total_visits").first(),
       db.prepare("SELECT COUNT(*) AS known_users FROM users").first()
     ]);
     return json({ totalLinks: links.total_links, totalVisits: links.total_visits, knownUsers: users.known_users });
   }
   if (method === "GET" && path === "/api/v1/admin/links") {
-    const params = new URL(request.url).searchParams;
-    const q = (params.get("q") || "").trim().slice(0, 100);
-    const offset = Math.max(0, Math.min(100000, Number.parseInt(params.get("offset") || "0", 10) || 0));
-    const like = "%" + q.replace(/[\\%_]/g, "\\$&") + "%";
-    const where = q ? " WHERE code LIKE ? ESCAPE '\\' OR destination_url LIKE ? ESCAPE '\\' OR owner_id LIKE ? ESCAPE '\\'" : "";
-    const bindings = q ? [like, like, like] : [];
-    const total = await db.prepare("SELECT COUNT(*) AS n FROM short_links" + where).bind(...bindings).first();
-    const page = await db.prepare("SELECT id, code, owner_id, destination_url, click_count, created_at FROM short_links" + where +
-      " ORDER BY created_at DESC, id DESC LIMIT 50 OFFSET ?").bind(...bindings, offset).all();
-    return json({ total: total.n, offset, links: (page.results || []).map(row => ({
-      id: row.id, code: row.code, ownerId: row.owner_id, destinationUrl: row.destination_url,
-      clickCount: row.click_count, createdAt: dateIso(row.created_at)
-    })) });
+    const params=new URL(request.url).searchParams;
+    const q=(params.get("q")||"").trim().slice(0,100);
+    const offset=Math.max(0,Math.min(100000,Number.parseInt(params.get("offset")||"0",10)||0));
+    const like="%"+q.replace(/[\\%_]/g,"\\$&")+"%";
+    const both="(SELECT id,code,owner_id,destination_url,click_count,created_at,'direct' AS link_type FROM short_links UNION ALL "+
+      "SELECT id,code,owner_id,destination_url,view_count AS click_count,created_at,'visits' AS link_type FROM visits_links)";
+    const where=q?" WHERE code LIKE ? ESCAPE '\\' OR destination_url LIKE ? ESCAPE '\\' OR owner_id LIKE ? ESCAPE '\\'":"";
+    const bindings=q?[like,like,like]:[];
+    const total=await db.prepare("SELECT COUNT(*) AS n FROM "+both+where).bind(...bindings).first();
+    const page=await db.prepare("SELECT id,code,owner_id,destination_url,click_count,created_at,link_type FROM "+
+      both+where+" ORDER BY created_at DESC,id DESC LIMIT 50 OFFSET ?").bind(...bindings,offset).all();
+    return json({total:total.n,offset,links:(page.results||[]).map(row=>({
+      id:row.id,code:row.code,ownerId:row.owner_id,destinationUrl:row.destination_url,
+      clickCount:row.click_count,linkType:row.link_type,createdAt:dateIso(row.created_at)
+    }))});
   }
-  const linkDelete = path.match(/^\/api\/v1\/admin\/links\/([0-9a-f-]{36})$/);
-  if (method === "DELETE" && linkDelete) {
-    if (!recentAuth(admin)) return fail(403, "Recent Google verification required. Click Verify with Google, then try again.");
-    const record = await db.prepare("SELECT id, code FROM short_links WHERE id = ?").bind(linkDelete[1]).first();
-    if (!record) return fail(404, "Link already deleted.");
-    if (await readConfirmation(request) !== record.code) return fail(400, "Type the exact link name to confirm deletion.");
-    const results = await db.batch([
-      db.prepare("DELETE FROM short_links WHERE id = ?").bind(record.id),
+  const linkDelete=path.match(/^\\/api\\/v1\\/admin\\/links\\/([0-9a-f-]{36})$/);
+  if(method==="DELETE" && linkDelete){
+    if(!recentAuth(admin))return fail(403,"Recent Google verification required. Click Verify with Google, then try again.");
+    const record=await db.prepare("SELECT id,code,'direct' AS link_type FROM short_links WHERE id = ? UNION ALL SELECT id,code,'visits' AS link_type FROM visits_links WHERE id = ?").bind(linkDelete[1],linkDelete[1]).first();
+    if(!record)return fail(404,"Link already deleted.");
+    if(await readConfirmation(request)!==record.code)return fail(400,"Type the exact link name to confirm deletion.");
+    const table=record.link_type==="visits"?"visits_links":"short_links";
+    const result=await db.batch([
+      db.prepare("DELETE FROM "+table+" WHERE id = ?").bind(record.id),
       db.prepare("INSERT INTO admin_events (id,admin_uid,action,target,created_at) VALUES (?,?,?,?,?)")
-        .bind(crypto.randomUUID(), admin.sub, "DELETE_LINK", record.code, Math.floor(Date.now() / 1000))
+        .bind(crypto.randomUUID(),admin.sub,"DELETE_"+record.link_type.toUpperCase(),record.code,Math.floor(Date.now()/1000))
     ]);
-    return results[0]?.meta?.changes ? json({ deleted: true, code: record.code }) : fail(409, "Link changed. Refresh and try again.");
+    return result[0]?.meta?.changes?json({deleted:true,code:record.code}):fail(409,"Link changed. Refresh and try again.");
   }
   if (method === "GET" && path === "/api/v1/admin/users") {
     if (!validFirebaseServiceAccount(env)) return fail(503, "Firebase account management is not configured correctly. Upload a valid service-account JSON secret.");
@@ -130,7 +133,7 @@ export async function handleAdmin(request, env, db) {
     const ownerIds = rawUsers.map(u => "firebase:" + u.localId);
     let counts = new Map();
     if (ownerIds.length) {
-      const rows = await db.prepare("SELECT owner_id, COUNT(*) AS total_links FROM short_links WHERE owner_id IN (" +
+      const rows = await db.prepare("SELECT owner_id, COUNT(*) AS total_links FROM (SELECT owner_id FROM short_links UNION ALL SELECT owner_id FROM visits_links) WHERE owner_id IN (" +
         ownerIds.map(() => "?").join(",") + ") GROUP BY owner_id").bind(...ownerIds).all();
       counts = new Map((rows.results || []).map(row => [row.owner_id, row.total_links]));
     }
@@ -144,7 +147,7 @@ export async function handleAdmin(request, env, db) {
   }
   if (method === "GET" && path === "/api/v1/admin/d1-accounts") {
     const rows = await db.prepare(
-      "SELECT u.id, u.created_at, COUNT(l.id) AS link_count FROM users u LEFT JOIN short_links l ON l.owner_id = u.id WHERE u.id LIKE 'firebase:%' GROUP BY u.id ORDER BY u.created_at DESC LIMIT 200"
+      "SELECT u.id, u.created_at, (SELECT COUNT(*) FROM short_links WHERE owner_id=u.id) + (SELECT COUNT(*) FROM visits_links WHERE owner_id=u.id) AS link_count FROM users u WHERE u.id LIKE 'firebase:%' ORDER BY u.created_at DESC LIMIT 200"
     ).all();
     return json({ accounts: (rows.results || []).map(row => ({
       uid: row.id.slice("firebase:".length), isAdmin: row.id === "firebase:" + env.ZRAIN_ADMIN_FIREBASE_UID, createdAt: dateIso(row.created_at), linkCount: row.link_count
@@ -169,6 +172,7 @@ export async function handleAdmin(request, env, db) {
     await db.batch([
       db.prepare("INSERT OR IGNORE INTO deleted_firebase_uids (uid, deleted_at) VALUES (?,?)").bind(uid, Math.floor(Date.now() / 1000)),
       db.prepare("DELETE FROM short_links WHERE owner_id = ?").bind(ownerId),
+      db.prepare("DELETE FROM visits_links WHERE owner_id = ?").bind(ownerId),
       db.prepare("DELETE FROM sessions WHERE user_id = ?").bind(ownerId),
       db.prepare("DELETE FROM users WHERE id = ?").bind(ownerId),
       db.prepare("INSERT INTO admin_events (id,admin_uid,action,target,created_at) VALUES (?,?,?,?,?)")
@@ -200,6 +204,7 @@ export async function handleAdmin(request, env, db) {
     const ownerId = "firebase:" + uid;
     await db.batch([
       db.prepare("DELETE FROM short_links WHERE owner_id = ?").bind(ownerId),
+      db.prepare("DELETE FROM visits_links WHERE owner_id = ?").bind(ownerId),
       db.prepare("DELETE FROM sessions WHERE user_id = ?").bind(ownerId),
       db.prepare("DELETE FROM users WHERE id = ?").bind(ownerId),
       db.prepare("INSERT INTO admin_events (id,admin_uid,action,target,created_at) VALUES (?,?,?,?,?)")
