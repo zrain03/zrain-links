@@ -5,16 +5,16 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#fffaf6">
   <meta name="description" content="Create a memorable link with your own name. QR codes and optional automatic shortening with Zrain Links.">
-  <title>Zrain Links — Create your own link</title>
+  <title>Zrain Links | Create your own link</title>
   <link rel="icon" href="/zrain-logo.webp" type="image/webp">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/app.css?v=admin-20261026-1">
   <link rel="stylesheet" href="/brand.css?v=zrain-shared-20261026-1">
-  <link rel="stylesheet" href="/visits.css?v=visits-20261027-2">
+  <link rel="stylesheet" href="/visits.css?v=visits-20261027-3">
   <script type="module" src="/app.js?v=admin-20261026-2"></script>
-  <script type="module" src="/visits-ui.js?v=visits-20261027-2"></script>
+  <script type="module" src="/visits-ui.js?v=visits-20261027-3"></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -36,7 +36,7 @@
 <main id="main" class="container">
 <div class="zrain-hero-layout">
   <section id="create" class="page-intro">
-    <div class="intro-copy"><p class="eyebrow">✦ DIRECT LINKS</p><h1>Create a clean link<br><em>you control.</em></h1><p>Give every link a memorable name of your own. Automatic shortening is optional — you decide how you share.</p><a class="button button-primary hero-start" href="#long-url">Create a direct link <span aria-hidden="true">→</span></a><div class="hero-points"><span>✓ Your custom name</span><span>✓ QR sharing</span><span>✓ Visit counts</span></div></div>
+    <div class="intro-copy"><p class="eyebrow">✦ DIRECT LINKS</p><h1>Create a clean link<br><em>you control.</em></h1><p>Give every link a memorable name of your own. Automatic shortening is optional. You decide how you share.</p><a class="button button-primary hero-start" href="#long-url">Create a direct link <span aria-hidden="true">→</span></a><div class="hero-points"><span>✓ Your custom name</span><span>✓ QR sharing</span><span>✓ Visit counts</span></div></div>
     
   </section>
 
@@ -119,7 +119,7 @@
   <div class="visits-intro">
     <p class="eyebrow">✦ VISITS LINKS</p>
     <h2 id="visits-heading">Build a visits link with <em>actions before unlock.</em></h2>
-    <p>Give your link a title, choose what visitors should do, and publish a dedicated unlock page. <strong>Visit a page</strong> is featured and easy to add — or choose any supported action instead.</p>
+    <p>Give your link a title, choose what visitors should do, and publish a dedicated unlock page. <strong>Visit a page</strong> is featured and easy to add. You can also choose a supported social action.</p>
     <a class="button button-primary hero-start" href="#visits-destination">Create a visits link <span aria-hidden="true">→</span></a>
     <div class="hero-points"><span>✓ Action-based unlock</span><span>✓ Visit a page</span><span>✓ Separate workspace</span></div>
     <p class="visits-disclaimer">Social actions use visitor confirmation, not automatic verification by third-party platforms.</p>
@@ -144,7 +144,7 @@
           <label>3. Actions before unlock <span class="required-star">*</span></label>
           <p class="field-explanation">Choose 1–20 actions. Visitors open each action and mark it complete.</p>
           <div class="visit-page-feature">
-            <div><strong>↗ Visit a page</strong><small>The quickest option — send visitors to a website first.</small></div>
+            <div><strong>↗ Visit a page</strong><small>The quickest option: send visitors to a website first.</small></div>
             <button class="button button-outline" id="visits-add-page" type="button">+ Add Visit a page</button>
           </div>
           <div id="visits-action-rows" class="visits-action-rows" aria-live="polite"></div>
@@ -160,8 +160,8 @@
       <h3 id="visits-preview-title">Your link title</h3>
       <div class="visits-public-preview">
         <span class="preview-eyebrow">PUBLIC LINK</span>
-        <strong id="visits-preview-url">zrain-links.web.app/your-title</strong>
-        <small id="visits-preview-link-note">Generated automatically from your title. The name cannot be edited.</small>
+        <strong id="visits-preview-url">zrain-links.web.app/your-title-XXXX</strong>
+        <small id="visits-preview-link-note">Generated from your title with a random four-letter suffix. The name cannot be edited.</small>
       </div>
       <div class="visits-preview-stats"><span>♧ 0 unlocked</span><span>◉ 0 views</span></div>
       <div id="visits-preview-steps" class="visits-preview-steps"><p>Choose an action to preview your visitor journey.</p></div>
@@ -171,7 +171,7 @@
   </div>
 </section>
 <section class="zrain-feature-grid visits-features" aria-label="For Visits Links">
-  <article><span class="feature-icon coral">↗</span><h3>Visit a page</h3><p>Prominently add a visit action — or choose another platform.</p></article>
+  <article><span class="feature-icon coral">↗</span><h3>Visit a page</h3><p>Prominently add a visit action, or choose a social platform.</p></article>
   <article><span class="feature-icon orange">✧</span><h3>Action builder</h3><p>Set up to 20 ordered actions for visitors to complete.</p></article>
   <article><span class="feature-icon blue">▦</span><h3>Social actions</h3><p>Choose YouTube, Instagram, TikTok, Facebook, X and other social platforms.</p></article>
   <article><span class="feature-icon coral">◉</span><h3>Unlock preview</h3><p>See how your title and action list will appear.</p></article>
@@ -199,7 +199,7 @@
     <p id="list-status" class="form-message" role="status" aria-live="polite"></p>
     <div id="links-list" class="links-list"></div>
     <section class="visits-my-links" aria-labelledby="visits-list-heading">
-      <div class="library-heading"><div><p class="eyebrow">SEPARATE COLLECTION</p><h3 id="visits-list-heading">My Visits Links</h3><p>Action-based links, page views and unlocks — separate from Direct Links.</p></div>
+      <div class="library-heading"><div><p class="eyebrow">SEPARATE COLLECTION</p><h3 id="visits-list-heading">My Visits Links</h3><p>Action-based links, page views and unlocks, separate from Direct Links.</p></div>
         <button type="button" id="visits-refresh" class="button button-outline">Refresh Visits Links</button></div>
       <div class="library-stats"><div><span>Visits links created</span><strong id="visits-count">0</strong></div><div><span>Unlocks recorded</span><strong id="visits-unlocks">0</strong></div></div>
       <p id="visits-list-message" class="form-message" role="status" aria-live="polite"></p>
