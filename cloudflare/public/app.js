@@ -1,5 +1,6 @@
 import { formatMalaysiaTime } from "./time-format.js?v=myt-seconds-20261026-2";
 import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
+import { openQrPreview } from "./qr-preview.js?v=qr-preview-20261027-1";
 "use strict";
 (() => {
   const $ = id => document.getElementById(id);
@@ -357,7 +358,7 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
         const b = document.createElement("button"); b.type = "button"; b.textContent = name; b.className = extra; b.addEventListener("click", handler); actions.append(b);
       }
       action("Copy", () => copyLink(publicShortUrl(link)));
-      action("QR code", () => downloadQr(link));
+      action("QR code", () => showQr(link));
       action("Delete", async () => {
         if (!window.confirm("Delete this short link? It will stop working.")) return;
         try {
@@ -378,13 +379,12 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
     try { await navigator.clipboard.writeText(url); toast("Link copied!"); }
     catch { toast("Copy unavailable. Select the link and copy it manually."); }
   }
-  async function downloadQr(link) {
-    try {
-      const response = await api("/api/v1/links/" + encodeURIComponent(link.id) + "/qr");
-      const blob = await response.blob(), url = URL.createObjectURL(blob);
-      const anchor = document.createElement("a"); anchor.href = url; anchor.download = "zrain-links-" + link.code + ".svg";
-      document.body.append(anchor); anchor.click(); anchor.remove(); window.setTimeout(() => URL.revokeObjectURL(url), 1500);
-    } catch (error) { toast(error.message); }
+  function showQr(link) {
+    return openQrPreview({
+      fetchQr: () => api("/api/v1/links/" + encodeURIComponent(link.id) + "/qr"),
+      shortUrl: publicShortUrl(link),
+      fileName: "zrain-links-" + link.code + ".svg"
+    });
   }
   document.querySelectorAll("[data-auth-mode]").forEach(b => b.addEventListener("click", () => setMode(b.dataset.authMode)));
   $("verified-button").addEventListener("click", async () => {
@@ -528,7 +528,7 @@ import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
   $("shorten-form").addEventListener("submit", onShorten);
   $("refresh-links").addEventListener("click", refresh);
   $("result-copy").addEventListener("click", () => { if (latestLink) copyLink(publicShortUrl(latestLink)); });
-  $("result-qr").addEventListener("click", () => { if (latestLink) downloadQr(latestLink); });
+  $("result-qr").addEventListener("click", () => { if (latestLink) showQr(latestLink); });
   $("auto-shorten").addEventListener("change", () => { updateAliasPreview(); checkAliasAvailability(); });
   $("long-url").addEventListener("input", updateDestinationPreview);
   // The two independent link experiences reuse the existing verified Firebase session.
