@@ -1,4 +1,4 @@
-import {ACTION_CATALOG, createVisitsAlias, validateVisitsTitle, validateVisitsActions, validateAcknowledgements} from "./visits-core.js";
+import {ACTION_CATALOG, ACTION_LABELS, createVisitsAlias, randomVisitsAlias, validateVisitsTitle, validateVisitsActions, validateAcknowledgements} from "./visits-core.js";
 import {validateDestination} from "./core.js";
 import {renderSVG} from "uqr";
 
@@ -14,7 +14,7 @@ function rowToPublic(row) {
 }
 async function actionsFor(db,id) {
   const result = await db.prepare("SELECT position,type,action_url FROM visits_actions WHERE link_id = ? ORDER BY position").bind(id).all();
-  const labels = new Map(ACTION_CATALOG.map(a => [a.id,a]));
+  const labels = ACTION_LABELS;
   return (result.results || []).map(row => ({
     position:row.position,type:row.type,url:row.action_url,
     platform:labels.get(row.type)?.platform || "Other",
@@ -53,16 +53,28 @@ export async function handleVisits(request,db,deps) {
     const body=await readBody(request);
     const title=userInput(()=>validateVisitsTitle(body?.title));
     const destination=userInput(()=>validateDestination(body?.destinationUrl));
-    if (body?.customAlias != null && typeof body.customAlias !== "string")
-      return fail(400,"Public link name must be text.");
-    const code=userInput(()=>createVisitsAlias(title,body?.customAlias?.trim() || ""));
+    if (body?.customAlias != null)
+      return fail(400,"Visits Link names come from the title. Use automatic shortening for a random name.");
+    if (body?.autoShorten != null && typeof body.autoShorten !== "boolean")
+      return fail(400,"Automatic shortening must be enabled or disabled.");
+    const automatic=body?.autoShorten === true;
+    const actions=userInput(()=>validateVisitsActions(body?.actions));
+    // When automatic shortening is off, the public name always follows the title.
+    // When on, retry safely if a generated name collides with either link type.
+    let code=automatic ? randomVisitsAlias() : userInput(()=>createVisitsAlias(title));
+    let available=false;
+    for (let attempt=0;attempt<(automatic ? 8 : 1);attempt++) {
+      if (attempt) code=randomVisitsAlias();
+      const taken=await db.prepare("SELECT code_lower FROM link_names WHERE code_lower = ?").bind(code).first();
+      if (!taken) { available=true; break; }
+    }
+    if (!available) return fail(409,automatic
+      ? "Could not generate an available short name. Please try again."
+      : "This title produces a link name that is already used. Change the title or enable automatic shortening.");
     const parsedDestination=new URL(destination);
     if (["zrain-links.web.app","zrain-links.firebaseapp.com"].includes(parsedDestination.hostname.toLowerCase())
         && parsedDestination.pathname.toLowerCase()==="/"+code)
       return fail(400,"A Visits Link cannot redirect back to itself.");
-    const actions=userInput(()=>validateVisitsActions(body?.actions));
-    if(await db.prepare("SELECT code_lower FROM link_names WHERE code_lower = ?").bind(code).first())
-      return fail(409,"This short name is already used by a Direct Link or Visits Link.");
     const linkId=id(),stamp=now();
     try{
       await db.batch([
@@ -72,7 +84,7 @@ export async function handleVisits(request,db,deps) {
           .bind(linkId,index,a.type,a.url))
       ]);
     }catch(e){
-      if(/UNIQUE constraint/i.test(String(e?.message))) return fail(409,"This short name is already taken. Choose another.");
+      if(/UNIQUE constraint/i.test(String(e?.message))) return fail(409,"This link name is already taken. Change the title, enable automatic shortening or try again.");
       throw e;
     }
     return json({...rowToPublic({id:linkId,code,title,created_at:stamp,view_count:0,unlock_count:0}),actions},201);
