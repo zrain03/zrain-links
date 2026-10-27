@@ -1,12 +1,18 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFile} from "node:fs/promises";
-import {ACTION_CATALOG,validateVisitsTitle,createVisitsAlias,validateVisitsActions,validateAcknowledgements} from "../src/visits-core.js";
+import {ACTION_CATALOG, ACTION_LABELS, validateVisitsTitle, createVisitsAlias, randomVisitsAlias, validateVisitsActions, validateAcknowledgements} from "../src/visits-core.js";
 
 const read = path => readFile(new URL(path,import.meta.url),"utf8");
 test("Visit a page is prominently supported but not a required action type",()=>{
   assert.equal(ACTION_CATALOG[0].id,"visit_page");
-  assert.ok(ACTION_CATALOG.length>=35);
+  assert.ok(ACTION_CATALOG.length>=20 && ACTION_CATALOG.length<=30);
+  const allowed=new Set(["Other","YouTube","Instagram","TikTok","X / Twitter","Facebook","Reddit","LinkedIn","Pinterest","Snapchat","Threads"]);
+  assert.ok(ACTION_CATALOG.every(action=>allowed.has(action.platform)));
+  assert.equal(ACTION_CATALOG.filter(action=>action.platform==="Other").length,1);
+  assert.ok(!ACTION_CATALOG.some(action=>["GitHub","Spotify","Roblox","Discord","Telegram","Google Play Store"].includes(action.platform)));
+  assert.equal(ACTION_LABELS.get("github_star").label,"Star repository"); // old published links remain readable
+  assert.throws(()=>validateVisitsActions([{type:"github_star",url:"https://github.com/zrain03/zrain-links"}]));
   const youtube=validateVisitsActions([{type:"youtube_subscribe",url:"https://www.youtube.com/@example"}]);
   assert.equal(youtube[0].platform,"YouTube");
   const page=validateVisitsActions([{type:"visit_page",url:"https://example.org/resource"}]);
@@ -18,14 +24,16 @@ test("rejects invalid action URLs, private destinations, and spoofed platform do
     [{type:"fake",url:"https://example.org"}],
     [{type:"visit_page",url:"http://example.org"}],
     [{type:"visit_page",url:"https://localhost"}],
-    [{type:"github_star",url:"https://github.com.evil.example.org"}],
+    [{type:"spotify_follow",url:"https://open.spotify.com/artist/one"}],
     [{type:"youtube_subscribe",url:"https://www.youtube.com.evil.org"}]
   ])assert.throws(()=>validateVisitsActions(actions));
 });
 test("separate link names and acknowledgements are validated",()=>{
   assert.equal(validateVisitsTitle(" My launch "),"My launch");
   assert.equal(createVisitsAlias("Guess The Flag",""),"guess-the-flag");
-  assert.throws(()=>createVisitsAlias("My link","admin"));
+  assert.throws(()=>createVisitsAlias("admin"));
+  assert.equal(createVisitsAlias("claim mp"),"claim-mp");
+  assert.match(randomVisitsAlias(),/^[a-z0-9]{9}$/);
   assert.throws(()=>validateVisitsTitle("x"));
   assert.equal(validateAcknowledgements([1,0],2),true);
   for(const completed of [[0],[0,0],[0,1,2],[2,1]])assert.throws(()=>validateAcknowledgements(completed,2));
@@ -52,6 +60,15 @@ test("independent Visits Link APIs and public unlock do not break direct redirec
   assert.match(visits,/unlock_count = unlock_count \+ 1/);
   assert.match(visits,/rowToPublic/);
   assert.match(html,/id="visits-form"/);
+  assert.match(html,/id="visits-auto-shorten"/);
+  assert.match(html,/id="visits-preview-url"/);
+  assert.doesNotMatch(html,/id="visits-alias"/);
+  assert.match(builder,/autoShorten:automatic/);
+  assert.match(builder,/\$\("visits-preview-url"\)/);
+  assert.doesNotMatch(builder,/\$\("visits-alias"\)/);
+  assert.match(visits,/randomVisitsAlias\(\)/);
+  assert.match(visits,/createVisitsAlias\(title\)/);
+  assert.match(visits,/if \(body\?\.customAlias != null\)/);
   assert.match(html,/id="visits-add-page"/);
   assert.match(html,/id="visits-picker"/);
   assert.match(html,/id="visits-list"/);
