@@ -1,4 +1,5 @@
 import {formatMalaysiaTime} from "./time-format.js?v=myt-seconds-20261026-2";
+import {isValidAlias} from "./alias-utils.js";
 
 const $ = id => document.getElementById(id);
 const API = "https://zrain-links.zrain-dev.workers.dev";
@@ -6,17 +7,11 @@ const PUBLIC = "https://zrain-links.web.app/";
 const catalog = [];
 const actions = [];
 const DRAFT_KEY="zrain-links:visits-draft";
-let saved=[],selectedCategory="All",aliasEdited=false,latest=null;
-const categories=["All","Video","Social","Messaging","Music","Developer","Apps","Gaming","Other"];
-const categoryOf = platform => ({
-  YouTube:"Video",Vimeo:"Video",Rumble:"Video",
-  Instagram:"Social",TikTok:"Social","X / Twitter":"Social",Facebook:"Social",Threads:"Social",Reddit:"Social",LinkedIn:"Social",Pinterest:"Social",Snapchat:"Social",
-  Discord:"Messaging",Telegram:"Messaging",WhatsApp:"Messaging",
-  Spotify:"Music",SoundCloud:"Music",Deezer:"Music",Bandcamp:"Music",Audiomack:"Music",
-  GitHub:"Developer","Product Hunt":"Developer",Dribbble:"Developer",Behance:"Developer",DeviantArt:"Developer",
-  "Google Play Store":"Apps","Apple App Store":"Apps",
-  Roblox:"Gaming",Steam:"Gaming",Kick:"Gaming",Twitch:"Gaming"
-})[platform] || "Other";
+let saved=[],selectedCategory="All",latest=null;
+const categories=["All","Visit a page","YouTube","Instagram","TikTok","Facebook","X / Twitter","More social"];
+const majorSocial=new Set(["YouTube","Instagram","TikTok","Facebook","X / Twitter"]);
+const categoryOf = action => action.id==="visit_page" ? "Visit a page" :
+  majorSocial.has(action.platform) ? action.platform : "More social";
 function node(tag,txt,className){
   const e=document.createElement(tag);
   if(txt!==undefined)e.textContent=txt;
@@ -40,7 +35,24 @@ async function api(path,{method="GET",body=null,auth=false}={}){
   return result;
 }
 function preview(){
-  $("visits-preview-title").textContent=$("visits-title").value.trim()||"Your link title";
+  const title=$("visits-title").value.trim();
+  const automatic=$("visits-auto-shorten").checked;
+  const derived=slug(title);
+  $("visits-preview-title").textContent=title||"Your link title";
+  const link=$("visits-preview-url"),note=$("visits-preview-link-note");
+  if (automatic) {
+    link.textContent="zrain-links.web.app/•••••••••";
+    note.textContent="A random short link will be generated when you publish. The name cannot be edited.";
+  } else if (!title) {
+    link.textContent="zrain-links.web.app/your-title";
+    note.textContent="The public link is generated from your title and cannot be edited.";
+  } else if (isValidAlias(derived)) {
+    link.textContent=boundLink(derived);
+    note.textContent="Based on your title. If this name is taken, change the title or enable shortening.";
+  } else {
+    link.textContent="zrain-links.web.app/…";
+    note.textContent="Choose a title that produces at least 3 URL-safe letters or numbers, or enable shortening.";
+  }
   const root=$("visits-preview-steps");root.replaceChildren();
   if(!actions.length){root.append(node("p","Choose an action to preview the visitor journey."));return}
   for(let i=0;i<actions.length;i++){
@@ -81,10 +93,10 @@ function addAction(item){
 function renderCatalog(){
   const root=$("visits-picker-options");root.replaceChildren();
   const search=$("visits-search").value.trim().toLowerCase();
-  const filtered=catalog.filter(a=>(selectedCategory==="All"||categoryOf(a.platform)===selectedCategory) &&
+  const filtered=catalog.filter(a=>(selectedCategory==="All"||categoryOf(a)===selectedCategory) &&
     (a.platform+" "+a.label+" "+a.id).toLowerCase().includes(search));
   const groups=new Map();
-  // Make Visit a page easy to discover even though it belongs to "Other".
+  // Visit a page is always featured first in the action catalog.
   for(const action of filtered){
     const group=action.id==="visit_page"?"Featured · Visit a page":action.platform;
     if(!groups.has(group))groups.set(group,[]);
@@ -126,14 +138,18 @@ function boundLink(code){return PUBLIC+encodeURIComponent(code)}
 async function submit(event){
   event.preventDefault();
   message("visits-message","");
-  const destination=$("visits-destination").value.trim(),title=$("visits-title").value.trim(),alias=$("visits-alias").value.trim();
+  const destination=$("visits-destination").value.trim(),title=$("visits-title").value.trim();
+  const automatic=$("visits-auto-shorten").checked;
+  const name=slug(title);
   if(!destination.startsWith("https://")){message("visits-message","Use a public HTTPS destination.");return}
   if(title.length<3||title.length>90){message("visits-message","Use a title with 3–90 characters.");return}
-  if(!/^[a-z0-9][a-z0-9-]{2,29}$/.test(alias)||alias.endsWith("-")){message("visits-message","Use a valid 3–30 character lowercase link name.");return}
+  if(!automatic&&!isValidAlias(name)){
+    message("visits-message","This title cannot form a valid public link. Change the title or enable automatic shortening.");return;
+  }
   if(!actions.length){message("visits-message","Choose at least one action. Visit a page is optional.");return}
   if(actions.some(a=>!a.url)){message("visits-message","Enter a URL for every selected action.");return}
   if(!window.ZrainVisitsBridge?.getUser()){
-    try { sessionStorage.setItem(DRAFT_KEY,JSON.stringify({destination,title,alias,actions})); }
+    try { sessionStorage.setItem(DRAFT_KEY,JSON.stringify({destination,title,automatic,actions})); }
     catch { /* Session storage may be unavailable in private browsing. */ }
     message("visits-message","Sign in to publish. Your form is kept here, so you can submit it afterward.");
     window.ZrainVisitsBridge?.openAuth();
@@ -142,11 +158,13 @@ async function submit(event){
   const button=$("visits-submit");button.disabled=true;
   try{
     latest=await api("/api/v1/visits",{method:"POST",auth:true,body:{
-      destinationUrl:destination,title,customAlias:alias,
+      destinationUrl:destination,title,autoShorten:automatic,
       actions:actions.map(a=>({type:a.id,url:a.url}))
     }});
     try { sessionStorage.removeItem(DRAFT_KEY); } catch {}
     const href=boundLink(latest.code);$("visits-result-url").href=href;$("visits-result-url").textContent=href;
+    $("visits-preview-url").textContent=href;
+    $("visits-preview-link-note").textContent="Published public link. This address cannot be edited.";
     $("visits-result").hidden=false;
     $("visits-result").scrollIntoView({behavior:"smooth",block:"center"});
     message("visits-message","Visits Link published! Visitor actions are acknowledged, not platform-verified.",true);
@@ -197,11 +215,8 @@ async function refreshList(){
   try{saved=await api("/api/v1/visits",{auth:true});showList();message("visits-list-message","");}
   catch(error){message("visits-list-message",error.message)}
 }
-$("visits-title").addEventListener("input",()=>{
-  if(!aliasEdited)$("visits-alias").value=slug($("visits-title").value);
-  preview();
-});
-$("visits-alias").addEventListener("input",()=>{aliasEdited=true});
+$("visits-title").addEventListener("input",preview);
+$("visits-auto-shorten").addEventListener("change",preview);
 $("visits-add-page").addEventListener("click",()=>{
   addAction({id:"visit_page",label:"Visit a page",platform:"Other"});
 });
@@ -218,8 +233,7 @@ try {
   if(pending && Array.isArray(pending.actions) && pending.actions.length<=20){
     $("visits-destination").value=typeof pending.destination==="string"?pending.destination:"";
     $("visits-title").value=typeof pending.title==="string"?pending.title:"";
-    $("visits-alias").value=typeof pending.alias==="string"?pending.alias:"";
-    aliasEdited=true;
+    $("visits-auto-shorten").checked=pending.automatic === true;
     actions.push(...pending.actions.filter(a=>a && typeof a.id==="string" && typeof a.url==="string"));
   }
   sessionStorage.removeItem(DRAFT_KEY);
