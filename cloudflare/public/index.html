@@ -36,81 +36,6 @@
   </div>
 </header>
 <main id="main" class="container">
-<div class="zrain-hero-layout">
-  <section id="create" class="page-intro">
-    <div class="intro-copy"><p class="eyebrow">✦ DIRECT LINKS</p><h1>Create a clean link<br><em>you control.</em></h1><p>Give every link a memorable name of your own. Automatic shortening is optional. You decide how you share.</p><a class="button button-primary hero-start" href="#long-url">Create a direct link <span aria-hidden="true">→</span></a><div class="hero-points"><span>✓ Your custom name</span><span>✓ QR sharing</span><span>✓ Visit counts</span></div></div>
-    
-  </section>
-
-  <div class="editor-grid">
-    <section class="editor-card" aria-labelledby="editor-heading">
-      <div class="card-heading"><div><span class="card-kicker">DIRECT LINK WORKSPACE</span><h2 id="editor-heading">Create link</h2></div><span class="step-pill">2 fields</span></div>
-      <form id="shorten-form" novalidate>
-        <div class="field-block">
-          <label for="long-url">1. Destination URL <span class="required-star">*</span></label>
-          <p class="field-explanation">Where should this link take someone?</p>
-          <input id="long-url" type="url" name="destination" autocomplete="url" inputmode="url" maxlength="2048" required placeholder="https://example.com/your-page">
-        </div>
-        <div class="field-block" id="alias-fieldset">
-          <label for="custom-alias">2. Your link name <span class="required-star">*</span></label>
-          <p class="field-explanation">Pick a memorable name, like <strong>myportfolio</strong> or <strong>claimmp</strong>.</p>
-          <div class="alias-input">
-            <span id="alias-prefix" class="alias-prefix">your-domain.com/</span>
-            <input id="custom-alias" name="customAlias" type="text" maxlength="30" minlength="3" required autocomplete="off" spellcheck="false" placeholder="myportfolio" pattern="[a-z0-9][a-z0-9-]{2,29}">
-          </div>
-          <div id="alias-suggestions" class="alias-suggestions" hidden aria-label="Suggested link names"><span>Try one of these:</span><div id="alias-suggestion-buttons"></div></div>
-          <p class="field-tip alias-availability" id="alias-availability" role="status" aria-live="polite"></p>
-          <p class="field-tip" id="alias-preview">3–30 lowercase letters, numbers or hyphens. Each name must be unique.</p>
-        </div>
-        <div class="option-box">
-          <label class="check-row" for="auto-shorten">
-            <input type="checkbox" id="auto-shorten">
-            <span><strong>Shorten link automatically</strong><small>Optional: generate a short random name instead of choosing one.</small></span>
-          </label>
-          <div class="domain-option" id="domain-option" hidden>
-            <label class="check-row secondary-check" for="use-short-domain"><input id="use-short-domain" type="checkbox"><span><strong>Use the shorter domain</strong><small>Only available when a second domain is connected.</small></span></label>
-          </div>
-          <p id="domain-hint" class="sr-only" aria-live="polite"></p>
-        </div>
-        <p class="field-tip">Destination URLs must start with <strong>https://</strong>.</p>
-        <p id="shorten-message" class="form-message" role="status" aria-live="polite"></p>
-        <button id="shorten-button" class="button button-primary create-button" type="submit"><span>Create link</span><span aria-hidden="true">→</span></button>
-        <p class="form-footnote">Sign in is required to save and manage your links.</p>
-      </form>
-    </section>
-
-    <aside class="preview-column">
-      <section class="preview-card" aria-labelledby="preview-heading">
-        <div class="preview-top"><span class="preview-eyebrow">LIVE PREVIEW</span><span class="preview-dot" aria-hidden="true"></span></div>
-        <h2 id="preview-heading">Your new link</h2>
-        <p>Here's how your link will look when shared.</p>
-        <div class="address-preview"><span class="address-icon" aria-hidden="true">↗</span><strong id="preview-url">your-domain.com/myportfolio</strong></div>
-        <div class="preview-divider"></div>
-        <div class="preview-detail"><span>LINK TYPE</span><strong id="preview-mode">Custom name</strong></div>
-        <div class="preview-detail"><span>DESTINATION</span><strong id="preview-destination">Add a destination URL</strong></div>
-      </section>
-      <section class="tip-card"><span class="tip-icon" aria-hidden="true">✦</span><div><strong>A name they'll remember</strong><p>Make it easy to recognize your link. You can always use automatic shortening instead.</p></div></section>
-    </aside>
-  </div>
-
-</div>
-<section class="zrain-feature-grid" aria-label="What Zrain Links can do">
-  <article><span class="feature-icon coral">⌁</span><h3>Custom names</h3><p>Pick a name that feels like yours and is easy to remember.</p></article>
-  <article><span class="feature-icon orange">↗</span><h3>Optional shortening</h3><p>Need something shorter? Turn on automatic link naming.</p></article>
-  <article><span class="feature-icon blue">▦</span><h3>QR codes</h3><p>Preview your QR code, then download it if you want to.</p></article>
-  <article><span class="feature-icon blue">⧉</span><h3>Copy &amp; share</h3><p>Copy a link in a click and share it anywhere.</p></article>
-  <article><span class="feature-icon orange">▥</span><h3>Visit counts</h3><p>See how many times someone has opened each link.</p></article>
-  <article><span class="feature-icon coral">✦</span><h3>Your collection</h3><p>Keep all your links together and manage them yourself.</p></article>
-</section>
-<section class="zrain-steps" aria-label="How it works"><strong>HOW IT WORKS</strong><span><b>1</b> Paste destination</span><span class="separator">→</span><span><b>2</b> Choose your name</span><span class="separator">→</span><span><b>3</b> Create &amp; share</span></section>
-
-  <section id="latest-result" class="result-card" hidden aria-labelledby="result-heading">
-    <div class="result-heading"><span class="result-check" aria-hidden="true">✓</span><div><h2 id="result-heading">Your link is ready</h2><p>Copy your link or preview its QR code before downloading.</p></div></div>
-    <a id="result-url" class="result-url" href="#" target="_blank" rel="noopener noreferrer"></a>
-    <p class="original-url">Goes to: <span id="result-destination"></span></p>
-    <div class="result-actions"><button id="result-copy" class="button button-primary" type="button">Copy link</button><button id="result-qr" class="button button-outline" type="button">QR code</button><a class="link-text" href="#my-links">My links →</a></div>
-  </section>
-
 <!-- Visits Links: separate feature, storage and unlock journey from Direct Links. -->
 <section class="two-modes" aria-label="Two ways to share">
   <div><p class="eyebrow">MORE WAYS TO SHARE</p><h2>One brand, two link experiences.</h2>
@@ -186,6 +111,81 @@
   <a id="visits-result-url" class="result-url" target="_blank" rel="noopener noreferrer"></a>
   <div class="result-actions"><button type="button" class="button button-outline" id="visits-copy-result">Copy link</button><button type="button" class="button button-outline" id="visits-qr-result">QR code</button></div>
 </section>
+<div class="zrain-hero-layout">
+  <section id="create" class="page-intro">
+    <div class="intro-copy"><p class="eyebrow">✦ DIRECT LINKS</p><h1>Create a clean link<br><em>you control.</em></h1><p>Give every link a memorable name of your own. Automatic shortening is optional. You decide how you share.</p><a class="button button-primary hero-start" href="#long-url">Create a direct link <span aria-hidden="true">→</span></a><div class="hero-points"><span>✓ Your custom name</span><span>✓ QR sharing</span><span>✓ Visit counts</span></div></div>
+    
+  </section>
+
+  <div class="editor-grid">
+    <section class="editor-card" aria-labelledby="editor-heading">
+      <div class="card-heading"><div><span class="card-kicker">DIRECT LINK WORKSPACE</span><h2 id="editor-heading">Create link</h2></div><span class="step-pill">2 fields</span></div>
+      <form id="shorten-form" novalidate>
+        <div class="field-block">
+          <label for="long-url">1. Destination URL <span class="required-star">*</span></label>
+          <p class="field-explanation">Where should this link take someone?</p>
+          <input id="long-url" type="url" name="destination" autocomplete="url" inputmode="url" maxlength="2048" required placeholder="https://example.com/your-page">
+        </div>
+        <div class="field-block" id="alias-fieldset">
+          <label for="custom-alias">2. Your link name <span class="required-star">*</span></label>
+          <p class="field-explanation">Pick a memorable name, like <strong>myportfolio</strong> or <strong>claimmp</strong>.</p>
+          <div class="alias-input">
+            <span id="alias-prefix" class="alias-prefix">your-domain.com/</span>
+            <input id="custom-alias" name="customAlias" type="text" maxlength="30" minlength="3" required autocomplete="off" spellcheck="false" placeholder="myportfolio" pattern="[a-z0-9][a-z0-9-]{2,29}">
+          </div>
+          <div id="alias-suggestions" class="alias-suggestions" hidden aria-label="Suggested link names"><span>Try one of these:</span><div id="alias-suggestion-buttons"></div></div>
+          <p class="field-tip alias-availability" id="alias-availability" role="status" aria-live="polite"></p>
+          <p class="field-tip" id="alias-preview">3–30 lowercase letters, numbers or hyphens. Each name must be unique.</p>
+        </div>
+        <div class="option-box">
+          <label class="check-row" for="auto-shorten">
+            <input type="checkbox" id="auto-shorten">
+            <span><strong>Shorten link automatically</strong><small>Optional: generate a short random name instead of choosing one.</small></span>
+          </label>
+          <div class="domain-option" id="domain-option" hidden>
+            <label class="check-row secondary-check" for="use-short-domain"><input id="use-short-domain" type="checkbox"><span><strong>Use the shorter domain</strong><small>Only available when a second domain is connected.</small></span></label>
+          </div>
+          <p id="domain-hint" class="sr-only" aria-live="polite"></p>
+        </div>
+        <p class="field-tip">Destination URLs must start with <strong>https://</strong>.</p>
+        <p id="shorten-message" class="form-message" role="status" aria-live="polite"></p>
+        <button id="shorten-button" class="button button-primary create-button" type="submit"><span>Create link</span><span aria-hidden="true">→</span></button>
+        <p class="form-footnote">Sign in is required to save and manage your links.</p>
+      </form>
+    </section>
+
+    <aside class="preview-column">
+      <section class="preview-card" aria-labelledby="preview-heading">
+        <div class="preview-top"><span class="preview-eyebrow">LIVE PREVIEW</span><span class="preview-dot" aria-hidden="true"></span></div>
+        <h2 id="preview-heading">Your new link</h2>
+        <p>Here's how your link will look when shared.</p>
+        <div class="address-preview"><span class="address-icon" aria-hidden="true">↗</span><strong id="preview-url">your-domain.com/myportfolio</strong></div>
+        <div class="preview-divider"></div>
+        <div class="preview-detail"><span>LINK TYPE</span><strong id="preview-mode">Custom name</strong></div>
+        <div class="preview-detail"><span>DESTINATION</span><strong id="preview-destination">Add a destination URL</strong></div>
+      </section>
+      <section class="tip-card"><span class="tip-icon" aria-hidden="true">✦</span><div><strong>A name they'll remember</strong><p>Make it easy to recognize your link. You can always use automatic shortening instead.</p></div></section>
+    </aside>
+  </div>
+
+</div>
+<section class="zrain-feature-grid" aria-label="What Zrain Links can do">
+  <article><span class="feature-icon coral">⌁</span><h3>Custom names</h3><p>Pick a name that feels like yours and is easy to remember.</p></article>
+  <article><span class="feature-icon orange">↗</span><h3>Optional shortening</h3><p>Need something shorter? Turn on automatic link naming.</p></article>
+  <article><span class="feature-icon blue">▦</span><h3>QR codes</h3><p>Preview your QR code, then download it if you want to.</p></article>
+  <article><span class="feature-icon blue">⧉</span><h3>Copy &amp; share</h3><p>Copy a link in a click and share it anywhere.</p></article>
+  <article><span class="feature-icon orange">▥</span><h3>Visit counts</h3><p>See how many times someone has opened each link.</p></article>
+  <article><span class="feature-icon coral">✦</span><h3>Your collection</h3><p>Keep all your links together and manage them yourself.</p></article>
+</section>
+<section class="zrain-steps" aria-label="How it works"><strong>HOW IT WORKS</strong><span><b>1</b> Paste destination</span><span class="separator">→</span><span><b>2</b> Choose your name</span><span class="separator">→</span><span><b>3</b> Create &amp; share</span></section>
+
+  <section id="latest-result" class="result-card" hidden aria-labelledby="result-heading">
+    <div class="result-heading"><span class="result-check" aria-hidden="true">✓</span><div><h2 id="result-heading">Your link is ready</h2><p>Copy your link or preview its QR code before downloading.</p></div></div>
+    <a id="result-url" class="result-url" href="#" target="_blank" rel="noopener noreferrer"></a>
+    <p class="original-url">Goes to: <span id="result-destination"></span></p>
+    <div class="result-actions"><button id="result-copy" class="button button-primary" type="button">Copy link</button><button id="result-qr" class="button button-outline" type="button">QR code</button><a class="link-text" href="#my-links">My links →</a></div>
+  </section>
+
 <dialog id="visits-picker" class="visits-picker" aria-labelledby="visits-picker-title">
   <div class="visits-picker-heading"><div><h2 id="visits-picker-title">Add an action</h2><p>Choose a website or social action.</p></div><button type="button" id="visits-picker-close" aria-label="Close actions">×</button></div>
   <label for="visits-search" class="sr-only">Search platform or action</label>
