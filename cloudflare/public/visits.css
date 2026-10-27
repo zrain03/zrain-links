@@ -83,3 +83,8 @@
 .visit-unlock-button:disabled{background:#dedbd8;box-shadow:none;color:#777}
 .visit-page-card .visit-honesty{font-size:11px;color:#818b95;margin-top:17px}
 @media(max-width:570px){.visit-page-main{padding:30px 0 65px}.visit-page-card{padding:22px}.visit-step{align-items:stretch;flex-direction:column}.visit-step-actions{justify-content:stretch}.visit-step-actions>*{flex:1}}
+
+.visits-row-controls{display:flex;gap:3px;justify-content:flex-end}
+.visits-row-controls button{border:1px solid #eeddd2;background:#fff7f2;color:#a64b35;font-weight:800;border-radius:6px;padding:7px 8px;min-width:26px}
+.visits-row-controls button:disabled{opacity:.35;cursor:not-allowed}
+@media(max-width:520px){.visits-action-row{grid-template-columns:1fr auto}.visits-row-controls{grid-row:1;grid-column:2}.visits-action-row input{grid-row:2;grid-column:1/-1}}
