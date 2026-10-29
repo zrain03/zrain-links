@@ -98,3 +98,9 @@ main > .two-modes + .zrain-hero-layout { padding-top:12px; }
 #visits-links, #create, #my-links { scroll-margin-top:110px; }
 .direct-my-links { margin-top:37px;border-top:1px solid #eedfd7;padding-top:30px; }
 .direct-my-links .library-heading h3 { font-size:24px;margin:0; }
+
+/* Keep the official Zrain tagline legible on the stand-alone Visits Link header. */
+.visit-page-header .visit-brand-label {display:flex;flex-direction:column;align-items:flex-start;gap:1px}
+.visit-page-header .visit-brand-main {display:inline-flex;align-items:baseline;gap:6px}
+.visit-page-header .visit-brand-tagline {display:block;max-width:190px;font-size:10px;font-weight:500;line-height:1.3;letter-spacing:0;white-space:normal;color:#667286}
+@media(max-width:450px){.visit-page-header .visit-brand-tagline{max-width:140px;font-size:9px}}
