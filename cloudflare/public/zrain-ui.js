@@ -4,7 +4,7 @@
  * The website owns its navigation unless a navigation array is provided.
  */
 export const ZRAIN_HOME = "https://zrain.web.app";
-export const ZRAIN_TAGLINE = "One ecosystem. A variety of useful tools.";
+export const ZRAIN_TAGLINE = "Made for people. Built with purpose.";
 
 function element(doc, tag, classes, content) {
   const el = doc.createElement(tag);

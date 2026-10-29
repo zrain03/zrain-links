@@ -26,6 +26,10 @@ jobs:
       - name: Build and test
         run: ./mvnw -B clean verify
 
+      - name: Install Cloudflare test dependencies
+        working-directory: cloudflare
+        run: npm ci --no-audit --no-fund
+
       - name: Test Cloudflare link validation
         run: node --test cloudflare/test/*.test.js
       - name: Check browser JavaScript and Firebase configuration
