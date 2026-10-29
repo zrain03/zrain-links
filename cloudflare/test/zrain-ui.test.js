@@ -25,7 +25,7 @@ test("Zrain UI sends logo and Zrain credit to the main ecosystem without changin
   };
   const result=mountZrainUI({product:"Links",logoSrc:"/zrain-logo.webp",productHref:"/",document:doc});
   assert.equal(ZRAIN_HOME,"https://zrain.web.app");
-  assert.equal(ZRAIN_TAGLINE,"One ecosystem. A variety of useful tools.");
+  assert.equal(ZRAIN_TAGLINE,"Made for people\. Built with purpose\.");
   assert.equal(result.homeHref,ZRAIN_HOME);
   assert.equal(brand.children[0].href,ZRAIN_HOME);
   assert.equal(brand.children[0].children[1].textContent,"Zrain");
@@ -41,7 +41,7 @@ test("both Links website pages link branding to Zrain ecosystem with static fall
     const html=await readFile(new URL(path,import.meta.url),"utf8");
     assert.match(html,/class="zrain-brand__home" href="https:\/\/zrain\.web\.app"/);
     assert.match(html,/class="zrain-footer__home" href="https:\/\/zrain\.web\.app"/);
-    assert.match(html,/One ecosystem\. A variety of useful tools\./);
+    assert.match(html,/Made for people\. Built with purpose\./);
     assert.match(html,/zrain-ui-config\.js/);
     assert.match(html,/zrain-brand__product"/);
   }
