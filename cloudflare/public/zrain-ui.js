@@ -61,8 +61,7 @@ export function mountZrainUI(config) {
     home.setAttribute("aria-label", "Zrain ecosystem home");
     home.append(
       brandLogo(doc, logoSrc, "brand-logo-image zrain-brand__logo", 42),
-      element(doc, "strong", "zrain-brand__name", "Zrain"),
-      element(doc, "small", "zrain-brand__tagline", tagline)
+      element(doc, "strong", "zrain-brand__name", "Zrain")
     );
     const productLink = link(doc, productHref, "zrain-brand__product", product);
     productLink.setAttribute("aria-label", "Zrain " + product + " home");
