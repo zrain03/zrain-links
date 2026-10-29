@@ -29,6 +29,7 @@ test("Zrain UI sends logo and Zrain credit to the main ecosystem without changin
   assert.equal(result.homeHref,ZRAIN_HOME);
   assert.equal(brand.children[0].href,ZRAIN_HOME);
   assert.equal(brand.children[0].children[1].textContent,"Zrain");
+  assert.equal(brand.children[0].children.length,2,"Header shows logo and brand only");
   assert.equal(brand.children[1].textContent,"Links");
   assert.equal(brand.children[1].href,"/");
   assert.equal(footer.children[0].href,ZRAIN_HOME);
