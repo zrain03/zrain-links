@@ -5,3 +5,5 @@ mvnw text eol=lf
 *.cmd text eol=crlf
 *.yml text eol=lf
 *.yaml text eol=lf
+cloudflare/public/brand.css text eol=lf
+cloudflare/public/zrain-ui.js text eol=lf
