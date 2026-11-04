@@ -300,6 +300,26 @@
       "metadataLocation": "registry (unchanged upstream, immutable migration, license, binary or strict JSON)"
     },
     {
+      "path": "cloudflare/public/feedback-embed.js",
+      "developer": "Zrain",
+      "created": "2026-11-01",
+      "createdBasis": "Earliest Git addition in remote commit 7802b87; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Paparkan maklum balas komuniti GitHub bagi Zrain Links.",
+      "purposeEn": "Display GitHub community feedback for Zrain Links.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/public/feedback.css",
+      "developer": "Zrain",
+      "created": "2026-11-01",
+      "createdBasis": "Earliest Git addition in remote commit 7802b87; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Gaya panel maklum balas komuniti Zrain Links.",
+      "purposeEn": "Style the Zrain Links community feedback panel.",
+      "metadataLocation": "file header + registry"
+    },
+    {
       "path": "cloudflare/public/index.html",
       "developer": "Zrain",
       "created": "2026-10-26",
