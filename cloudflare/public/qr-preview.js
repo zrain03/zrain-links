@@ -1,3 +1,12 @@
+/**
+ * Fail / File: cloudflare/public/qr-preview.js
+ * Pembangun / Developer: Zrain
+ * Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-27
+ * Dikemas kini / Last updated: 2026-11-04
+ * BM: Modul JavaScript qr-preview untuk fungsi produk dan ujian.
+ * EN: JavaScript module qr-preview for product functionality and tests.
+ */
+
 // Shared QR preview for Direct Links and Visits Links.
 // The user must explicitly choose Download QR before a file is saved.
 const dialog = document.getElementById("qr-dialog");

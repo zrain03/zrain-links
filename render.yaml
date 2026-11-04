@@ -1,3 +1,10 @@
+# Fail / File: render.yaml
+# Pembangun / Developer: Zrain
+# Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+# Dikemas kini / Last updated: 2026-11-04
+# BM: Konfigurasi deployment warisan untuk servis Java.
+# EN: Legacy deployment configuration for the Java service.
+
 services:
   - type: web
     name: zrain-links

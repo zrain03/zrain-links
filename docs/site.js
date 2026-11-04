@@ -1,3 +1,12 @@
+/**
+ * Fail / File: docs/site.js
+ * Pembangun / Developer: Zrain
+ * Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+ * Dikemas kini / Last updated: 2026-11-04
+ * BM: Modul JavaScript site untuk fungsi produk dan ujian.
+ * EN: JavaScript module site for product functionality and tests.
+ */
+
 "use strict";
 (() => {
   const buttons = [...document.querySelectorAll(".tab-button")];

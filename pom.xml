@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Fail / File: pom.xml
+ Pembangun / Developer: Zrain
+ Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+ Dikemas kini / Last updated: 2026-11-04
+ BM: Konfigurasi binaan prototaip Spring Boot lama.
+ EN: Build configuration for the legacy Spring Boot prototype.
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">

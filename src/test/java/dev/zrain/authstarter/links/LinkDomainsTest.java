@@ -1,3 +1,12 @@
+/**
+ * Fail / File: src/test/java/dev/zrain/authstarter/links/LinkDomainsTest.java
+ * Pembangun / Developer: Zrain
+ * Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+ * Dikemas kini / Last updated: 2026-11-04
+ * BM: Ujian regresi Java untuk LinkDomainsTest.
+ * EN: Java regression tests for LinkDomainsTest.
+ */
+
 package dev.zrain.authstarter.links;
 
 import org.junit.jupiter.api.Test;

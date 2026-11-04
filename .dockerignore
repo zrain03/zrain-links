@@ -1,3 +1,10 @@
+# Fail / File: .dockerignore
+# Pembangun / Developer: Zrain
+# Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+# Dikemas kini / Last updated: 2026-11-04
+# BM: Mengelakkan fail setempat dan rahsia daripada imej Docker.
+# EN: Exclude local files and secrets from Docker images.
+
 .git
 target
 .env

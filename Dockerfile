@@ -1,3 +1,10 @@
+# Fail / File: Dockerfile
+# Pembangun / Developer: Zrain
+# Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+# Dikemas kini / Last updated: 2026-11-04
+# BM: Resipi imej untuk prototaip backend Java.
+# EN: Image recipe for the legacy Java backend.
+
 FROM maven:3.9-eclipse-temurin-21 AS build
 WORKDIR /workspace
 COPY pom.xml .

@@ -1,3 +1,12 @@
+/**
+ * Fail / File: cloudflare/src/core.js
+ * Pembangun / Developer: Zrain
+ * Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+ * Dikemas kini / Last updated: 2026-11-04
+ * BM: Pengesahan destinasi dan alias pautan pendek.
+ * EN: Destination and short-link alias validation.
+ */
+
 export const RESERVED = new Set(["api","r","admin","login","logout","signup","signin","register","assets","static","docs","swagger-ui","actuator","index","index.html","favicon.svg","app.css","app.js","help","terms","privacy","dashboard","links","my-links","account","settings","support","robots.txt","sitemap.xml"]);
 export function validateAlias(value) {
   if (typeof value !== "string") throw new Error("Invalid custom name.");

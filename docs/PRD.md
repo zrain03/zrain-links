@@ -1,3 +1,11 @@
+<!--
+ Fail / File: docs/PRD.md
+ Pembangun / Developer: Zrain
+ Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+ Dikemas kini / Last updated: 2026-11-04
+ BM: Dokumentasi khusus projek mengenai prd.
+ EN: Project documentation about prd.
+-->
 # Product Requirements: Zrain Auth Starter
 
 ## Goal

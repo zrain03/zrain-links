@@ -1,3 +1,12 @@
+/**
+ * Fail / File: cloudflare/scripts/build-pages.mjs
+ * Pembangun / Developer: Zrain
+ * Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+ * Dikemas kini / Last updated: 2026-11-04
+ * BM: Membina bundle Cloudflare Pages jika diperlukan.
+ * EN: Build optional Cloudflare Pages bundle.
+ */
+
 import { build } from "esbuild";
 import { mkdir, copyFile, readdir, rm } from "node:fs/promises";
 import { join } from "node:path";

@@ -1,3 +1,12 @@
+/**
+ * Fail / File: src/main/resources/static/app.js
+ * Pembangun / Developer: Zrain
+ * Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+ * Dikemas kini / Last updated: 2026-11-04
+ * BM: Modul JavaScript app untuk fungsi produk dan ujian.
+ * EN: JavaScript module app for product functionality and tests.
+ */
+
 "use strict";
 (() => {
   const $ = id => document.getElementById(id);

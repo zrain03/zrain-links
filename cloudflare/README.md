@@ -1,23 +1,28 @@
+<!--
+ Fail / File: cloudflare/README.md
+ Pembangun / Developer: Zrain
+ Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+ Dikemas kini / Last updated: 2026-11-04
+ BM: Panduan Worker, D1, ujian dan deployment.
+ EN: Guide to Worker, D1, testing and deployment.
+-->
 # Zrain Links — Cloudflare deployment
 
 Cloudflare Workers + D1 implementation of Zrain Links, independent from the existing Java Spring Boot backend.
 
-## One-time setup in Cloudflare dashboard
+## Existing D1 installation and safe deployment
 
-1. Go to **Storage & databases → D1 → Create database** and name it `zrain-links-db`.
-2. Copy the database's **Database ID** (UUID) from its D1 overview, then replace `REPLACE_WITH_YOUR_D1_DATABASE_ID` in `cloudflare/wrangler.toml`. Commit that config change to the development branch. The D1 database ID is not a secret.
-3. On Windows PowerShell, from the repository root run:
+The supplied project already specifies `zrain-links-db` with a D1 database ID in `wrangler.toml`. **Do not create or migrate to another D1 database** merely to perform this UI/documentation repair. The Worker, account data, and existing short URLs must remain attached to the approved database.
+
+From PowerShell in `Zrain\Projects\zrain-links\cloudflare`, run the prerequisite verification before a deliberate deployment:
 
 ```powershell
-cd cloudflare
-npm install
-npx wrangler login
-npx wrangler d1 migrations apply zrain-links-db --remote
-npx wrangler deploy
+npm ci
+npm run ui:check
+npm test
 ```
 
-4. Cloudflare will print an actual HTTPS URL such as `https://zrain-links.zrain-dev.workers.dev`. Verify `/api/health` and create a test account and alias. The exact URL is not guaranteed until Cloudflare confirms the deployment.
-5. Optional automated Git deploys: configure Workers & Pages to deploy the GitHub repo with root directory `/cloudflare`, build command `npm install`, and deploy command `npx wrangler deploy` once the D1 ID and migrations are configured.
+Only if verified and explicitly ready to deploy, follow the existing deployment guide in `docs/DEPLOYMENT.md` and confirm the correct Cloudflare and Firebase accounts. Review migrations separately; **do not reinitialize or delete production D1 data**.
 
 ## Important details
 

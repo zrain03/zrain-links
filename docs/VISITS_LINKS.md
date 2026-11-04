@@ -1,3 +1,11 @@
+<!--
+ Fail / File: docs/VISITS_LINKS.md
+ Pembangun / Developer: Zrain
+ Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-27
+ Dikemas kini / Last updated: 2026-11-04
+ BM: Dokumentasi khusus projek mengenai visits links.
+ EN: Project documentation about visits links.
+-->
 # Zrain Links - Visits Links (action-based unlock)
 
 The same Zrain Links website now contains **two independent link types**:

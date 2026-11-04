@@ -1,3 +1,11 @@
+<!--
+ Fail / File: docs/DUAL_DOMAIN.md
+ Pembangun / Developer: Zrain
+ Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+ Dikemas kini / Last updated: 2026-11-04
+ BM: Dokumentasi khusus projek mengenai dual domain.
+ EN: Project documentation about dual domain.
+-->
 # Dual-domain link URLs
 
 The Spring Boot application supports two verified public origins, without relying on user-supplied hostnames.

@@ -1,4 +1,13 @@
 /**
+ * Fail / File: cloudflare/scripts/sync-zrain-ui.mjs
+ * Pembangun / Developer: Zrain
+ * Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-27
+ * Dikemas kini / Last updated: 2026-11-04
+ * BM: Menyegerakkan shared UI pin dengan aset public.
+ * EN: Synchronize pinned shared UI with public assets.
+ */
+
+/**
  * Synchronize official Zrain UI assets from the version-pinned GitHub package
  * installed at node_modules/@zrain/ui.
  *

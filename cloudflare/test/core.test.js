@@ -1,3 +1,12 @@
+/**
+ * Fail / File: cloudflare/test/core.test.js
+ * Pembangun / Developer: Zrain
+ * Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+ * Dikemas kini / Last updated: 2026-11-04
+ * BM: Ujian regresi Cloudflare untuk core.
+ * EN: Cloudflare regression tests for core.
+ */
+
 import test from "node:test";
 import assert from "node:assert/strict";
 import {validateAlias,validateDestination} from "../src/core.js";

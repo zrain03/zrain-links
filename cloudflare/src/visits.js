@@ -1,3 +1,12 @@
+/**
+ * Fail / File: cloudflare/src/visits.js
+ * Pembangun / Developer: Zrain
+ * Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-27
+ * Dikemas kini / Last updated: 2026-11-04
+ * BM: API Visits Links dan pengurusan akses kepada data.
+ * EN: Visits Links API and data-access enforcement.
+ */
+
 import {ACTION_CATALOG, ACTION_LABELS, createVisitsAlias, titleVisitsAlias, randomVisitsAlias, validateVisitsTitle, validateVisitsActions, validateAcknowledgements} from "./visits-core.js";
 import {validateDestination} from "./core.js";
 import {renderSVG} from "uqr";

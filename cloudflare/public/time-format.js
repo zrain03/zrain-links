@@ -1,3 +1,12 @@
+/**
+ * Fail / File: cloudflare/public/time-format.js
+ * Pembangun / Developer: Zrain
+ * Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+ * Dikemas kini / Last updated: 2026-11-04
+ * BM: Modul JavaScript time-format untuk fungsi produk dan ujian.
+ * EN: JavaScript module time-format for product functionality and tests.
+ */
+
 /** Display UTC creation timestamps consistently in Malaysia time (UTC+08:00). */
 export function formatMalaysiaTime(isoTimestamp) {
   const date = new Date(isoTimestamp);

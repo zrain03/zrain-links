@@ -1,3 +1,11 @@
+<!--
+ Fail / File: docs/RELEASE_STATUS.md
+ Pembangun / Developer: Zrain
+ Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+ Dikemas kini / Last updated: 2026-11-04
+ BM: Dokumentasi khusus projek mengenai release status.
+ EN: Project documentation about release status.
+-->
 # Zrain Auth Starter — Release Status
 
 ## Definition of done: reusable Java JWT starter v1.0

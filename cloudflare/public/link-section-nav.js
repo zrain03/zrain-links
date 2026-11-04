@@ -1,3 +1,12 @@
+/**
+ * Fail / File: cloudflare/public/link-section-nav.js
+ * Pembangun / Developer: Zrain
+ * Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-27
+ * Dikemas kini / Last updated: 2026-11-04
+ * BM: Penyelarasan navigasi berdasarkan seksyen halaman sebenar.
+ * EN: Navigation state synchronized with actual visible page sections.
+ */
+
 // Sync the active navigation tab to what a visitor can actually see.
 // The reading line sits inside the viewport, not immediately under the
 // header. Direct's large heading is visible before its section reaches

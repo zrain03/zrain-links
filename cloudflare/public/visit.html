@@ -1,4 +1,12 @@
 <!doctype html>
+<!--
+ Fail / File: cloudflare/public/visit.html
+ Pembangun / Developer: Zrain
+ Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-27
+ Dikemas kini / Last updated: 2026-11-04
+ BM: Halaman HTML visit; mengekalkan kontrak elemen dan accessibility.
+ EN: visit HTML page; preserves element contracts and accessibility.
+-->
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -8,19 +16,25 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/app.css?v=admin-20261026-1">
-<link rel="stylesheet" href="/brand.css?v=brand-20261029-footeronly">
-<link rel="stylesheet" href="/visits.css?v=brand-20261029-footeronly">
+<link rel="stylesheet" href="/brand.css?v=ui-20261104-golden">
+<link rel="stylesheet" href="/visits.css?v=ui-20261104-golden">
 <script type="module" src="/visit-page.js?v=visits-20261027-3"></script>
+  <!-- BM: Pemasangan identiti bersama tidak mengambil alih navigasi atau proses unlock. -->
+  <!-- EN: The shared identity mount does not take over navigation or the unlock process. -->
+  <script type="module" src="/zrain-ui-config.js?v=ui-20261104-golden"></script>
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 <header class="topbar zrain-header"><div class="container topbar-inner zrain-header__inner">
-  <a class="brand zrain-brand" href="/" aria-label="Zrain Links home">
-    <img src="/zrain-logo.webp" class="brand-logo-image zrain-brand__logo" alt="" width="42" height="42">
-    <span class="zrain-brand__label"><strong>Zrain</strong><span class="zrain-brand__product">Links</span></span>
-  </a>
+  <!-- BM: Pautan logo membuka ekosistem; nama produk kembali ke Zrain Links. -->
+  <!-- EN: The logo link opens the ecosystem; the product name returns to Zrain Links. -->
+  <div class="brand zrain-brand">
+    <a class="zrain-brand__home" href="https://zrain.web.app" aria-label="Zrain ecosystem home"><img src="/zrain-logo.webp" class="brand-logo-image zrain-brand__logo" alt="" width="42" height="42"><strong class="zrain-brand__name">Zrain</strong></a>
+    <a class="zrain-brand__product" href="/" aria-label="Zrain Links home">Links</a>
+  </div>
   <nav class="topnav" aria-label="Navigation"><a href="/#visits-links">Create your own link</a></nav>
 </div></header>
-<main class="visit-page-main container">
+<main class="visit-page-main container" id="main">
   <section class="visit-page-card" aria-labelledby="visit-heading">
     <p class="eyebrow">VISITS LINK · ACTION-BASED UNLOCK</p>
     <h1 id="visit-heading">Loading your link…</h1>
@@ -34,8 +48,12 @@
 </main>
 <footer class="footer zrain-footer"><div class="container footer-inner zrain-footer__inner">
   <div class="footer-brand zrain-footer__identity">
-    <img src="/zrain-logo.webp" class="brand-logo-image zrain-footer__logo" alt="" width="38" height="38">
-    <span class="zrain-footer__copy"><strong>Developed by Zrain</strong><small>Made for people. Built with purpose.</small></span>
+    <!-- BM: Identiti footer menuju ke laman ekosistem tanpa mengubah aliran unlock. -->
+    <!-- EN: Footer identity links to the ecosystem without changing the unlock flow. -->
+    <a class="zrain-footer__home" href="https://zrain.web.app" aria-label="Developed by Zrain. Open Zrain ecosystem home">
+      <img src="/zrain-logo.webp" class="brand-logo-image zrain-footer__logo" alt="" width="38" height="38">
+      <span class="zrain-footer__copy"><strong>Developed by Zrain</strong><small>Made for people. Built with purpose.</small></span>
+    </a>
   </div>
   <div class="footer-links zrain-footer__links"><a href="mailto:zrain.dev@gmail.com">Contact</a><a href="https://github.com/zrain03/zrain-links" target="_blank" rel="noopener noreferrer">GitHub</a></div>
 </div></footer>

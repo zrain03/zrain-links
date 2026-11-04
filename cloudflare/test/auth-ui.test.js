@@ -1,3 +1,12 @@
+/**
+ * Fail / File: cloudflare/test/auth-ui.test.js
+ * Pembangun / Developer: Zrain
+ * Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+ * Dikemas kini / Last updated: 2026-11-04
+ * BM: Ujian regresi Cloudflare untuk auth-ui.
+ * EN: Cloudflare regression tests for auth-ui.
+ */
+
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFile} from "node:fs/promises";

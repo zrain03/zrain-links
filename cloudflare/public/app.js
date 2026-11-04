@@ -1,3 +1,12 @@
+/**
+ * Fail / File: cloudflare/public/app.js
+ * Pembangun / Developer: Zrain
+ * Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+ * Dikemas kini / Last updated: 2026-11-04
+ * BM: Aliran interaksi dan authentication halaman utama.
+ * EN: Main-page interactions and authentication workflow.
+ */
+
 import { formatMalaysiaTime } from "./time-format.js?v=myt-seconds-20261026-2";
 import { isValidAlias, aliasSuggestions } from "./alias-utils.js";
 import { openQrPreview } from "./qr-preview.js?v=qr-preview-20261027-1";

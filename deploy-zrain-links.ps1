@@ -1,3 +1,12 @@
+<#
+Fail / File: deploy-zrain-links.ps1
+Pembangun / Developer: Zrain
+Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-27
+Dikemas kini / Last updated: 2026-11-04
+BM: Skrip deployment dengan semakan pra-deploy.
+EN: Deployment script with pre-deploy verification.
+#>
+
 # Zrain Links production release. Uses Zrain UI from the pinned GitHub
 # dependency. Do not bypass a failed sync or test.
 $ErrorActionPreference = 'Stop'

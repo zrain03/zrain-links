@@ -1,3 +1,11 @@
+<!--
+ Fail / File: docs/SECURITY.md
+ Pembangun / Developer: Zrain
+ Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+ Dikemas kini / Last updated: 2026-11-04
+ BM: Dokumentasi khusus projek mengenai security.
+ EN: Project documentation about security.
+-->
 # Security and limitations
 
 - JWT signature: HS256 with >= 32 random bytes; validate issuer, audience and expiry.

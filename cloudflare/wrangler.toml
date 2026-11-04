@@ -1,3 +1,10 @@
+# Fail / File: cloudflare/wrangler.toml
+# Pembangun / Developer: Zrain
+# Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+# Dikemas kini / Last updated: 2026-11-04
+# BM: Konfigurasi Worker dan binding D1.
+# EN: Worker deployment and D1 binding configuration.
+
 name = "zrain-links"
 main = "src/index.js"
 compatibility_date = "2026-10-01"

@@ -1,6 +1,18 @@
+<!--
+ Fail / File: README.md
+ Pembangun / Developer: Zrain
+ Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+ Dikemas kini / Last updated: 2026-11-04
+ BM: Gambaran produk, kontrak, keselamatan dan cara menjalankannya.
+ EN: Product overview, contracts, safety and operating instructions.
+-->
 # Zrain Links
 
 **Create recognizable links with names you choose.** Zrain Links is a custom-link manager, not primarily a URL shortener.
+
+> **Active web architecture (4 November 2026):** The Firebase Hosting frontend and Cloudflare Worker/D1 service under `cloudflare/` are the current Zrain Links web implementation. The Java Spring Boot tree and the older `docs/` Auth Starter-style demonstration are retained as a separate legacy prototype, **not** the deployed Cloudflare backend. Git repository changes do not prove that a production deployment has occurred.
+
+> **Audit status:** See [`docs/ENGINEERING_AUDIT_2026-11-04.md`](docs/ENGINEERING_AUDIT_2026-11-04.md) for what was changed, verified and not verified, and [`docs/AI_HANDOFF.md`](docs/AI_HANDOFF.md) for contracts and maintenance instructions.
 
 ## Shared Zrain UI: official Git dependency
 
@@ -15,7 +27,7 @@ git pull --ff-only origin feature/links-foundation
 
 The deploy script runs `npm install`, `npm run ui:sync`, `npm test`, Cloudflare Worker deployment and Firebase Hosting deployment, stopping on errors. A plain Git push or pull **does not update the live website**. Local authentication with Wrangler/Firebase is still required, and frontend changes should be checked in a browser.
 
-The package is pinned to commit `af77e6782bdfa168296c1fe14061d72a1e400c55` for reproducible builds. When upgrading to a newer Zrain UI version, explicitly update the Git dependency SHA, run `npm install`, sync, test and commit the changed assets and lockfile. CI checks that the locally served assets match the pinned upstream package.
+The package is pinned to commit `a109401fa591afa9f66479fa8d86f1ed1679d70b` for reproducible builds. When upgrading to a newer Zrain UI version, explicitly update the Git dependency SHA, run `npm install`, sync, test and commit the changed assets and lockfile. CI checks that the locally served assets match the pinned upstream package.
 
 
 ## User flow

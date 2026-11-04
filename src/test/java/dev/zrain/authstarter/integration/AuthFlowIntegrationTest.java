@@ -1,3 +1,12 @@
+/**
+ * Fail / File: src/test/java/dev/zrain/authstarter/integration/AuthFlowIntegrationTest.java
+ * Pembangun / Developer: Zrain
+ * Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+ * Dikemas kini / Last updated: 2026-11-04
+ * BM: Ujian regresi Java untuk AuthFlowIntegrationTest.
+ * EN: Java regression tests for AuthFlowIntegrationTest.
+ */
+
 
 package dev.zrain.authstarter.integration;
 

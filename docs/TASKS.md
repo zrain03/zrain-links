@@ -1,3 +1,11 @@
+<!--
+ Fail / File: docs/TASKS.md
+ Pembangun / Developer: Zrain
+ Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+ Dikemas kini / Last updated: 2026-11-04
+ BM: Dokumentasi khusus projek mengenai tasks.
+ EN: Project documentation about tasks.
+-->
 # Zrain Auth Starter — Verification checklist
 
 - [x] Build project with Java 21 / Spring Boot 4.1.2.

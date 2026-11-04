@@ -1,3 +1,10 @@
+# Fail / File: .github/workflows/zrain-ui.yml
+# Pembangun / Developer: Zrain
+# Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-27
+# Dikemas kini / Last updated: 2026-11-04
+# BM: Automasi ujian dan semakan GitHub Actions.
+# EN: GitHub Actions test and verification automation.
+
 name: Zrain UI dependency checks
 
 on:

@@ -1,3 +1,10 @@
+# Fail / File: .gitignore
+# Pembangun / Developer: Zrain
+# Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+# Dikemas kini / Last updated: 2026-11-04
+# BM: Mengabaikan binaan, cache dan fail persendirian.
+# EN: Ignore build outputs, caches and private files.
+
 target/
 .classpath
 .project

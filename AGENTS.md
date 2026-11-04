@@ -1,3 +1,11 @@
+<!--
+ Fail / File: AGENTS.md
+ Pembangun / Developer: Zrain
+ Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+ Dikemas kini / Last updated: 2026-11-04
+ BM: Dokumentasi panduan dan konvensyen projek.
+ EN: Project guidance and conventions documentation.
+-->
 # Development instructions
 
 - This is an independent reusable Java 21 / Spring Boot 4 authentication template.

@@ -1,3 +1,12 @@
+/**
+ * Fail / File: cloudflare/test/smoke.mjs
+ * Pembangun / Developer: Zrain
+ * Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+ * Dikemas kini / Last updated: 2026-11-04
+ * BM: Ujian smoke terhadap servis Wrangler setempat.
+ * EN: Smoke checks against local Wrangler service.
+ */
+
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 

@@ -1,3 +1,12 @@
+/**
+ * Fail / File: cloudflare/src/visits-core.js
+ * Pembangun / Developer: Zrain
+ * Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-27
+ * Dikemas kini / Last updated: 2026-11-04
+ * BM: Peraturan tindakan dan format Visits Links.
+ * EN: Visits Links action rules and input formats.
+ */
+
 import { validateDestination, randomAlias } from "./core.js";
 
 const ALL_ACTION_CATALOG = Object.freeze([

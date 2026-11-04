@@ -1,3 +1,12 @@
+/**
+ * Fail / File: src/main/java/dev/zrain/authstarter/config/JwtConfig.java
+ * Pembangun / Developer: Zrain
+ * Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+ * Dikemas kini / Last updated: 2026-11-04
+ * BM: Kod legacy Spring Boot bagi komponen JwtConfig; kontrak API dipelihara.
+ * EN: legacy Spring Boot implementation of JwtConfig; API contracts preserved.
+ */
+
 package dev.zrain.authstarter.config;
 
 import java.util.Base64;

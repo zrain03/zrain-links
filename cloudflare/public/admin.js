@@ -1,3 +1,12 @@
+/**
+ * Fail / File: cloudflare/public/admin.js
+ * Pembangun / Developer: Zrain
+ * Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+ * Dikemas kini / Last updated: 2026-11-04
+ * BM: Interaksi panel pentadbir dengan API berkebenaran.
+ * EN: Administrator dashboard interactions with authorized APIs.
+ */
+
 import {formatMalaysiaTime} from "./time-format.js?v=myt-seconds-20261026-2";
 
 const $ = id => document.getElementById(id);

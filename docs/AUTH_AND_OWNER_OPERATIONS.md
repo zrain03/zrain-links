@@ -1,3 +1,11 @@
+<!--
+ Fail / File: docs/AUTH_AND_OWNER_OPERATIONS.md
+ Pembangun / Developer: Zrain
+ Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+ Dikemas kini / Last updated: 2026-11-04
+ BM: Dokumentasi khusus projek mengenai auth and owner operations.
+ EN: Project documentation about auth and owner operations.
+-->
 # Zrain Links — authentication and owner operations
 
 ## Google Sign-In

@@ -1,0 +1,1295 @@
+{
+  "schemaVersion": 1,
+  "developer": "Zrain",
+  "created": "2026-11-04",
+  "updated": "2026-11-04",
+  "descriptionMs": "Inventori metadata fail Zrain Links: tarikh asal bersandarkan Git yang dibekalkan; fail luar dan migrasi tidak diubah.",
+  "descriptionEn": "Zrain Links file provenance: original dates derived from supplied Git evidence; third-party files and migrations stay unchanged.",
+  "baselineGitCommit": "8c39543",
+  "uiSharedCommit": "a109401fa591afa9f66479fa8d86f1ed1679d70b",
+  "files": [
+    {
+      "path": ".dockerignore",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Mengelakkan fail setempat dan rahsia daripada imej Docker.",
+      "purposeEn": "Exclude local files and secrets from Docker images.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": ".env.example",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Contoh pemboleh ubah konfigurasi tanpa rahsia sebenar.",
+      "purposeEn": "Secret-free example of environment configuration.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": ".firebaserc",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-10-26",
+      "purposeMs": "Pemetaan projek Firebase Hosting.",
+      "purposeEn": "Firebase Hosting project mapping.",
+      "metadataLocation": "registry (unchanged upstream, immutable migration, license, binary or strict JSON)"
+    },
+    {
+      "path": ".gitattributes",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Konvensyen Git untuk line ending dan jenis fail.",
+      "purposeEn": "Git conventions for line endings and file types.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Automasi ujian dan semakan GitHub Actions.",
+      "purposeEn": "GitHub Actions test and verification automation.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": ".github/workflows/zrain-ui.yml",
+      "developer": "Zrain",
+      "created": "2026-10-27",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Automasi ujian dan semakan GitHub Actions.",
+      "purposeEn": "GitHub Actions test and verification automation.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": ".gitignore",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Mengabaikan binaan, cache dan fail persendirian.",
+      "purposeEn": "Ignore build outputs, caches and private files.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": ".mvn/wrapper/maven-wrapper.properties",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-10-26",
+      "purposeMs": "Fail maven-wrapper.properties mengekalkan keperluan tooling dan projek.",
+      "purposeEn": "maven-wrapper.properties file preserves tooling and project requirements.",
+      "metadataLocation": "registry (unchanged upstream, immutable migration, license, binary or strict JSON)",
+      "sourceNote": "Third-party Maven Wrapper tooling retained without authorship claim."
+    },
+    {
+      "path": "AGENTS.md",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Dokumentasi panduan dan konvensyen projek.",
+      "purposeEn": "Project guidance and conventions documentation.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "CLAUDE.md",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Dokumentasi panduan dan konvensyen projek.",
+      "purposeEn": "Project guidance and conventions documentation.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "Dockerfile",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Resipi imej untuk prototaip backend Java.",
+      "purposeEn": "Image recipe for the legacy Java backend.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "FILE_PROVENANCE.json",
+      "developer": "Zrain",
+      "created": "2026-11-04",
+      "createdBasis": "created in this repair package; original file date not applicable",
+      "updated": "2026-11-04",
+      "purposeMs": "Rekod metadata semua fail sumber termasuk manifest ini.",
+      "purposeEn": "Metadata records for every source file including this manifest.",
+      "metadataLocation": "registry (unchanged upstream, immutable migration, license, binary or strict JSON)"
+    },
+    {
+      "path": "LICENSE",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-10-26",
+      "purposeMs": "Fail LICENSE mengekalkan keperluan tooling dan projek.",
+      "purposeEn": "LICENSE file preserves tooling and project requirements.",
+      "metadataLocation": "registry (unchanged upstream, immutable migration, license, binary or strict JSON)"
+    },
+    {
+      "path": "README.md",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Gambaran produk, kontrak, keselamatan dan cara menjalankannya.",
+      "purposeEn": "Product overview, contracts, safety and operating instructions.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/.gitignore",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Mengabaikan binaan, cache dan fail persendirian.",
+      "purposeEn": "Ignore build outputs, caches and private files.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/README.md",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Panduan Worker, D1, ujian dan deployment.",
+      "purposeEn": "Guide to Worker, D1, testing and deployment.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/migrations/0001_initial.sql",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-10-26",
+      "purposeMs": "Migrasi pangkalan data tidak berubah untuk keserasian dan pemulihan.",
+      "purposeEn": "Unmodified database migration for compatibility and recovery.",
+      "metadataLocation": "registry (unchanged upstream, immutable migration, license, binary or strict JSON)"
+    },
+    {
+      "path": "cloudflare/migrations/0002_admin_controls.sql",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-10-26",
+      "purposeMs": "Migrasi pangkalan data tidak berubah untuk keserasian dan pemulihan.",
+      "purposeEn": "Unmodified database migration for compatibility and recovery.",
+      "metadataLocation": "registry (unchanged upstream, immutable migration, license, binary or strict JSON)"
+    },
+    {
+      "path": "cloudflare/migrations/0003_visits_links.sql",
+      "developer": "Zrain",
+      "created": "2026-10-27",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-10-27",
+      "purposeMs": "Migrasi pangkalan data tidak berubah untuk keserasian dan pemulihan.",
+      "purposeEn": "Unmodified database migration for compatibility and recovery.",
+      "metadataLocation": "registry (unchanged upstream, immutable migration, license, binary or strict JSON)"
+    },
+    {
+      "path": "cloudflare/package-lock.json",
+      "developer": "Zrain",
+      "created": "2026-10-27",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Dependency lock untuk pemasangan reproducible.",
+      "purposeEn": "Dependency lock for reproducible installations.",
+      "metadataLocation": "registry (unchanged upstream, immutable migration, license, binary or strict JSON)"
+    },
+    {
+      "path": "cloudflare/package.json",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Manifest dependency dan skrip untuk Cloudflare.",
+      "purposeEn": "Dependencies and scripts for the Cloudflare application.",
+      "metadataLocation": "registry (unchanged upstream, immutable migration, license, binary or strict JSON)"
+    },
+    {
+      "path": "cloudflare/public/admin.css",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Gaya visual bagi admin tanpa mengubah logik produk.",
+      "purposeEn": "Visual styles for admin without modifying product logic.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/public/admin.html",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Halaman HTML admin; mengekalkan kontrak elemen dan accessibility.",
+      "purposeEn": "admin HTML page; preserves element contracts and accessibility.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/public/admin.js",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Interaksi panel pentadbir dengan API berkebenaran.",
+      "purposeEn": "Administrator dashboard interactions with authorized APIs.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/public/alias-utils.js",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Modul JavaScript alias-utils untuk fungsi produk dan ujian.",
+      "purposeEn": "JavaScript module alias-utils for product functionality and tests.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/public/app.css",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Gaya visual bagi app tanpa mengubah logik produk.",
+      "purposeEn": "Visual styles for app without modifying product logic.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/public/app.js",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Aliran interaksi dan authentication halaman utama.",
+      "purposeEn": "Main-page interactions and authentication workflow.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/public/brand.css",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Gaya visual bagi brand tanpa mengubah logik produk.",
+      "purposeEn": "Visual styles for brand without modifying product logic.",
+      "metadataLocation": "registry (unchanged upstream, immutable migration, license, binary or strict JSON)"
+    },
+    {
+      "path": "cloudflare/public/favicon.svg",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-10-26",
+      "purposeMs": "Aset imej yang dikekalkan tanpa pengubahsuaian.",
+      "purposeEn": "Image asset retained without modification.",
+      "metadataLocation": "registry (unchanged upstream, immutable migration, license, binary or strict JSON)"
+    },
+    {
+      "path": "cloudflare/public/index.html",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Halaman HTML index; mengekalkan kontrak elemen dan accessibility.",
+      "purposeEn": "index HTML page; preserves element contracts and accessibility.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/public/link-section-nav.js",
+      "developer": "Zrain",
+      "created": "2026-10-27",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Penyelarasan navigasi berdasarkan seksyen halaman sebenar.",
+      "purposeEn": "Navigation state synchronized with actual visible page sections.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/public/qr-preview.css",
+      "developer": "Zrain",
+      "created": "2026-10-27",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Gaya visual bagi qr-preview tanpa mengubah logik produk.",
+      "purposeEn": "Visual styles for qr-preview without modifying product logic.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/public/qr-preview.js",
+      "developer": "Zrain",
+      "created": "2026-10-27",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Modul JavaScript qr-preview untuk fungsi produk dan ujian.",
+      "purposeEn": "JavaScript module qr-preview for product functionality and tests.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/public/time-format.js",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Modul JavaScript time-format untuk fungsi produk dan ujian.",
+      "purposeEn": "JavaScript module time-format for product functionality and tests.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/public/visit-page.js",
+      "developer": "Zrain",
+      "created": "2026-10-27",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Aliran pelawat untuk mengesahkan tindakan dan membuka destinasi.",
+      "purposeEn": "Visitor journey for confirming actions and unlocking destinations.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/public/visit.html",
+      "developer": "Zrain",
+      "created": "2026-10-27",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Halaman HTML visit; mengekalkan kontrak elemen dan accessibility.",
+      "purposeEn": "visit HTML page; preserves element contracts and accessibility.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/public/visits-ui.js",
+      "developer": "Zrain",
+      "created": "2026-10-27",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Pembina dan pengurusan Visits Links dalam browser.",
+      "purposeEn": "Browser-based Visits Links builder and management.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/public/visits.css",
+      "developer": "Zrain",
+      "created": "2026-10-27",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Gaya visual bagi visits tanpa mengubah logik produk.",
+      "purposeEn": "Visual styles for visits without modifying product logic.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/public/zrain-logo.webp",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-10-26",
+      "purposeMs": "Aset imej yang dikekalkan tanpa pengubahsuaian.",
+      "purposeEn": "Image asset retained without modification.",
+      "metadataLocation": "registry (unchanged upstream, immutable migration, license, binary or strict JSON)"
+    },
+    {
+      "path": "cloudflare/public/zrain-ui-config.js",
+      "developer": "Zrain",
+      "created": "2026-10-27",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Integrasi identiti bersama tanpa mengubah navigasi produk.",
+      "purposeEn": "Shared identity integration without modifying product navigation.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/public/zrain-ui.js",
+      "developer": "Zrain",
+      "created": "2026-10-27",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Modul JavaScript zrain-ui untuk fungsi produk dan ujian.",
+      "purposeEn": "JavaScript module zrain-ui for product functionality and tests.",
+      "metadataLocation": "registry (unchanged upstream, immutable migration, license, binary or strict JSON)"
+    },
+    {
+      "path": "cloudflare/scripts/build-pages.mjs",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Membina bundle Cloudflare Pages jika diperlukan.",
+      "purposeEn": "Build optional Cloudflare Pages bundle.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/scripts/sync-zrain-ui.mjs",
+      "developer": "Zrain",
+      "created": "2026-10-27",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Menyegerakkan shared UI pin dengan aset public.",
+      "purposeEn": "Synchronize pinned shared UI with public assets.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/src/admin-auth.js",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Pengesahan identiti administrator.",
+      "purposeEn": "Administrator identity validation.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/src/admin.js",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Operasi pengurusan admin berpagar kebenaran.",
+      "purposeEn": "Authorization-gated administrative management operations.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/src/core.js",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Pengesahan destinasi dan alias pautan pendek.",
+      "purposeEn": "Destination and short-link alias validation.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/src/index.js",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Penghala permintaan Worker, autentikasi dan perlindungan API.",
+      "purposeEn": "Worker request routing, authentication and API protection.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/src/visits-core.js",
+      "developer": "Zrain",
+      "created": "2026-10-27",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Peraturan tindakan dan format Visits Links.",
+      "purposeEn": "Visits Links action rules and input formats.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/src/visits.js",
+      "developer": "Zrain",
+      "created": "2026-10-27",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "API Visits Links dan pengurusan akses kepada data.",
+      "purposeEn": "Visits Links API and data-access enforcement.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/test/admin.test.js",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Ujian regresi Cloudflare untuk admin.",
+      "purposeEn": "Cloudflare regression tests for admin.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/test/auth-ui.test.js",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Ujian regresi Cloudflare untuk auth-ui.",
+      "purposeEn": "Cloudflare regression tests for auth-ui.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/test/core.test.js",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Ujian regresi Cloudflare untuk core.",
+      "purposeEn": "Cloudflare regression tests for core.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/test/golden-reference.test.js",
+      "developer": "Zrain",
+      "created": "2026-11-04",
+      "createdBasis": "created in this repair package; original file date not applicable",
+      "updated": "2026-11-04",
+      "purposeMs": "Ujian regresi Cloudflare untuk golden-reference.",
+      "purposeEn": "Cloudflare regression tests for golden-reference.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/test/provenance.test.js",
+      "developer": "Zrain",
+      "created": "2026-11-04",
+      "createdBasis": "created in this repair package; original file date not applicable",
+      "updated": "2026-11-04",
+      "purposeMs": "Ujian regresi Cloudflare untuk provenance.",
+      "purposeEn": "Cloudflare regression tests for provenance.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/test/qr-preview.test.js",
+      "developer": "Zrain",
+      "created": "2026-10-27",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Ujian regresi Cloudflare untuk qr-preview.",
+      "purposeEn": "Cloudflare regression tests for qr-preview.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/test/section-nav.test.js",
+      "developer": "Zrain",
+      "created": "2026-10-27",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Ujian regresi Cloudflare untuk section-nav.",
+      "purposeEn": "Cloudflare regression tests for section-nav.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/test/smoke.mjs",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Ujian smoke terhadap servis Wrangler setempat.",
+      "purposeEn": "Smoke checks against local Wrangler service.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/test/visits.test.js",
+      "developer": "Zrain",
+      "created": "2026-10-27",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Ujian regresi Cloudflare untuk visits.",
+      "purposeEn": "Cloudflare regression tests for visits.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/test/zrain-ui.test.js",
+      "developer": "Zrain",
+      "created": "2026-10-27",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Ujian regresi Cloudflare untuk zrain-ui.",
+      "purposeEn": "Cloudflare regression tests for zrain-ui.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "cloudflare/wrangler.toml",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Konfigurasi Worker dan binding D1.",
+      "purposeEn": "Worker deployment and D1 binding configuration.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "deploy-zrain-links.ps1",
+      "developer": "Zrain",
+      "created": "2026-10-27",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Skrip deployment dengan semakan pra-deploy.",
+      "purposeEn": "Deployment script with pre-deploy verification.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "docs/.nojekyll",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-10-26",
+      "purposeMs": "Fail .nojekyll mengekalkan keperluan tooling dan projek.",
+      "purposeEn": ".nojekyll file preserves tooling and project requirements.",
+      "metadataLocation": "registry (unchanged upstream, immutable migration, license, binary or strict JSON)"
+    },
+    {
+      "path": "docs/ADMIN_DASHBOARD.md",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Dokumentasi khusus projek mengenai admin dashboard.",
+      "purposeEn": "Project documentation about admin dashboard.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "docs/AI_HANDOFF.md",
+      "developer": "Zrain",
+      "created": "2026-11-04",
+      "createdBasis": "created in this repair package; original file date not applicable",
+      "updated": "2026-11-04",
+      "purposeMs": "Dokumentasi khusus projek mengenai ai handoff.",
+      "purposeEn": "Project documentation about ai handoff.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "docs/ARCHITECTURE.md",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Dokumentasi khusus projek mengenai architecture.",
+      "purposeEn": "Project documentation about architecture.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "docs/AUTH_AND_OWNER_OPERATIONS.md",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Dokumentasi khusus projek mengenai auth and owner operations.",
+      "purposeEn": "Project documentation about auth and owner operations.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "docs/DEPLOYMENT.md",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Dokumentasi khusus projek mengenai deployment.",
+      "purposeEn": "Project documentation about deployment.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "docs/DUAL_DOMAIN.md",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Dokumentasi khusus projek mengenai dual domain.",
+      "purposeEn": "Project documentation about dual domain.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "docs/ENGINEERING_AUDIT_2026-11-04.md",
+      "developer": "Zrain",
+      "created": "2026-11-04",
+      "createdBasis": "created in this repair package; original file date not applicable",
+      "updated": "2026-11-04",
+      "purposeMs": "Dokumentasi khusus projek mengenai engineering audit 2026-11-04.",
+      "purposeEn": "Project documentation about engineering audit 2026-11-04.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "docs/PRD.md",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Dokumentasi khusus projek mengenai prd.",
+      "purposeEn": "Project documentation about prd.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "docs/RELEASE_STATUS.md",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Dokumentasi khusus projek mengenai release status.",
+      "purposeEn": "Project documentation about release status.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "docs/SECURITY.md",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Dokumentasi khusus projek mengenai security.",
+      "purposeEn": "Project documentation about security.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "docs/TASKS.md",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Dokumentasi khusus projek mengenai tasks.",
+      "purposeEn": "Project documentation about tasks.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "docs/VISITS_LINKS.md",
+      "developer": "Zrain",
+      "created": "2026-10-27",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Dokumentasi khusus projek mengenai visits links.",
+      "purposeEn": "Project documentation about visits links.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "docs/favicon.svg",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-10-26",
+      "purposeMs": "Aset imej yang dikekalkan tanpa pengubahsuaian.",
+      "purposeEn": "Image asset retained without modification.",
+      "metadataLocation": "registry (unchanged upstream, immutable migration, license, binary or strict JSON)"
+    },
+    {
+      "path": "docs/index.html",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Halaman HTML index; mengekalkan kontrak elemen dan accessibility.",
+      "purposeEn": "index HTML page; preserves element contracts and accessibility.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "docs/site.css",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Gaya visual bagi site tanpa mengubah logik produk.",
+      "purposeEn": "Visual styles for site without modifying product logic.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "docs/site.js",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Modul JavaScript site untuk fungsi produk dan ujian.",
+      "purposeEn": "JavaScript module site for product functionality and tests.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "firebase.json",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-10-26",
+      "purposeMs": "Tetapan hosting dan routing Firebase.",
+      "purposeEn": "Firebase Hosting and routing settings.",
+      "metadataLocation": "registry (unchanged upstream, immutable migration, license, binary or strict JSON)"
+    },
+    {
+      "path": "mvnw",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-10-26",
+      "purposeMs": "Fail mvnw mengekalkan keperluan tooling dan projek.",
+      "purposeEn": "mvnw file preserves tooling and project requirements.",
+      "metadataLocation": "registry (unchanged upstream, immutable migration, license, binary or strict JSON)",
+      "sourceNote": "Third-party Maven Wrapper tooling retained without authorship claim."
+    },
+    {
+      "path": "mvnw.cmd",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-10-26",
+      "purposeMs": "Fail mvnw.cmd mengekalkan keperluan tooling dan projek.",
+      "purposeEn": "mvnw.cmd file preserves tooling and project requirements.",
+      "metadataLocation": "registry (unchanged upstream, immutable migration, license, binary or strict JSON)",
+      "sourceNote": "Third-party Maven Wrapper tooling retained without authorship claim."
+    },
+    {
+      "path": "pom.xml",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Konfigurasi binaan prototaip Spring Boot lama.",
+      "purposeEn": "Build configuration for the legacy Spring Boot prototype.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "render.yaml",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Konfigurasi deployment warisan untuk servis Java.",
+      "purposeEn": "Legacy deployment configuration for the Java service.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/java/dev/zrain/authstarter/AuthStarterApplication.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Kod legacy Spring Boot bagi komponen AuthStarterApplication; kontrak API dipelihara.",
+      "purposeEn": "legacy Spring Boot implementation of AuthStarterApplication; API contracts preserved.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/java/dev/zrain/authstarter/auth/AuthController.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Kod legacy Spring Boot bagi komponen AuthController; kontrak API dipelihara.",
+      "purposeEn": "legacy Spring Boot implementation of AuthController; API contracts preserved.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/java/dev/zrain/authstarter/auth/AuthService.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Kod legacy Spring Boot bagi komponen AuthService; kontrak API dipelihara.",
+      "purposeEn": "legacy Spring Boot implementation of AuthService; API contracts preserved.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/java/dev/zrain/authstarter/auth/EmailAlreadyRegisteredException.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Kod legacy Spring Boot bagi komponen EmailAlreadyRegisteredException; kontrak API dipelihara.",
+      "purposeEn": "legacy Spring Boot implementation of EmailAlreadyRegisteredException; API contracts preserved.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/java/dev/zrain/authstarter/auth/JwtService.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Kod legacy Spring Boot bagi komponen JwtService; kontrak API dipelihara.",
+      "purposeEn": "legacy Spring Boot implementation of JwtService; API contracts preserved.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/java/dev/zrain/authstarter/auth/dto/LoginRequest.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Kod legacy Spring Boot bagi komponen LoginRequest; kontrak API dipelihara.",
+      "purposeEn": "legacy Spring Boot implementation of LoginRequest; API contracts preserved.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/java/dev/zrain/authstarter/auth/dto/RegisterRequest.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Kod legacy Spring Boot bagi komponen RegisterRequest; kontrak API dipelihara.",
+      "purposeEn": "legacy Spring Boot implementation of RegisterRequest; API contracts preserved.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/java/dev/zrain/authstarter/auth/dto/TokenResponse.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Kod legacy Spring Boot bagi komponen TokenResponse; kontrak API dipelihara.",
+      "purposeEn": "legacy Spring Boot implementation of TokenResponse; API contracts preserved.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/java/dev/zrain/authstarter/common/ApiError.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Kod legacy Spring Boot bagi komponen ApiError; kontrak API dipelihara.",
+      "purposeEn": "legacy Spring Boot implementation of ApiError; API contracts preserved.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/java/dev/zrain/authstarter/common/ApiExceptionHandler.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Kod legacy Spring Boot bagi komponen ApiExceptionHandler; kontrak API dipelihara.",
+      "purposeEn": "legacy Spring Boot implementation of ApiExceptionHandler; API contracts preserved.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/java/dev/zrain/authstarter/config/JwtConfig.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Kod legacy Spring Boot bagi komponen JwtConfig; kontrak API dipelihara.",
+      "purposeEn": "legacy Spring Boot implementation of JwtConfig; API contracts preserved.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/java/dev/zrain/authstarter/config/JwtProperties.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Kod legacy Spring Boot bagi komponen JwtProperties; kontrak API dipelihara.",
+      "purposeEn": "legacy Spring Boot implementation of JwtProperties; API contracts preserved.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/java/dev/zrain/authstarter/config/SecurityConfig.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Kod legacy Spring Boot bagi komponen SecurityConfig; kontrak API dipelihara.",
+      "purposeEn": "legacy Spring Boot implementation of SecurityConfig; API contracts preserved.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/java/dev/zrain/authstarter/demo/DemoController.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Kod legacy Spring Boot bagi komponen DemoController; kontrak API dipelihara.",
+      "purposeEn": "legacy Spring Boot implementation of DemoController; API contracts preserved.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/java/dev/zrain/authstarter/links/LinkDomains.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Kod legacy Spring Boot bagi komponen LinkDomains; kontrak API dipelihara.",
+      "purposeEn": "legacy Spring Boot implementation of LinkDomains; API contracts preserved.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/java/dev/zrain/authstarter/links/LinkResponse.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Kod legacy Spring Boot bagi komponen LinkResponse; kontrak API dipelihara.",
+      "purposeEn": "legacy Spring Boot implementation of LinkResponse; API contracts preserved.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/java/dev/zrain/authstarter/links/QrController.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Kod legacy Spring Boot bagi komponen QrController; kontrak API dipelihara.",
+      "purposeEn": "legacy Spring Boot implementation of QrController; API contracts preserved.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/java/dev/zrain/authstarter/links/RedirectController.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Kod legacy Spring Boot bagi komponen RedirectController; kontrak API dipelihara.",
+      "purposeEn": "legacy Spring Boot implementation of RedirectController; API contracts preserved.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/java/dev/zrain/authstarter/links/ShortLink.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Kod legacy Spring Boot bagi komponen ShortLink; kontrak API dipelihara.",
+      "purposeEn": "legacy Spring Boot implementation of ShortLink; API contracts preserved.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/java/dev/zrain/authstarter/links/ShortLinkController.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Kod legacy Spring Boot bagi komponen ShortLinkController; kontrak API dipelihara.",
+      "purposeEn": "legacy Spring Boot implementation of ShortLinkController; API contracts preserved.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/java/dev/zrain/authstarter/links/ShortLinkRepository.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Kod legacy Spring Boot bagi komponen ShortLinkRepository; kontrak API dipelihara.",
+      "purposeEn": "legacy Spring Boot implementation of ShortLinkRepository; API contracts preserved.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/java/dev/zrain/authstarter/links/ShortLinkService.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Kod legacy Spring Boot bagi komponen ShortLinkService; kontrak API dipelihara.",
+      "purposeEn": "legacy Spring Boot implementation of ShortLinkService; API contracts preserved.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/java/dev/zrain/authstarter/user/AppUser.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Kod legacy Spring Boot bagi komponen AppUser; kontrak API dipelihara.",
+      "purposeEn": "legacy Spring Boot implementation of AppUser; API contracts preserved.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/java/dev/zrain/authstarter/user/Role.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Kod legacy Spring Boot bagi komponen Role; kontrak API dipelihara.",
+      "purposeEn": "legacy Spring Boot implementation of Role; API contracts preserved.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/java/dev/zrain/authstarter/user/UserController.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Kod legacy Spring Boot bagi komponen UserController; kontrak API dipelihara.",
+      "purposeEn": "legacy Spring Boot implementation of UserController; API contracts preserved.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/java/dev/zrain/authstarter/user/UserRepository.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Kod legacy Spring Boot bagi komponen UserRepository; kontrak API dipelihara.",
+      "purposeEn": "legacy Spring Boot implementation of UserRepository; API contracts preserved.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/java/dev/zrain/authstarter/user/dto/UserResponse.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Kod legacy Spring Boot bagi komponen UserResponse; kontrak API dipelihara.",
+      "purposeEn": "legacy Spring Boot implementation of UserResponse; API contracts preserved.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/resources/application-local.yml",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Konfigurasi framework dan pipeline.",
+      "purposeEn": "Framework and pipeline configuration.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/resources/application-prod.yml",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Konfigurasi framework dan pipeline.",
+      "purposeEn": "Framework and pipeline configuration.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/resources/application.yml",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Konfigurasi framework dan pipeline.",
+      "purposeEn": "Framework and pipeline configuration.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/resources/db/migration/V1__create_users_and_links.sql",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-10-26",
+      "purposeMs": "Migrasi pangkalan data tidak berubah untuk keserasian dan pemulihan.",
+      "purposeEn": "Unmodified database migration for compatibility and recovery.",
+      "metadataLocation": "registry (unchanged upstream, immutable migration, license, binary or strict JSON)"
+    },
+    {
+      "path": "src/main/resources/db/migration/V2__link_domain_variant.sql",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-10-26",
+      "purposeMs": "Migrasi pangkalan data tidak berubah untuk keserasian dan pemulihan.",
+      "purposeEn": "Unmodified database migration for compatibility and recovery.",
+      "metadataLocation": "registry (unchanged upstream, immutable migration, license, binary or strict JSON)"
+    },
+    {
+      "path": "src/main/resources/static/app.css",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Gaya visual bagi app tanpa mengubah logik produk.",
+      "purposeEn": "Visual styles for app without modifying product logic.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/resources/static/app.js",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Modul JavaScript app untuk fungsi produk dan ujian.",
+      "purposeEn": "JavaScript module app for product functionality and tests.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/resources/static/favicon.svg",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-10-26",
+      "purposeMs": "Aset imej yang dikekalkan tanpa pengubahsuaian.",
+      "purposeEn": "Image asset retained without modification.",
+      "metadataLocation": "registry (unchanged upstream, immutable migration, license, binary or strict JSON)"
+    },
+    {
+      "path": "src/main/resources/static/index.html",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Halaman HTML index; mengekalkan kontrak elemen dan accessibility.",
+      "purposeEn": "index HTML page; preserves element contracts and accessibility.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/main/resources/static/zrain-logo.webp",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-10-26",
+      "purposeMs": "Aset imej yang dikekalkan tanpa pengubahsuaian.",
+      "purposeEn": "Image asset retained without modification.",
+      "metadataLocation": "registry (unchanged upstream, immutable migration, license, binary or strict JSON)"
+    },
+    {
+      "path": "src/test/java/dev/zrain/authstarter/auth/AuthServiceTest.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Ujian regresi Java untuk AuthServiceTest.",
+      "purposeEn": "Java regression tests for AuthServiceTest.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/test/java/dev/zrain/authstarter/config/JwtServiceTest.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Ujian regresi Java untuk JwtServiceTest.",
+      "purposeEn": "Java regression tests for JwtServiceTest.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/test/java/dev/zrain/authstarter/integration/AuthFlowIntegrationTest.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Ujian regresi Java untuk AuthFlowIntegrationTest.",
+      "purposeEn": "Java regression tests for AuthFlowIntegrationTest.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/test/java/dev/zrain/authstarter/integration/LinksIntegrationTest.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Ujian regresi Java untuk LinksIntegrationTest.",
+      "purposeEn": "Java regression tests for LinksIntegrationTest.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/test/java/dev/zrain/authstarter/integration/SecurityIntegrationTest.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Ujian regresi Java untuk SecurityIntegrationTest.",
+      "purposeEn": "Java regression tests for SecurityIntegrationTest.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/test/java/dev/zrain/authstarter/links/LinkDomainsTest.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Ujian regresi Java untuk LinkDomainsTest.",
+      "purposeEn": "Java regression tests for LinkDomainsTest.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/test/java/dev/zrain/authstarter/user/UserRepositoryTest.java",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Ujian regresi Java untuk UserRepositoryTest.",
+      "purposeEn": "Java regression tests for UserRepositoryTest.",
+      "metadataLocation": "file header + registry"
+    },
+    {
+      "path": "src/test/resources/application-test.yml",
+      "developer": "Zrain",
+      "created": "2026-10-26",
+      "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
+      "updated": "2026-11-04",
+      "purposeMs": "Konfigurasi framework dan pipeline.",
+      "purposeEn": "Framework and pipeline configuration.",
+      "metadataLocation": "file header + registry"
+    }
+  ]
+}

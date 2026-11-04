@@ -1,3 +1,12 @@
+/**
+ * Fail / File: cloudflare/public/alias-utils.js
+ * Pembangun / Developer: Zrain
+ * Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+ * Dikemas kini / Last updated: 2026-11-04
+ * BM: Modul JavaScript alias-utils untuk fungsi produk dan ujian.
+ * EN: JavaScript module alias-utils for product functionality and tests.
+ */
+
 // Pure, browser-and-Node-compatible suggestions. The API remains the final
 // authority for collisions and reserved paths.
 const RESERVED = new Set(["api","r","admin","login","logout","signup","signin","register",

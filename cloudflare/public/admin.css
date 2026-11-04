@@ -1,3 +1,12 @@
+/**
+ * Fail / File: cloudflare/public/admin.css
+ * Pembangun / Developer: Zrain
+ * Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+ * Dikemas kini / Last updated: 2026-11-04
+ * BM: Gaya visual bagi admin tanpa mengubah logik produk.
+ * EN: Visual styles for admin without modifying product logic.
+ */
+
 /* Zrain Links admin: separate from the public website, same warm palette. */
 .admin-main{padding:40px 0 70px;min-height:60vh}
 .admin-heading{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:28px}

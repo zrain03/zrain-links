@@ -1,3 +1,11 @@
+<!--
+ Fail / File: docs/DEPLOYMENT.md
+ Pembangun / Developer: Zrain
+ Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+ Dikemas kini / Last updated: 2026-11-04
+ BM: Dokumentasi khusus projek mengenai deployment.
+ EN: Project documentation about deployment.
+-->
 # Zrain Links — Long-lived deployment plan
 
 **Goal:** short links keep working for years on a memorable domain. No hosting provider or domain registrar guarantees literal forever. Durability requires a domain that is owned and renewed, continuously running hosting, a persistent database with tested backups, and an ability to restore or migrate.

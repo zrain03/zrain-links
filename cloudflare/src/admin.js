@@ -1,3 +1,12 @@
+/**
+ * Fail / File: cloudflare/src/admin.js
+ * Pembangun / Developer: Zrain
+ * Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+ * Dikemas kini / Last updated: 2026-11-04
+ * BM: Operasi pengurusan admin berpagar kebenaran.
+ * EN: Authorization-gated administrative management operations.
+ */
+
 import { adminIdentityMatches } from "./admin-auth.js";
 import { createRemoteJWKSet, jwtVerify, SignJWT, importPKCS8 } from "jose";
 

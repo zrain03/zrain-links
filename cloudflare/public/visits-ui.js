@@ -1,3 +1,12 @@
+/**
+ * Fail / File: cloudflare/public/visits-ui.js
+ * Pembangun / Developer: Zrain
+ * Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-27
+ * Dikemas kini / Last updated: 2026-11-04
+ * BM: Pembina dan pengurusan Visits Links dalam browser.
+ * EN: Browser-based Visits Links builder and management.
+ */
+
 import {formatMalaysiaTime} from "./time-format.js?v=myt-seconds-20261026-2";
 import {openQrPreview} from "./qr-preview.js?v=qr-preview-20261027-1";
 

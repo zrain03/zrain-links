@@ -1,3 +1,11 @@
+<!--
+ Fail / File: docs/ARCHITECTURE.md
+ Pembangun / Developer: Zrain
+ Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+ Dikemas kini / Last updated: 2026-11-04
+ BM: Dokumentasi khusus projek mengenai architecture.
+ EN: Project documentation about architecture.
+-->
 # Architecture
 
 Client -> AuthController -> AuthService -> UserRepository -> H2

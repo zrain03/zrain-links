@@ -1,3 +1,10 @@
+# Fail / File: .gitattributes
+# Pembangun / Developer: Zrain
+# Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+# Dikemas kini / Last updated: 2026-11-04
+# BM: Konvensyen Git untuk line ending dan jenis fail.
+# EN: Git conventions for line endings and file types.
+
 * text=auto
 
 mvnw text eol=lf

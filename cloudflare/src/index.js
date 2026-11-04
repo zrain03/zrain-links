@@ -1,3 +1,12 @@
+/**
+ * Fail / File: cloudflare/src/index.js
+ * Pembangun / Developer: Zrain
+ * Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+ * Dikemas kini / Last updated: 2026-11-04
+ * BM: Penghala permintaan Worker, autentikasi dan perlindungan API.
+ * EN: Worker request routing, authentication and API protection.
+ */
+
 import { handleAdmin } from "./admin.js";
 import { handleVisits } from "./visits.js";
 import { randomAlias, validateAlias, validateDestination } from "./core.js";

@@ -1,3 +1,10 @@
+# Fail / File: .github/workflows/ci.yml
+# Pembangun / Developer: Zrain
+# Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+# Dikemas kini / Last updated: 2026-11-04
+# BM: Automasi ujian dan semakan GitHub Actions.
+# EN: GitHub Actions test and verification automation.
+
 
 name: Java CI
 

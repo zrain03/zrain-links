@@ -1,3 +1,11 @@
+<!--
+ Fail / File: docs/ADMIN_DASHBOARD.md
+ Pembangun / Developer: Zrain
+ Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
+ Dikemas kini / Last updated: 2026-11-04
+ BM: Dokumentasi khusus projek mengenai admin dashboard.
+ EN: Project documentation about admin dashboard.
+-->
 # Zrain Links Admin Dashboard
 
 The admin dashboard is available at https://zrain-links.web.app/admin.html. The admin UID is intentionally not stored in GitHub, frontend source or documentation. Only server-side secret ZRAIN_ADMIN_FIREBASE_UID, a verified matching Firebase email and Google sign-in are trusted.

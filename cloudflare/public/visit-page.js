@@ -1,3 +1,12 @@
+/**
+ * Fail / File: cloudflare/public/visit-page.js
+ * Pembangun / Developer: Zrain
+ * Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-27
+ * Dikemas kini / Last updated: 2026-11-04
+ * BM: Aliran pelawat untuk mengesahkan tindakan dan membuka destinasi.
+ * EN: Visitor journey for confirming actions and unlocking destinations.
+ */
+
 const $=id=>document.getElementById(id);
 const API="https://zrain-links.zrain-dev.workers.dev";
 const code=new URLSearchParams(location.search).get("code");
