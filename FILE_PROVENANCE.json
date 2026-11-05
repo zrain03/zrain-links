@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "developer": "Zrain",
   "created": "2026-11-04",
-  "updated": "2026-11-04",
+  "updated": "2026-11-05",
   "descriptionMs": "Inventori metadata fail Zrain Links: tarikh asal bersandarkan Git yang dibekalkan; fail luar dan migrasi tidak diubah.",
   "descriptionEn": "Zrain Links file provenance: original dates derived from supplied Git evidence; third-party files and migrations stay unchanged.",
   "baselineGitCommit": "8c39543",
@@ -124,7 +124,7 @@
       "developer": "Zrain",
       "created": "2026-11-04",
       "createdBasis": "created in this repair package; original file date not applicable",
-      "updated": "2026-11-04",
+      "updated": "2026-11-05",
       "purposeMs": "Rekod metadata semua fail sumber termasuk manifest ini.",
       "purposeEn": "Metadata records for every source file including this manifest.",
       "metadataLocation": "registry (unchanged upstream, immutable migration, license, binary or strict JSON)"
@@ -324,7 +324,7 @@
       "developer": "Zrain",
       "created": "2026-10-26",
       "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
-      "updated": "2026-11-04",
+      "updated": "2026-11-05",
       "purposeMs": "Halaman HTML index; mengekalkan kontrak elemen dan accessibility.",
       "purposeEn": "index HTML page; preserves element contracts and accessibility.",
       "metadataLocation": "file header + registry"
@@ -564,7 +564,7 @@
       "developer": "Zrain",
       "created": "2026-11-04",
       "createdBasis": "created in this repair package; original file date not applicable",
-      "updated": "2026-11-04",
+      "updated": "2026-11-05",
       "purposeMs": "Ujian regresi Cloudflare untuk provenance.",
       "purposeEn": "Cloudflare regression tests for provenance.",
       "metadataLocation": "file header + registry"
