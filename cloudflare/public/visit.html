@@ -3,7 +3,7 @@
  Fail / File: cloudflare/public/visit.html
  Pembangun / Developer: Zrain
  Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-27
- Dikemas kini / Last updated: 2026-11-04
+ Dikemas kini / Last updated: 2026-11-06
  BM: Halaman HTML visit; mengekalkan kontrak elemen dan accessibility.
  EN: visit HTML page; preserves element contracts and accessibility.
 -->
@@ -22,7 +22,6 @@
   <!-- BM: Pemasangan identiti bersama tidak mengambil alih navigasi atau proses unlock. -->
   <!-- EN: The shared identity mount does not take over navigation or the unlock process. -->
   <script type="module" src="/zrain-ui-config.js?v=ui-20261104-golden"></script>
-  <link rel="stylesheet" href="/feedback.css">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -46,6 +45,7 @@
     <button type="button" class="button button-primary visit-unlock-button" id="visit-unlock" disabled>🔒 Unlock link</button>
     <p class="visit-honesty">Actions are confirmed by visitors. Zrain Links cannot independently verify external follows, likes, subscriptions or website visits. Views count page loads, not unique people.</p>
   </section>
+  <section id="zrain-feedback" aria-label="Zrain Community feedback" style="width:100%;max-width:1160px;margin:32px auto"></section>
 </main>
 <footer class="footer zrain-footer"><div class="container footer-inner zrain-footer__inner">
   <div class="footer-brand zrain-footer__identity">
@@ -58,5 +58,5 @@
   </div>
   <div class="footer-links zrain-footer__links"><a href="mailto:zrain.dev@gmail.com">Contact</a><a href="https://github.com/zrain03/zrain-links" target="_blank" rel="noopener noreferrer">GitHub</a></div>
 </div></footer>
-  <script defer src="/feedback-embed.js" data-product="zrain-links"></script>
+  <script defer src="https://zrain-community.web.app/embed.js" data-product="zrain-links" data-target="#zrain-feedback"></script>
 </body></html>

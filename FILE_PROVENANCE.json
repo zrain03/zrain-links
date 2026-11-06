@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "developer": "Zrain",
   "created": "2026-11-04",
-  "updated": "2026-11-05",
+  "updated": "2026-11-06",
   "descriptionMs": "Inventori metadata fail Zrain Links: tarikh asal bersandarkan Git yang dibekalkan; fail luar dan migrasi tidak diubah.",
   "descriptionEn": "Zrain Links file provenance: original dates derived from supplied Git evidence; third-party files and migrations stay unchanged.",
   "baselineGitCommit": "8c39543",
@@ -300,31 +300,11 @@
       "metadataLocation": "registry (unchanged upstream, immutable migration, license, binary or strict JSON)"
     },
     {
-      "path": "cloudflare/public/feedback-embed.js",
-      "developer": "Zrain",
-      "created": "2026-11-01",
-      "createdBasis": "Earliest Git addition in remote commit 7802b87; original authoring date may predate Git",
-      "updated": "2026-11-04",
-      "purposeMs": "Paparkan maklum balas komuniti GitHub bagi Zrain Links.",
-      "purposeEn": "Display GitHub community feedback for Zrain Links.",
-      "metadataLocation": "file header + registry"
-    },
-    {
-      "path": "cloudflare/public/feedback.css",
-      "developer": "Zrain",
-      "created": "2026-11-01",
-      "createdBasis": "Earliest Git addition in remote commit 7802b87; original authoring date may predate Git",
-      "updated": "2026-11-04",
-      "purposeMs": "Gaya panel maklum balas komuniti Zrain Links.",
-      "purposeEn": "Style the Zrain Links community feedback panel.",
-      "metadataLocation": "file header + registry"
-    },
-    {
       "path": "cloudflare/public/index.html",
       "developer": "Zrain",
       "created": "2026-10-26",
       "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
-      "updated": "2026-11-05",
+      "updated": "2026-11-06",
       "purposeMs": "Halaman HTML index; mengekalkan kontrak elemen dan accessibility.",
       "purposeEn": "index HTML page; preserves element contracts and accessibility.",
       "metadataLocation": "file header + registry"
@@ -384,7 +364,7 @@
       "developer": "Zrain",
       "created": "2026-10-27",
       "createdBasis": "earliest Git addition in supplied repository; original authoring date may predate Git",
-      "updated": "2026-11-04",
+      "updated": "2026-11-06",
       "purposeMs": "Halaman HTML visit; mengekalkan kontrak elemen dan accessibility.",
       "purposeEn": "visit HTML page; preserves element contracts and accessibility.",
       "metadataLocation": "file header + registry"
