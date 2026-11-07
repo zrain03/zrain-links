@@ -2,7 +2,7 @@
  * Fail / File: cloudflare/public/app.js
  * Pembangun / Developer: Zrain
  * Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
- * Dikemas kini / Last updated: 2026-11-04
+ * Dikemas kini / Last updated: 2026-11-07
  * BM: Aliran interaksi dan authentication halaman utama.
  * EN: Main-page interactions and authentication workflow.
  */
@@ -19,6 +19,8 @@ import { openQrPreview } from "./qr-preview.js?v=qr-preview-20261027-1";
   const API = "https://zrain-links.zrain-dev.workers.dev";
   const PUBLIC_LINK_ORIGIN = "https://zrain-links.web.app";
   const PENDING_LINK_KEY = "zrain-links:pending-link";
+  const GUEST_KEY_STORAGE = "zrain-links:guest-key";
+  let guestKeyMemory = null, guestKeyPromise = null, latestIsGuest = false;
   try {
     const queued = sessionStorage.getItem(PENDING_LINK_KEY);
     if (queued) pendingUrl = JSON.parse(queued);
@@ -131,10 +133,28 @@ import { openQrPreview } from "./qr-preview.js?v=qr-preview-20261027-1";
     show("toast", true);
     window.setTimeout(() => show("toast", false), 3200);
   }
-  async function api(path, { method = "GET", body = null, auth = true } = {}) {
+  // BM: Token Guest disimpan setempat dan tidak mengubah sesi Firebase.
+  // EN: The browser stores a guest key locally without changing the Firebase session.
+  async function ensureGuestKey() {
+    if (guestKeyMemory && /^[a-f0-9]{64}$/.test(guestKeyMemory)) return guestKeyMemory;
+    try {
+      const stored = localStorage.getItem(GUEST_KEY_STORAGE);
+      if (stored && /^[a-f0-9]{64}$/.test(stored)) return (guestKeyMemory = stored);
+    } catch { /* Storage may be blocked; the key remains in memory. */ }
+    if (!guestKeyPromise) guestKeyPromise = (async () => {
+      const created = await api("/api/v1/guest", {method:"POST",auth:false});
+      if (!/^[a-f0-9]{64}$/.test(created?.guestKey || "")) throw new Error("Guest session could not be created.");
+      guestKeyMemory = created.guestKey;
+      try { localStorage.setItem(GUEST_KEY_STORAGE,guestKeyMemory); } catch {}
+      return guestKeyMemory;
+    })();
+    try { return await guestKeyPromise; } finally { guestKeyPromise = null; }
+  }
+  async function api(path, { method = "GET", body = null, auth = true, guest = false, retryGuest = true } = {}) {
     const headers = {};
     if (body !== null) headers["Content-Type"] = "application/json";
-    if (auth) {
+    if (guest) headers["X-Guest-Key"] = await ensureGuestKey();
+    else if (auth) {
       if (!currentUser) throw new Error("Sign in and verify your email to continue.");
       headers.Authorization = "Bearer " + await currentUser.getIdToken();
     }
@@ -142,6 +162,13 @@ import { openQrPreview } from "./qr-preview.js?v=qr-preview-20261027-1";
     try { response = await fetch(API + path, { method, headers, body: body === null ? undefined : JSON.stringify(body), cache: "no-store" }); }
     catch { throw new Error("Cannot connect to the server. Check your connection."); }
     if (!response.ok) {
+      // BM: Pulihkan kunci Guest yang hilang tanpa menjejaskan akaun berdaftar.
+      // EN: Recover an invalid guest credential without changing signed-in accounts.
+      if (guest && response.status === 401 && retryGuest) {
+        guestKeyMemory = null;
+        try { localStorage.removeItem(GUEST_KEY_STORAGE); } catch {}
+        return api(path, {method,body,auth:false,guest:true,retryGuest:false});
+      }
       let reason = "";
       try { reason = (await response.json()).message || ""; } catch {}
       const failure = new Error(reason || "Request failed (" + response.status + ").");
@@ -288,8 +315,11 @@ import { openQrPreview } from "./qr-preview.js?v=qr-preview-20261027-1";
     const button = $("shorten-button"); button.disabled = true; note("shorten-message", "");
     try {
       if (!/^https:\/\//i.test(url)) throw new Error("Please enter a link starting with https://");
-      const link = await api("/api/v1/links", { method: "POST", body: { destinationUrl: url, customAlias: alias || null } });
+      const asGuest = !currentUser;
+      const link = await api("/api/v1/links", { method: "POST", auth:!asGuest, guest:asGuest,
+        body: { destinationUrl: url, customAlias: alias || null } });
       latestLink = link;
+      latestIsGuest = asGuest;
       $("result-url").textContent = publicShortUrl(link);
       $("result-url").href = publicShortUrl(link);
       $("result-destination").textContent = link.destinationUrl;
@@ -298,7 +328,7 @@ import { openQrPreview } from "./qr-preview.js?v=qr-preview-20261027-1";
       $("custom-alias").value = "";
       $("auto-shorten").checked = false;
       updateAliasPreview();
-      await refresh();
+      if (!asGuest) await refresh();
       $("latest-result").scrollIntoView({ behavior: "smooth", block: "nearest" });
     } catch (error) {
       note("shorten-message", explainApiError(error));
@@ -340,7 +370,6 @@ import { openQrPreview } from "./qr-preview.js?v=qr-preview-20261027-1";
     if (!/^https:\/\//i.test(url)) { note("shorten-message", "Please paste a public HTTPS website link."); return; }
     const alias = autoMode() ? "" : $("custom-alias").value.trim();
     if (!autoMode() && !isValidAlias(alias)) { note("shorten-message", "Choose a valid name below, or use 3–30 lowercase letters, numbers or hyphens."); updateAliasPreview(); $("custom-alias").focus(); return; }
-    if (!currentUser) { pendingUrl = { url, alias }; openAuth(true); return; }
     createLink(url, alias);
   }
   function render() {
@@ -390,7 +419,10 @@ import { openQrPreview } from "./qr-preview.js?v=qr-preview-20261027-1";
   }
   function showQr(link) {
     return openQrPreview({
-      fetchQr: () => api("/api/v1/links/" + encodeURIComponent(link.id) + "/qr"),
+      fetchQr: () => {
+        const asGuest = latestIsGuest && latestLink?.id === link.id;
+        return api("/api/v1/links/" + encodeURIComponent(link.id) + "/qr", {auth:!asGuest,guest:asGuest});
+      },
       shortUrl: publicShortUrl(link),
       fileName: "zrain-links-" + link.code + ".svg"
     });

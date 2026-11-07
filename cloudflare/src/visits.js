@@ -2,7 +2,7 @@
  * Fail / File: cloudflare/src/visits.js
  * Pembangun / Developer: Zrain
  * Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-27
- * Dikemas kini / Last updated: 2026-11-04
+ * Dikemas kini / Last updated: 2026-11-07
  * BM: API Visits Links dan pengurusan akses kepada data.
  * EN: Visits Links API and data-access enforcement.
  */
@@ -31,7 +31,7 @@ async function actionsFor(db,id) {
   }));
 }
 export async function handleVisits(request,db,deps) {
-  const {authUser,readBody,throttle,now,id}=deps;
+  const {authUser,linkOwner=authUser,readBody,throttle,now,id}=deps;
   const url=new URL(request.url), path=url.pathname, method=request.method;
   if (method==="GET" && path==="/api/v1/visits/catalog")
     return json(ACTION_CATALOG.map(({id,platform,label})=>({id,platform,label})));
@@ -57,7 +57,7 @@ export async function handleVisits(request,db,deps) {
     return json({destinationUrl:row.destination_url});
   }
   if(path==="/api/v1/visits" && method==="POST") {
-    const user=await authUser(request,db);
+    const user=await linkOwner(request,db);
     await throttle(db,request,"create-visits",40);
     const body=await readBody(request);
     const title=userInput(()=>validateVisitsTitle(body?.title));
@@ -106,7 +106,7 @@ export async function handleVisits(request,db,deps) {
   }
   const personal=path.match(/^\/api\/v1\/visits\/([0-9a-f-]{36})(\/qr)?$/);
   if(personal){
-    const user=await authUser(request,db);
+    const user=method==="GET" && personal[2] ? await linkOwner(request,db) : await authUser(request,db);
     const link=await db.prepare("SELECT id,code,owner_id FROM visits_links WHERE id = ? AND owner_id = ?").bind(personal[1],user.id).first();
     if(!link)return fail(404,"Visits Link not found.");
     if(method==="DELETE" && !personal[2]){

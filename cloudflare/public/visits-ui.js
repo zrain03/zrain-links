@@ -2,7 +2,7 @@
  * Fail / File: cloudflare/public/visits-ui.js
  * Pembangun / Developer: Zrain
  * Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-27
- * Dikemas kini / Last updated: 2026-11-04
+ * Dikemas kini / Last updated: 2026-11-07
  * BM: Pembina dan pengurusan Visits Links dalam browser.
  * EN: Browser-based Visits Links builder and management.
  */
@@ -17,7 +17,7 @@ const PUBLIC = "https://zrain-links.web.app/";
 const catalog = [];
 const actions = [];
 const DRAFT_KEY="zrain-links:visits-draft";
-let saved=[],selectedCategory="All",latest=null;
+let saved=[],selectedCategory="All",latest=null,latestWasGuest=false;
 const categories=["All","Visit a page","YouTube","Instagram","TikTok","Facebook","X / Twitter","More social"];
 const majorSocial=new Set(["YouTube","Instagram","TikTok","Facebook","X / Twitter"]);
 const categoryOf = action => action.id==="visit_page" ? "Visit a page" :
@@ -31,7 +31,10 @@ function node(tag,txt,className){
 function message(id,text,ok=false){
   const el=$(id);el.textContent=text;el.classList.toggle("ok",ok);
 }
-async function api(path,{method="GET",body=null,auth=false}={}){
+async function api(path,{method="GET",body=null,auth=false,guest=false}={}){
+  // BM: Gunakan pembantu API utama untuk token Guest; login kekal seperti asal.
+  // EN: Reuse the main API helper for guest credentials; keep signed-in calls unchanged.
+  if(guest)return window.ZrainVisitsBridge.api(path,{method,body,auth:false,guest:true});
   const headers={};
   if(body!==null)headers["content-type"]="application/json";
   if(auth){
@@ -161,19 +164,14 @@ async function submit(event){
   }
   if(!actions.length){message("visits-message","Choose at least one action. Visit a page is optional.");return}
   if(actions.some(a=>!a.url)){message("visits-message","Enter a URL for every selected action.");return}
-  if(!window.ZrainVisitsBridge?.getUser()){
-    try { sessionStorage.setItem(DRAFT_KEY,JSON.stringify({destination,title,automatic,actions})); }
-    catch { /* Session storage may be unavailable in private browsing. */ }
-    message("visits-message","Sign in to publish. Your form is kept here, so you can submit it afterward.");
-    window.ZrainVisitsBridge?.openAuth();
-    return;
-  }
+  const asGuest=!window.ZrainVisitsBridge?.getUser();
   const button=$("visits-submit");button.disabled=true;
   try{
-    latest=await api("/api/v1/visits",{method:"POST",auth:true,body:{
+    latest=await api("/api/v1/visits",{method:"POST",auth:!asGuest,guest:asGuest,body:{
       destinationUrl:destination,title,autoShorten:automatic,
       actions:actions.map(a=>({type:a.id,url:a.url}))
     }});
+    latestWasGuest=asGuest;
     try { sessionStorage.removeItem(DRAFT_KEY); } catch {}
     const href=boundLink(latest.code);$("visits-result-url").href=href;$("visits-result-url").textContent=href;
     $("visits-preview-url").textContent=href;
@@ -191,7 +189,10 @@ async function copy(href){
 }
 function showQr(link){
   return openQrPreview({
-    fetchQr:()=>window.ZrainVisitsBridge.api("/api/v1/visits/"+encodeURIComponent(link.id)+"/qr"),
+    fetchQr:()=>{
+      const asGuest=latestWasGuest && latest?.id===link.id;
+      return window.ZrainVisitsBridge.api("/api/v1/visits/"+encodeURIComponent(link.id)+"/qr",{auth:!asGuest,guest:asGuest});
+    },
     shortUrl:boundLink(link.code),
     fileName:"zrain-visits-"+link.code+".svg"
   });
