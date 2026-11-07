@@ -162,12 +162,12 @@ test("Visits Links appears above Direct Links without changing either workspace"
 // EN: Community must sit below the unlock card, never beside it at any screen width.
 test("public Visits Link keeps Community below unlock card without changing its embed", async()=>{
   const [html,css]=await Promise.all([read("../public/visit.html"),read("../public/visits.css")]);
-  const main=html.match(/<main class="visit-page-main container" id="main">([\\s\\S]*?)<\\/main>/)?.[1] || "";
+  const main=html.match(/<main class="visit-page-main container" id="main">([\s\S]*?)<\/main>/)?.[1] || "";
   assert.ok(main.indexOf('class="visit-page-card"')>=0);
   assert.ok(main.indexOf('id="zrain-feedback"')>main.indexOf('class="visit-page-card"'));
-  assert.match(css,/\\.visit-page-main\\{[^}]*display:flex;flex-direction:column;align-items:center;/);
-  assert.match(css,/\\.visit-page-main > #zrain-feedback\\{[^}]*width:min\\(640px,100%\\)/);
+  assert.match(css,/\.visit-page-main\{[^}]*display:flex;flex-direction:column;align-items:center;/);
+  assert.match(css,/\.visit-page-main > #zrain-feedback\{[^}]*width:min\(640px,100%\)/);
   assert.doesNotMatch(html,/id="zrain-feedback"[^>]*style=/);
-  assert.match(html,/visits\\.css\\?v=visit-layout-20261107-1/);
-  assert.match(html,/src="https:\\/\\/zrain-community\\.web\\.app\\/embed\\.js" data-product="zrain-links"/);
+  assert.match(html,/visits\.css\?v=visit-layout-20261107-1/);
+  assert.match(html,/src="https:\/\/zrain-community\.web\.app\/embed\.js" data-product="zrain-links"/);
 });
