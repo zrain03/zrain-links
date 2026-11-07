@@ -2,13 +2,14 @@
  * Fail / File: cloudflare/src/index.js
  * Pembangun / Developer: Zrain
  * Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-26
- * Dikemas kini / Last updated: 2026-11-04
+ * Dikemas kini / Last updated: 2026-11-07
  * BM: Penghala permintaan Worker, autentikasi dan perlindungan API.
  * EN: Worker request routing, authentication and API protection.
  */
 
 import { handleAdmin } from "./admin.js";
 import { handleVisits } from "./visits.js";
+import { createGuest, linkOwner as resolveLinkOwner } from "./guest.js";
 import { randomAlias, validateAlias, validateDestination } from "./core.js";
 import { renderSVG } from "uqr";
 import { createRemoteJWKSet, jwtVerify } from "jose";
@@ -17,7 +18,7 @@ const FIREBASE_PROJECT = "zrain-links";
 const PUBLIC_LINK_ORIGIN = "https://zrain-links.web.app";
 const firebaseKeys = createRemoteJWKSet(new URL("https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com"));
 const allowedOrigins = new Set(["https://zrain-links.web.app", "https://zrain-links.firebaseapp.com", "https://zrain-links.zrain-dev.workers.dev"]);
-function corsHeaders(request) { const origin=request.headers.get("origin"); return origin && allowedOrigins.has(origin) ? {"access-control-allow-origin":origin,"vary":"Origin","access-control-allow-headers":"Authorization, Content-Type","access-control-allow-methods":"GET, POST, DELETE, OPTIONS"} : {}; }
+function corsHeaders(request) { const origin=request.headers.get("origin"); return origin && allowedOrigins.has(origin) ? {"access-control-allow-origin":origin,"vary":"Origin","access-control-allow-headers":"Authorization, Content-Type, X-Guest-Key","access-control-allow-methods":"GET, POST, DELETE, OPTIONS"} : {}; }
 
 
 function withCors(response, cors) { const headers = new Headers(response.headers); for (const [key,value] of Object.entries(cors)) headers.set(key,value); return new Response(response.body,{status:response.status,headers}); }
@@ -78,6 +79,9 @@ async function authUser(request, db) {
     throw { status: 401, message: "Sign in with Firebase and verify your email before creating links." };
   }
 }
+// BM: Identiti Guest hanya boleh mengakses operasi penciptaan dan QR miliknya.
+// EN: A guest identity is limited to creating links and reading its own QR image.
+const linkOwner = (request, db) => resolveLinkOwner(request, db, { authUser, hash });
 async function throttle(db, request, action, max) {
   const client = request.headers.get("CF-Connecting-IP") || "unknown";
   const digest = await hash(client + ":" + action);
@@ -125,7 +129,11 @@ async function handleRequest(request, env) {
       if (path.startsWith("/api/v1/")) {
         if (path.startsWith("/api/v1/admin/")) return await handleAdmin(request, env, db);
         if (path === "/api/v1/visits" || path.startsWith("/api/v1/visits/"))
-          return await handleVisits(request, db, {authUser,readBody,throttle,now,id});
+          return await handleVisits(request, db, {authUser,linkOwner,readBody,throttle,now,id});
+        if (method === "POST" && path === "/api/v1/guest") {
+          await throttle(db, request, "guest-register", 8);
+          return json(await createGuest(db, { id, now, token, hash }), 201);
+        }
         if (method === "POST" && path === "/api/v1/auth/register") {
           await throttle(db, request, "signup", 12);
           const body = await readBody(request), email = emailOf(body.email), password = passOf(body.password);
@@ -154,7 +162,7 @@ async function handleRequest(request, env) {
           return json(result.results.map(x => ({id:x.id,code:x.code,destinationUrl:x.destination_url,shortUrl:origin+"/"+x.code,clickCount:x.click_count,createdAt:new Date(x.created_at*1000).toISOString()})));
         }
         if (path === "/api/v1/links" && method === "POST") {
-          const user = await authUser(request,db);
+          const user = await linkOwner(request,db);
           await throttle(db, request, "create", 50);
           const body = await readBody(request);
           if (!body || typeof body !== "object" || Array.isArray(body))
@@ -189,7 +197,7 @@ async function handleRequest(request, env) {
         }
         const qr = path.match(/^\/api\/v1\/links\/([0-9a-f-]{36})\/qr$/);
         if (method === "GET" && qr) {
-          const user = await authUser(request,db);
+          const user = await linkOwner(request,db);
           const link = await db.prepare("SELECT id,code FROM short_links WHERE id=? AND owner_id=?").bind(qr[1],user.id).first();
           if (!link) return error("NOT_FOUND","Link not found.",404);
           return new Response(renderSVG("https://zrain-links.web.app/"+link.code), {headers:{"content-type":"image/svg+xml; charset=utf-8","content-disposition":"attachment; filename=\"zrain-links-"+link.code+".svg\"","cache-control":"no-store"}});

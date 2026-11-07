@@ -2,7 +2,7 @@
  * Fail / File: cloudflare/test/visits.test.js
  * Pembangun / Developer: Zrain
  * Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-27
- * Dikemas kini / Last updated: 2026-11-04
+ * Dikemas kini / Last updated: 2026-11-07
  * BM: Ujian regresi Cloudflare untuk visits.
  * EN: Cloudflare regression tests for visits.
  */
@@ -65,7 +65,7 @@ test("independent Visits Link APIs and public unlock do not break direct redirec
     read("../src/index.js"),read("../src/visits.js"),read("../public/index.html"),
     read("../public/visits-ui.js"),read("../public/visit-page.js"),read("../src/admin.js")
   ]);
-  assert.match(worker,/handleVisits\(request, db, \{authUser,readBody,throttle,now,id\}\)/);
+  assert.match(worker,/handleVisits\(request, db, \{authUser,linkOwner,readBody,throttle,now,id\}\)/);
   assert.match(worker,/SELECT code_lower FROM link_names WHERE code_lower/);
   assert.match(worker,/PUBLIC_LINK_ORIGIN\+"\/visit\.html\?code="/);
   assert.match(visits,/await authUser\(request,db\)/);
