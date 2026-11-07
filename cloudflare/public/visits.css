@@ -2,7 +2,7 @@
  * Fail / File: cloudflare/public/visits.css
  * Pembangun / Developer: Zrain
  * Dicipta / Created (rekod Git terawal / earliest Git addition): 2026-10-27
- * Dikemas kini / Last updated: 2026-11-04
+ * Dikemas kini / Last updated: 2026-11-07
  * BM: Gaya visual bagi visits tanpa mengubah logik produk.
  * EN: Visual styles for visits without modifying product logic.
  */
@@ -77,7 +77,10 @@
 @media(max-width:520px){.visits-intro h2{font-size:41px}.two-modes{padding:19px}.mode-choices{flex-wrap:wrap;border-radius:13px}.visit-page-feature{flex-direction:column;align-items:stretch}.visit-page-feature .button{width:100%}.visits-action-row{grid-template-columns:minmax(0,1fr) auto}.visits-action-row input{grid-row:2;grid-column:1/-1}.visits-picker-grid{grid-template-columns:1fr}}
 
 /* Public visitor action flow: existing Zrain header/footer, dedicated unlock surface. */
-.visit-page-main{min-height:65vh;padding:54px 0 95px;display:flex;justify-content:center}
+/* BM: Susun langkah unlock dahulu, kemudian Community secara menegak pada semua saiz.
+   EN: Stack the unlock flow above Community at every viewport width. */
+.visit-page-main{min-height:65vh;padding:54px 0 95px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
+.visit-page-main > #zrain-feedback{width:min(640px,100%);min-width:0;margin:32px auto 0}
 .visit-page-card{width:min(640px,100%);height:max-content;background:#fffdfa;border:1px solid #ebddd4;border-radius:22px;padding:32px;box-shadow:0 14px 45px #562f2211}
 .visit-page-card h1{font-size:clamp(28px,4vw,41px);letter-spacing:-1.3px;line-height:1.2;margin:9px 0}
 .visit-page-card>p{color:#728092;font-size:13px;line-height:1.7}
