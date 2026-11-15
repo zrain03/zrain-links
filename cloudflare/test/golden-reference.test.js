@@ -28,11 +28,12 @@ test('all public-facing app pages use the official ecosystem identity and footer
     assert.match(html, /class="footer-brand zrain-footer__identity"/, page);
     assert.match(html, /class="zrain-footer__home" href="https:\/\/zrain\.web\.app"/, page);
     assert.match(html, /Developed by Zrain/, page);
-    assert.match(html, /Made for people\. Built with purpose\./, page);
+    // The shared runtime supplies the single standard tagline.
+    assert.match(html, /data-product="zrain-links"/, page);
     assert.match(html, /zrain-ui-config\.js\?v=ui-20261104-golden/, page);
     assert.match(html, /href="#main"/, page);
     assert.match(html, /id="main"/, page);
-    const header = html.split('</header>')[0];
+    const header = html.split(/<main\b/i)[0];
     assert.doesNotMatch(header, /Made for people\. Built with purpose\./, page);
   }
 });

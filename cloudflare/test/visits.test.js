@@ -162,7 +162,7 @@ test("Visits Links appears above Direct Links without changing either workspace"
 // EN: Community must sit below the unlock card, never beside it at any screen width.
 test("public Visits Link keeps Community below unlock card without changing its embed", async()=>{
   const [html,css]=await Promise.all([read("../public/visit.html"),read("../public/visits.css")]);
-  const main=html.match(/<main class="visit-page-main container" id="main">([\s\S]*?)<\/main>/)?.[1] || "";
+  const main=html.match(/<main data-zrain-content class="visit-page-main container" id="main">([\s\S]*?)<\/main>/)?.[1] || "";
   assert.ok(main.indexOf('class="visit-page-card"')>=0);
   assert.ok(main.indexOf('id="zrain-feedback"')>main.indexOf('class="visit-page-card"'));
   assert.match(css,/\.visit-page-main\{[^}]*display:flex;flex-direction:column;align-items:center;/);
