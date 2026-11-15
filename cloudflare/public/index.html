@@ -26,10 +26,10 @@
   <script type="module" src="/visits-ui.js?v=guest-20261107-1"></script>
   <script type="module" src="/link-section-nav.js?v=scrollspy-20261027-2"></script>
   <script type="module" src="/zrain-ui-config.js?v=ui-20261104-golden"></script>
-</head>
+<style>.zrain-product-workspace{width:100%;min-width:0}.zrain-product-workspace .zrain-brand{display:none}.zrain-product-workspace .topbar,.zrain-product-workspace .monitor-workspace-nav{position:relative;inset:auto;background:#fbf2e6;color:#452733;border-bottom:1px solid #dfc4ae}.zrain-product-workspace .topbar-inner,.zrain-product-workspace .monitor-workspace-nav>div{padding:8px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.zrain-product-workspace :is(.topnav,.account-actions){flex-wrap:wrap;max-width:100%}.zrain-product-workspace main.container{margin-inline:auto;padding-top:16px}</style></head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<header class="topbar zrain-header">
+<div data-zrain-content class="zrain-product-workspace"><div class="topbar">
   <div class="container topbar-inner zrain-header__inner">
     <div class="brand zrain-brand"><a class="zrain-brand__home" href="https://zrain.web.app" aria-label="Zrain ecosystem home"><img src="/zrain-logo.webp" class="brand-logo-image zrain-brand__logo" alt="" width="42" height="42"><strong class="zrain-brand__name">Zrain</strong></a><a class="zrain-brand__product" href="/" aria-label="Zrain Links home">Links</a></div>
     <nav class="topnav" aria-label="Site navigation">
@@ -43,7 +43,7 @@
       <div id="header-user" class="account-user" hidden><span id="header-email"></span><button class="button button-outline" type="button" id="header-signout">Sign out</button></div>
     </div>
   </div>
-</header>
+</div>
 <main id="main" class="container">
 <section id="visits-links" class="visits-hero" aria-labelledby="visits-heading">
   <div class="visits-intro">
@@ -222,7 +222,7 @@
   </section>
   <section id="zrain-feedback" aria-label="Zrain Community feedback"></section>
   <script src="https://zrain-community.web.app/embed.js" data-product="zrain-links" data-target="#zrain-feedback" defer></script>
-</main>
+</main></div>
 
 <dialog id="qr-dialog" class="qr-dialog" aria-labelledby="qr-dialog-title">
   <div class="qr-dialog__top">
@@ -308,7 +308,7 @@
   <p class="dialog-note">Your account is used to keep your links together.</p>
 </dialog>
 <div id="toast" class="toast" hidden role="status" aria-live="polite"></div>
-<footer class="footer zrain-footer">
+<footer data-zrain-legacy class="footer zrain-footer">
   <div class="container footer-inner zrain-footer__inner">
     <div class="footer-brand zrain-footer__identity">
       <a class="zrain-footer__home" href="https://zrain.web.app" aria-label="Developed by Zrain. Open Zrain ecosystem home">
@@ -324,5 +324,5 @@
 </footer>
 
 
-</body>
+<script defer src="https://zrain.web.app/ui/v2/layout.js" data-product="zrain-links" data-menu='[{"label":"Ecosystem","href":"https://zrain.web.app/"},{"label":"Create","href":"#create"},{"label":"My links","href":"#my-links"}]'></script></body>
 </html>

@@ -20,7 +20,8 @@ test('all public-facing app pages use the official ecosystem identity and footer
   // EN: Ensure every page provides the same @zrain/ui mounting targets.
   for (const page of pages) {
     const html = await read('../public/' + page);
-    assert.match(html, /class="topbar zrain-header"/, page);
+    assert.match(html, /src="https:\/\/zrain\.web\.app\/ui\/v2\/layout\.js"/);
+    assert.match(html, /data-zrain-content/);
     assert.match(html, /class="brand zrain-brand"/, page);
     assert.match(html, /class="zrain-brand__home" href="https:\/\/zrain\.web\.app"/, page);
     assert.match(html, /class="zrain-brand__product" href="\/"/, page);
