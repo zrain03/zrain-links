@@ -9,6 +9,16 @@
   "uiSharedCommit": "a109401fa591afa9f66479fa8d86f1ed1679d70b",
   "files": [
     {
+      "path": "cloudflare/public/link-studio.css",
+      "developer": "Zrain",
+      "created": "2026-11-16",
+      "createdBasis": "introduced in this redesign",
+      "updated": "2026-11-16",
+      "purposeMs": "Susun atur ringkas untuk penciptaan pautan.",
+      "purposeEn": "Compact link creation layout.",
+      "metadataLocation": "file header + registry"
+    },
+    {
       "path": ".dockerignore",
       "developer": "Zrain",
       "created": "2026-10-26",

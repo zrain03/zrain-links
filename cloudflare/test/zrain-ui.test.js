@@ -49,10 +49,11 @@ test("Zrain UI sends logo and Zrain credit to the main ecosystem without changin
 test("both Links website pages link branding to Zrain ecosystem with static fallback",async()=>{
   for(const path of ["../public/index.html","../public/admin.html"]){
     const html=await readFile(new URL(path,import.meta.url),"utf8");
-    assert.match(html,/class="zrain-brand__home" href="https:\/\/zrain\.web\.app"/);
+    assert.match(html,/\/ui\/v2\/layout\.js/);
+    if (path.endsWith("/admin.html")) assert.match(html,/class="zrain-brand__home" href="https:\/\/zrain\.web\.app"/);
     assert.match(html,/class="zrain-footer__home" href="https:\/\/zrain\.web\.app"/);
     assert.match(html,/Made for people\. Built with purpose\./);
     assert.match(html,/zrain-ui-config\.js/);
-    assert.match(html,/zrain-brand__product"/);
+    if (path.endsWith("/admin.html")) assert.match(html,/zrain-brand__product"/);
   }
 });

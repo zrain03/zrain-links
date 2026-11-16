@@ -22,9 +22,11 @@ test('all public-facing app pages use the official ecosystem identity and footer
     const html = await read('../public/' + page);
     assert.match(html, /src="https:\/\/zrain\.web\.app\/ui\/v2\/layout\.js"/);
     assert.match(html, /data-zrain-content/);
-    assert.match(html, /class="brand zrain-brand"/, page);
+    if (page !== "index.html") {
+      assert.match(html, /class="brand zrain-brand"/, page);
     assert.match(html, /class="zrain-brand__home" href="https:\/\/zrain\.web\.app"/, page);
-    assert.match(html, /class="zrain-brand__product" href="\/"/, page);
+      assert.match(html, /class="zrain-brand__product" href="\/"/, page);
+    }
     assert.match(html, /class="footer-brand zrain-footer__identity"/, page);
     assert.match(html, /class="zrain-footer__home" href="https:\/\/zrain\.web\.app"/, page);
     assert.match(html, /Developed by Zrain/, page);

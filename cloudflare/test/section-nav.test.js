@@ -14,21 +14,18 @@ import {activeSectionFromOffsets,sectionForHash,mountSectionNavigation,readingLi
 
 const read=path=>readFile(new URL(path,import.meta.url),"utf8");
 
-test("Visits is first, the mode selector separates workspaces, and collections follow the same order",async()=>{
+test("The shared menu orders Visits Link, Directs and Feedback",async()=>{
   const html=await read("../public/index.html");
   const css=await read("../public/visits.css");
-  const nav=html.slice(html.indexOf('<nav class="topnav"'),html.indexOf("</nav>"));
-  assert.ok(nav.indexOf('href="#visits-links"')<nav.indexOf('href="#create"'));
-  assert.match(nav,/id="nav-visits" class="current"/);
-  const visits=html.indexOf('id="visits-links"'),switcher=html.indexOf('class="two-modes"'),direct=html.indexOf('id="create"');
-  assert.ok(visits>=0 && visits<switcher && switcher<direct);
-  const modes=html.slice(switcher,direct);
-  assert.ok(modes.indexOf('href="#visits-links"')<modes.indexOf('href="#create"'));
-  assert.ok(html.indexOf('class="visits-my-links"')<html.indexOf('class="direct-my-links"'));
-  assert.match(html,/id="links-title"/);
-  assert.match(html,/id="visits-list"/);
-  assert.match(html,/id="links-list"/);
-  assert.match(html,/src="\/link-section-nav\.js\?v=scrollspy-20261027-2"/);
+  const menu=JSON.parse(html.match(/data-menu='([^']+)'/)[1]);
+  assert.deepEqual(menu, [
+    {label: "Visits Link", href: "#visits-links"},
+    {label: "Directs", href: "#create"},
+    {label: "Feedback", href: "#zrain-feedback"}
+  ]);
+  for (const item of menu) assert.ok(html.includes('id="' + item.href.slice(1) + '"'));
+  assert.doesNotMatch(html, /class="topnav"|class="two-modes"/);
+  assert.ok(html.indexOf('class="visits-my-links"') < html.indexOf('class="direct-my-links"'));
   assert.match(css,/\.direct-my-links\s*\{/);
   const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
   assert.equal(new Set(ids).size,ids.length,"HTML IDs must remain unique");

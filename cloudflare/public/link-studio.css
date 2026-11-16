@@ -1,0 +1,50 @@
+/*
+ * Fail / File: cloudflare/public/link-studio.css
+ * Pembangun / Developer: Zrain
+ * Dicipta / Created: 2026-11-16
+ * Dikemas kini / Last updated: 2026-11-16
+ * BM: Susun atur ringkas untuk penciptaan pautan.
+ * EN: Compact link creation layout.
+ */
+.zrain-product-workspace { width: min(100%, 1060px); margin-inline: auto; padding: 12px clamp(12px, 4vw, 32px) 0; }
+.zrain-product-workspace > .topbar { position: static; background: none; border: 0; box-shadow: none; }
+.zrain-product-workspace > .topbar .topbar-inner, .zrain-product-workspace > main { width: 100%; max-width: none; padding: 0; }
+.zrain-product-workspace > .topbar .topbar-inner { display: flex; justify-content: space-between; min-height: unset; gap: 12px; flex-wrap: wrap; padding-block: 10px; }
+.links-title { color: var(--zr-ink, #482630); font-size: clamp(1.4rem, 3vw, 2rem); margin: 0; letter-spacing: -.04em; }
+.zr-compact-v44:not(.is-light) .links-title { color: #f5e7da; }
+.zrain-product-workspace .account-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.zrain-product-workspace .account-actions a { color: inherit; font-size: .85rem; }
+.zrain-product-workspace .account-actions button { min-height: 36px; padding: 6px 12px; }
+.zrain-product-workspace .visits-hero, .zrain-product-workspace .direct-studio {
+  display: block; margin: 0 0 18px; padding: 0; min-height: 0; overflow: hidden;
+  background: #fff9ef; color: #482632; border: 1px solid #dcbeab; border-radius: 18px;
+}
+.studio-heading { background: #ead3a8; padding: 14px clamp(14px, 3vw, 24px); border-bottom: 1px solid #d5b98b; }
+.studio-heading h2 { font-size: clamp(1.3rem, 2.6vw, 1.9rem); line-height: 1.12; margin: 0 0 5px; letter-spacing: -.035em; }
+.studio-heading p { margin: 0; font-size: .875rem; color: #664440; }
+.zrain-product-workspace :is(.visits-editor, .editor-grid) {
+  display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 0; align-items: stretch; margin: 0; padding: 0;
+}
+.zrain-product-workspace .editor-card, .zrain-product-workspace .preview-card {
+  position: static; min-width: 0; padding: clamp(14px, 3vw, 24px); border: 0; border-radius: 0;
+  margin: 0; box-shadow: none; background: transparent;
+}
+.zrain-product-workspace .preview-card { height: 100%; background: #f3e4d3; border-inline-start: 1px solid #e5cbb5; }
+.zrain-product-workspace .preview-column { display: block; min-width: 0; }
+.zrain-product-workspace :is(.field-block, .option-box) { margin-block: 0 12px; }
+.zrain-product-workspace .create-button { min-height: 43px; }
+.zrain-product-workspace :is(#visits-preview-url, #preview-url, #preview-destination, #header-email) { overflow-wrap: anywhere; }
+.zrain-product-workspace :is(#visits-links, #create, #zrain-feedback, #my-links) { scroll-margin-top: 16px; }
+@media (max-width: 700px) {
+  .zrain-product-workspace :is(.visits-editor, .editor-grid) { grid-template-columns: minmax(0, 1fr); }
+  .zrain-product-workspace .preview-card { border-inline-start: 0; border-top: 1px solid #e5cbb5; }
+  .zrain-product-workspace .visit-page-feature { flex-wrap: wrap; }
+}
+
+
+/* Keep the shared header as the only mode navigation. Deep links still open their section. */
+.zr-shared-page #main .direct-pane { display: none; }
+.zr-shared-page #main:has(#create:target, #create :target, #latest-result:target) .direct-pane { display: block; }
+.zr-shared-page #main:has(#create:target, #create :target, #latest-result:target, #zrain-feedback:target) .visits-pane { display: none; }
+.zr-shared-page #main:not(:has(#zrain-feedback:target)) > #zrain-feedback { display: none; }

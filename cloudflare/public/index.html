@@ -24,39 +24,32 @@
   <link rel="stylesheet" href="/qr-preview.css?v=qr-preview-20261027-1">
   <script type="module" src="/app.js?v=guest-20261107-1"></script>
   <script type="module" src="/visits-ui.js?v=guest-20261107-1"></script>
-  <script type="module" src="/link-section-nav.js?v=scrollspy-20261027-2"></script>
+  <link rel="stylesheet" href="/link-studio.css">
   <script type="module" src="/zrain-ui-config.js?v=ui-20261104-golden"></script>
 <style>.zrain-product-workspace{width:100%;min-width:0}.zrain-product-workspace .zrain-brand{display:none}.zrain-product-workspace .topbar,.zrain-product-workspace .monitor-workspace-nav{position:relative;inset:auto;background:#fbf2e6;color:#452733;border-bottom:1px solid #dfc4ae}.zrain-product-workspace .topbar-inner,.zrain-product-workspace .monitor-workspace-nav>div{padding:8px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.zrain-product-workspace :is(.topnav,.account-actions){flex-wrap:wrap;max-width:100%}.zrain-product-workspace main.container{margin-inline:auto;padding-top:16px}</style></head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <div data-zrain-content class="zrain-product-workspace"><div class="topbar">
   <div class="container topbar-inner zrain-header__inner">
-    <div class="brand zrain-brand"><a class="zrain-brand__home" href="https://zrain.web.app" aria-label="Zrain ecosystem home"><img src="/zrain-logo.webp" class="brand-logo-image zrain-brand__logo" alt="" width="42" height="42"><strong class="zrain-brand__name">Zrain</strong></a><a class="zrain-brand__product" href="/" aria-label="Zrain Links home">Links</a></div>
-    <nav class="topnav" aria-label="Site navigation">
-      <a id="nav-visits" class="current" href="#visits-links" aria-current="location">Visits links</a>
-      <a href="#create">Direct links</a>
+    <h1 class="links-title">Zrain Links</h1>
+    <div class="account-actions">
       <a id="nav-my-links" href="#my-links" hidden>My links</a>
       <a id="nav-admin" href="/admin.html" hidden>Admin</a>
-    </nav>
-    <div class="account-actions">
       <button class="button button-outline" type="button" id="header-signin">Sign in</button>
       <div id="header-user" class="account-user" hidden><span id="header-email"></span><button class="button button-outline" type="button" id="header-signout">Sign out</button></div>
     </div>
   </div>
 </div>
 <main id="main" class="container">
+<div class="visits-pane">
 <section id="visits-links" class="visits-hero" aria-labelledby="visits-heading">
-  <div class="visits-intro">
-    <p class="eyebrow">✦ VISITS LINKS</p>
-    <h2 id="visits-heading">Build a visits link with <em>actions before unlock.</em></h2>
-    <p>Give your link a title, choose what visitors should do, and publish a dedicated unlock page. <strong>Visit a page</strong> is featured and easy to add. You can also choose a supported social action.</p>
-    <a class="button button-primary hero-start" href="#visits-destination">Create a visits link <span aria-hidden="true">→</span></a>
-    <div class="hero-points"><span>✓ Action-based unlock</span><span>✓ Visit a page</span><span>✓ Separate workspace</span></div>
-    <p class="visits-disclaimer">Social actions use visitor confirmation, not automatic verification by third-party platforms.</p>
+  <div class="studio-heading">
+    <h2 id="visits-heading">Visits Link</h2>
+    <p>Choose what visitors do before they unlock your destination.</p>
   </div>
   <div class="visits-editor">
     <section class="editor-card visits-builder" aria-labelledby="visits-form-heading">
-      <div class="card-heading"><div><span class="card-kicker">VISITS LINK WORKSPACE</span><h3 id="visits-form-heading">Create visits link</h3></div></div>
+      <h3 id="visits-form-heading" class="sr-only">Create visits link</h3>
       <form id="visits-form">
         <div class="field-block"><label for="visits-destination">1. Destination URL <span class="required-star">*</span></label>
           <p class="field-explanation">The final website visitors can unlock.</p>
@@ -82,7 +75,7 @@
         </div>
         <p id="visits-message" class="form-message" role="status" aria-live="polite"></p>
         <button id="visits-submit" class="button button-primary create-button" type="submit"><span>Create visits link</span><span aria-hidden="true">→</span></button>
-        <p class="form-footnote">Sign in is required to save and manage Visits Links.</p>
+        <p class="form-footnote">Social actions are confirmed by visitors. Sign in to save and manage your links.</p>
       </form>
     </section>
     <aside class="preview-card visits-preview">
@@ -100,35 +93,21 @@
     </aside>
   </div>
 </section>
-<section class="zrain-feature-grid visits-features" aria-label="For Visits Links">
-  <article><span class="feature-icon coral">↗</span><h3>Visit a page</h3><p>Prominently add a visit action, or choose a social platform.</p></article>
-  <article><span class="feature-icon orange">✧</span><h3>Action builder</h3><p>Set up to 20 ordered actions for visitors to complete.</p></article>
-  <article><span class="feature-icon blue">▦</span><h3>Social actions</h3><p>Choose YouTube, Instagram, TikTok, Facebook, X and other social platforms.</p></article>
-  <article><span class="feature-icon coral">◉</span><h3>Unlock preview</h3><p>See how your title and action list will appear.</p></article>
-  <article><span class="feature-icon blue">▣</span><h3>Separate collection</h3><p>Keep Visits Links apart from Direct Links.</p></article>
-  <article><span class="feature-icon orange">▥</span><h3>Views & unlocks</h3><p>View page loads and visitor-confirmed unlocks.</p></article>
-</section>
-<div class="zrain-steps visits-steps"><strong>HOW VISITS LINKS WORK</strong><span><b>1</b> Add destination</span><span class="separator">→</span><span><b>2</b> Set title</span><span class="separator">→</span><span><b>3</b> Choose actions</span><span class="separator">→</span><span><b>4</b> Publish & share</span></div>
 <section id="visits-result" class="result-card" hidden aria-labelledby="visits-result-title">
   <h2 id="visits-result-title">Your Visits Link is ready</h2><p>Share this link to show visitors your action-based unlock page.</p>
   <a id="visits-result-url" class="result-url" target="_blank" rel="noopener noreferrer"></a>
   <div class="result-actions"><button type="button" class="button button-outline" id="visits-copy-result">Copy link</button><button type="button" class="button button-outline" id="visits-qr-result">QR code</button></div>
 </section>
-<!-- Visits Links: separate feature, storage and unlock journey from Direct Links. -->
-<section class="two-modes" aria-label="Two ways to share">
-  <div><p class="eyebrow">MORE WAYS TO SHARE</p><h2>One brand, two link experiences.</h2>
-    <p>Direct links take visitors straight to a page. Visits links let you choose actions visitors acknowledge before unlocking the destination.</p></div>
-  <div class="mode-choices"><a href="#visits-links" class="selected" aria-current="location">✦ Visits links</a><a href="#create">↗ Direct links</a></div>
-</section>
-<div class="zrain-hero-layout">
-  <section id="create" class="page-intro">
-    <div class="intro-copy"><p class="eyebrow">✦ DIRECT LINKS</p><h1>Create a clean link<br><em>you control.</em></h1><p>Give every link a memorable name of your own. Automatic shortening is optional. You decide how you share.</p><a class="button button-primary hero-start" href="#long-url">Create a direct link <span aria-hidden="true">→</span></a><div class="hero-points"><span>✓ Your custom name</span><span>✓ QR sharing</span><span>✓ Visit counts</span></div></div>
-    
-  </section>
-
-  <div class="editor-grid">
+</div>
+<div class="direct-pane">
+<section id="create" class="direct-studio" aria-labelledby="direct-heading">
+    <div class="studio-heading">
+      <h2 id="direct-heading">Directs</h2>
+      <p>Create a short link that opens your destination straight away.</p>
+    </div>
+    <div class="editor-grid">
     <section class="editor-card" aria-labelledby="editor-heading">
-      <div class="card-heading"><div><span class="card-kicker">DIRECT LINK WORKSPACE</span><h2 id="editor-heading">Create link</h2></div><span class="step-pill">2 fields</span></div>
+      <h3 id="editor-heading" class="sr-only">Create direct link</h3>
       <form id="shorten-form" novalidate>
         <div class="field-block">
           <label for="long-url">1. Destination URL <span class="required-star">*</span></label>
@@ -173,21 +152,10 @@
         <div class="preview-detail"><span>LINK TYPE</span><strong id="preview-mode">Custom name</strong></div>
         <div class="preview-detail"><span>DESTINATION</span><strong id="preview-destination">Add a destination URL</strong></div>
       </section>
-      <section class="tip-card"><span class="tip-icon" aria-hidden="true">✦</span><div><strong>A name they'll remember</strong><p>Make it easy to recognize your link. You can always use automatic shortening instead.</p></div></section>
     </aside>
   </div>
 
-</div>
-<section class="zrain-feature-grid" aria-label="What Zrain Links can do">
-  <article><span class="feature-icon coral">⌁</span><h3>Custom names</h3><p>Pick a name that feels like yours and is easy to remember.</p></article>
-  <article><span class="feature-icon orange">↗</span><h3>Optional shortening</h3><p>Need something shorter? Turn on automatic link naming.</p></article>
-  <article><span class="feature-icon blue">▦</span><h3>QR codes</h3><p>Preview your QR code, then download it if you want to.</p></article>
-  <article><span class="feature-icon blue">⧉</span><h3>Copy &amp; share</h3><p>Copy a link in a click and share it anywhere.</p></article>
-  <article><span class="feature-icon orange">▥</span><h3>Visit counts</h3><p>See how many times someone has opened each link.</p></article>
-  <article><span class="feature-icon coral">✦</span><h3>Your collection</h3><p>Keep all your links together and manage them yourself.</p></article>
 </section>
-<section class="zrain-steps" aria-label="How it works"><strong>HOW IT WORKS</strong><span><b>1</b> Paste destination</span><span class="separator">→</span><span><b>2</b> Choose your name</span><span class="separator">→</span><span><b>3</b> Create &amp; share</span></section>
-
   <section id="latest-result" class="result-card" hidden aria-labelledby="result-heading">
     <div class="result-heading"><span class="result-check" aria-hidden="true">✓</span><div><h2 id="result-heading">Your link is ready</h2><p>Copy your link or preview its QR code before downloading.</p></div></div>
     <a id="result-url" class="result-url" href="#" target="_blank" rel="noopener noreferrer"></a>
@@ -195,6 +163,7 @@
     <div class="result-actions"><button id="result-copy" class="button button-primary" type="button">Copy link</button><button id="result-qr" class="button button-outline" type="button">QR code</button><a class="link-text" href="#my-links">My links →</a></div>
   </section>
 
+</div>
 <dialog id="visits-picker" class="visits-picker" aria-labelledby="visits-picker-title">
   <div class="visits-picker-heading"><div><h2 id="visits-picker-title">Add an action</h2><p>Choose a website or social action.</p></div><button type="button" id="visits-picker-close" aria-label="Close actions">×</button></div>
   <label for="visits-search" class="sr-only">Search platform or action</label>
@@ -324,5 +293,5 @@
 </footer>
 
 
-<script defer src="https://zrain.web.app/ui/v2/layout.js" data-product="zrain-links" data-menu='[{"label":"Ecosystem","href":"https://zrain.web.app/"},{"label":"Create","href":"#create"},{"label":"My links","href":"#my-links"}]'></script></body>
+<script defer src="https://zrain.web.app/ui/v2/layout.js" data-product="zrain-links" data-menu='[{"label":"Visits Link","href":"#visits-links"},{"label":"Directs","href":"#create"},{"label":"Feedback","href":"#zrain-feedback"}]'></script></body>
 </html>
