@@ -14,13 +14,13 @@ import {activeSectionFromOffsets,sectionForHash,mountSectionNavigation,readingLi
 
 const read=path=>readFile(new URL(path,import.meta.url),"utf8");
 
-test("The shared menu orders Visits Link, Directs and Feedback",async()=>{
+test("The shared menu orders Visits Link, Direct Links and Feedback",async()=>{
   const html=await read("../public/index.html");
   const css=await read("../public/visits.css");
   const menu=JSON.parse(html.match(/data-menu='([^']+)'/)[1]);
   assert.deepEqual(menu, [
     {label: "Visits Link", href: "#visits-links"},
-    {label: "Directs", href: "#create"},
+    {label: "Direct Links", href: "#create"},
     {label: "Feedback", href: "#zrain-feedback"}
   ]);
   for (const item of menu) assert.ok(html.includes('id="' + item.href.slice(1) + '"'));
