@@ -58,7 +58,7 @@ test("existing link details persist if Google popup requires explicit redirect",
 
 test("auth resources have a coordinated cache-busting revision", async () => {
   const html = await read("../public/index.html");
-  assert.match(html, /app\.css\?v=admin-20261026-1/);
+  assert.match(html, /app\.css\?v=identity-20261117/);
   assert.match(html, /app\.js\?v=guest-20261107-1/);
 });
 

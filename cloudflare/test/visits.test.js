@@ -168,6 +168,14 @@ test("public Visits Link keeps Community below unlock card without changing its 
   assert.match(css,/\.visit-page-main\{[^}]*display:flex;flex-direction:column;align-items:center;/);
   assert.match(css,/\.visit-page-main > #zrain-feedback\{[^}]*width:min\(640px,100%\)/);
   assert.doesNotMatch(html,/id="zrain-feedback"[^>]*style=/);
-  assert.match(html,/visits\.css\?v=visit-layout-20261107-1/);
+  assert.match(html,/visits\.css\?v=identity-20261117/);
   assert.match(html,/src="https:\/\/zrain-community\.web\.app\/embed\.js" data-product="zrain-links"/);
+});
+
+// The public unlock page provides a prominent, safe path to create a new link.
+test('public unlock page offers a branded create-link action',async()=>{
+ const html=await read('../public/visit.html'),css=await read('../public/visits.css');
+ assert.ok(html.includes('<a class="visit-create-link" href="https://zrain-links.web.app/">Create your own link'));
+ assert.ok(css.includes('min-height:58px'));
+ assert.ok(css.includes('color:#351d25'));
 });

@@ -25,7 +25,7 @@ async function files(dir) {
   const found=[];
   for (const entry of await readdir(dir,{withFileTypes:true})) {
     if (entry.isDirectory() && !excluded.has(entry.name)) found.push(...await files(join(dir,entry.name)));
-    if (entry.isFile()) found.push(relative(root,join(dir,entry.name)).split('\\').join('/'));
+    if (entry.isFile() && !excluded.has(entry.name)) found.push(relative(root,join(dir,entry.name)).split('\\').join('/'));
   }
   return found;
 }

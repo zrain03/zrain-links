@@ -17,6 +17,6 @@ import { mountZrainUI } from "./zrain-ui.js?v=ui-20261104-golden";
 // The shared component owns only the Zrain branding and footer credit.
 mountZrainUI({
   product: "Links",
-  logoSrc: "/zrain-logo.webp",
+  logoSrc: "https://zrain.web.app/zrain-mascot.png?v=20261117",
   productHref: "/"
 });

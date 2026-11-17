@@ -32,7 +32,7 @@ test('all public-facing app pages use the official ecosystem identity and footer
     assert.match(html, /Developed by Zrain/, page);
     // The shared runtime supplies the single standard tagline.
     assert.match(html, /data-product="zrain-links"/, page);
-    assert.match(html, /zrain-ui-config\.js\?v=ui-20261104-golden/, page);
+    assert.match(html, /zrain-ui-config\.js\?v=identity-20261117/, page);
     assert.match(html, /href="#main"/, page);
     assert.match(html, /id="main"/, page);
     const header = html.split(/<main\b/i)[0];
