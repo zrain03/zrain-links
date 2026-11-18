@@ -168,7 +168,7 @@ test("public Visits Link keeps Community below unlock card without changing its 
   assert.match(css,/\.visit-page-main\{[^}]*display:flex;flex-direction:column;align-items:center;/);
   assert.match(css,/\.visit-page-main > #zrain-feedback\{[^}]*width:min\(640px,100%\)/);
   assert.doesNotMatch(html,/id="zrain-feedback"[^>]*style=/);
-  assert.match(html,/visits\.css\?v=identity-20261117/);
+  assert.match(html,/visits\.css\?v=identity-20261118-spacing/);
   assert.match(html,/src="https:\/\/zrain-community\.web\.app\/embed\.js" data-product="zrain-links"/);
 });
 
